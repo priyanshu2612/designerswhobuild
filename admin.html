@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin · designerswhobuild</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+body { background: #f0f2f5; min-height: 100vh; padding: 40px 16px; }
+.card { background: white; border-radius: 20px; padding: 36px 32px; max-width: 560px; margin: 0 auto; box-shadow: 0 2px 16px rgba(0,0,0,.09); }
+.logo { font-size: 13px; color: #999; font-weight: 600; letter-spacing: .3px; margin-bottom: 24px; }
+h1 { font-size: 24px; font-weight: 800; color: #10192d; margin-bottom: 28px; }
+.top-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px; }
+.top-bar h1 { margin-bottom: 0; }
+.logout-btn { font-size: 13px; color: #aaa; background: none; border: 1.5px solid #eee; border-radius: 8px; cursor: pointer; padding: 6px 14px; font-weight: 500; }
+.logout-btn:hover { color: #666; border-color: #ccc; }
+.tabs { display: flex; gap: 8px; margin-bottom: 28px; }
+.tab { flex: 1; padding: 11px; border: 2px solid #eee; border-radius: 12px; background: white; cursor: pointer; font-size: 14px; font-weight: 600; color: #888; transition: all .15s; }
+.tab.active { border-color: #3169ed; color: #3169ed; background: #eef2ff; }
+label { display: block; font-size: 13px; font-weight: 600; color: #555; margin: 18px 0 6px; }
+label:first-of-type { margin-top: 0; }
+input[type=text], input[type=email], input[type=password], input[type=url], select, textarea {
+  width: 100%; border: 1.5px solid #e5e5e5; border-radius: 10px;
+  padding: 10px 13px; font-size: 14px; color: #10192d; outline: none;
+  background: #fafafa; transition: border-color .15s;
+}
+input:focus, select:focus, textarea:focus { border-color: #3169ed; background: white; }
+textarea { min-height: 88px; resize: vertical; line-height: 1.5; }
+.hint { font-size: 12px; color: #aaa; margin-top: 5px; line-height: 1.4; }
+.check-row { display: flex; align-items: center; gap: 8px; margin-top: 18px; }
+.check-row input[type=checkbox] { width: 16px; height: 16px; cursor: pointer; }
+.check-row label { margin: 0; cursor: pointer; }
+button.primary {
+  width: 100%; background: #3169ed; color: white; border: none;
+  border-radius: 12px; padding: 13px; font-size: 15px; font-weight: 700;
+  cursor: pointer; margin-top: 24px; transition: background .15s;
+}
+button.primary:hover { background: #2558d4; }
+button.primary:disabled { background: #a0b8f5; cursor: not-allowed; }
+.msg { margin-top: 14px; padding: 11px 14px; border-radius: 10px; font-size: 13px; font-weight: 500; display: none; }
+.msg.success { background: #d4f5e9; color: #1a7a4a; }
+.msg.error   { background: #fde8e8; color: #c0392b; }
+.divider { height: 1px; background: #f0f0f0; margin: 24px 0; }
+.field-group { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.field-group label { margin-top: 0; }
+@media (max-width: 480px) { .field-group { grid-template-columns: 1fr; } .card { padding: 28px 20px; } }
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="card" id="loginCard">
+  <div class="logo">designerswhobuild.com</div>
+  <h1>Admin Login</h1>
+  <label>Email</label>
+  <input type="email" id="adminEmail" placeholder="your@email.com">
+  <label>Password</label>
+  <input type="password" id="adminPassword" placeholder="••••••••" onkeydown="if(event.key==='Enter')login()">
+  <button class="primary" id="loginBtn" onclick="login()">Login →</button>
+  <div id="loginMsg" class="msg"></div>
+</div>
+
+<!-- ADMIN PANEL -->
+<div class="card" id="panelCard" style="display:none">
+  <div class="top-bar">
+    <a href="designerwhobuild.html" style="font-size:13px;color:#aaa;text-decoration:none;border:1.5px solid #eee;border-radius:8px;padding:6px 14px;font-weight:500;">← Home</a>
+    <h1 style="font-size:18px;">Admin Panel</h1>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" id="tab-btn-user" onclick="switchTab('user')">Add User</button>
+    <button class="tab" id="tab-btn-post" onclick="switchTab('post')">Add Post</button>
+  </div>
+
+  <!-- ── ADD USER ── -->
+  <div id="tab-user">
+    <div class="field-group">
+      <div>
+        <label>Full Name *</label>
+        <input type="text" id="u-name" placeholder="Arjun Sethi">
+      </div>
+      <div>
+        <label>Handle (unique)</label>
+        <input type="text" id="u-handle" placeholder="arjun">
+      </div>
+    </div>
+    <div class="field-group" style="margin-top:18px">
+      <div>
+        <label>Designation</label>
+        <input type="text" id="u-role" placeholder="Product Designer">
+      </div>
+      <div>
+        <label>Company</label>
+        <input type="text" id="u-company" placeholder="CRED">
+      </div>
+    </div>
+    <label>Avatar URL</label>
+    <input type="url" id="u-avatar" placeholder="https://...">
+    <label>Bio</label>
+    <textarea id="u-bio" placeholder="Short bio about this designer..."></textarea>
+    <button class="primary" id="addUserBtn" onclick="addUser()">Add User</button>
+    <div id="userMsg" class="msg"></div>
+  </div>
+
+  <!-- ── ADD POST ── -->
+  <div id="tab-post" style="display:none">
+    <label>User *</label>
+    <select id="p-user"><option value="">Loading users…</option></select>
+
+    <div class="field-group" style="margin-top:18px">
+      <div>
+        <label>App Name *</label>
+        <input type="text" id="p-appname" placeholder="Clipt">
+      </div>
+      <div>
+        <label>Status</label>
+        <select id="p-status">
+          <option value="live">Live</option>
+          <option value="wip" selected>WIP</option>
+          <option value="concept">Concept</option>
+        </select>
+      </div>
+    </div>
+
+    <label>Post Title *</label>
+    <input type="text" id="p-title" placeholder="Introducing Clipt - Clipboard History for iPhone">
+
+    <label>Description</label>
+    <textarea id="p-desc" placeholder="What is this app about? What makes it special?"></textarea>
+
+    <div class="field-group" style="margin-top:18px">
+      <div>
+        <label>Category</label>
+        <select id="p-category">
+          <option>iOS app</option>
+          <option>macOS</option>
+          <option>Web</option>
+          <option>Games</option>
+          <option>Interactive</option>
+        </select>
+      </div>
+      <div>
+        <label>Media Layout</label>
+        <select id="p-layout" onchange="onLayoutChange()">
+          <option value="single">Single image</option>
+          <option value="5grid">5-grid (4–5 imgs)</option>
+          <option value="carousel">Carousel (2+ imgs)</option>
+          <option value="video">Video (.mp4)</option>
+        </select>
+      </div>
+    </div>
+
+    <label>Thumbnail URL</label>
+    <input type="url" id="p-thumb" placeholder="https://... (icon shown in cards)">
+
+    <label id="media-label">Media URLs</label>
+    <textarea id="p-media" placeholder="One URL per line"></textarea>
+    <p class="hint" id="media-hint">Single: 1 image URL · 5-grid: 4–5 image URLs · Carousel: 2+ image URLs · Video: 1 .mp4 URL</p>
+
+    <div class="check-row">
+      <input type="checkbox" id="p-featured" checked>
+      <label for="p-featured">Show in Feed (featured)</label>
+    </div>
+
+    <button class="primary" id="addPostBtn" onclick="addPost()">Add Post</button>
+    <div id="postMsg" class="msg"></div>
+  </div>
+</div>
+
+<script>
+const { createClient } = supabase;
+const sb = createClient(
+  'https://lrhiwutrgypxulawjdri.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxyaGl3dXRyZ3lweHVsYXdqZHJpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyMzU3OTQsImV4cCI6MjA5MzgxMTc5NH0.UU8_L67xLHJXwmA-0Ju7NtWoUUgCLGpJKgICIILaDT4'
+);
+
+// Auto-restore session on page load
+sb.auth.getSession().then(({ data: { session } }) => { if (session) showPanel(); });
+
+async function login() {
+  const email    = document.getElementById('adminEmail').value.trim();
+  const password = document.getElementById('adminPassword').value;
+  if (!email || !password) { showMsg('loginMsg', 'Enter email and password.', 'error'); return; }
+  const btn = document.getElementById('loginBtn');
+  btn.disabled = true; btn.textContent = 'Logging in…';
+  const { error } = await sb.auth.signInWithPassword({ email, password });
+  btn.disabled = false; btn.textContent = 'Login →';
+  if (error) { showMsg('loginMsg', error.message, 'error'); return; }
+  showPanel();
+}
+
+async function logout() {
+  await sb.auth.signOut();
+  document.getElementById('panelCard').style.display = 'none';
+  document.getElementById('loginCard').style.display  = 'block';
+}
+
+function showPanel() {
+  document.getElementById('loginCard').style.display  = 'none';
+  document.getElementById('panelCard').style.display  = 'block';
+  loadUsers();
+}
+
+async function loadUsers() {
+  const { data } = await sb.from('profiles').select('id, name').order('name');
+  const sel = document.getElementById('p-user');
+  sel.innerHTML = '<option value="">Select user…</option>';
+  (data || []).forEach(u => {
+    const opt = document.createElement('option');
+    opt.value = u.id; opt.textContent = u.name;
+    sel.appendChild(opt);
+  });
+}
+
+function switchTab(name) {
+  document.getElementById('tab-user').style.display = name === 'user' ? 'block' : 'none';
+  document.getElementById('tab-post').style.display = name === 'post' ? 'block' : 'none';
+  document.getElementById('tab-btn-user').classList.toggle('active', name === 'user');
+  document.getElementById('tab-btn-post').classList.toggle('active', name === 'post');
+  if (name === 'post') loadUsers();
+}
+
+function onLayoutChange() {
+  const layout = document.getElementById('p-layout').value;
+  const hints = {
+    single:   'Single image URL',
+    '5grid':  '4–5 image URLs, one per line',
+    carousel: '2+ image URLs, one per line',
+    video:    '1 .mp4 video URL'
+  };
+  document.getElementById('media-hint').textContent = hints[layout];
+}
+
+async function addUser() {
+  const name = document.getElementById('u-name').value.trim();
+  if (!name) { showMsg('userMsg', 'Name is required.', 'error'); return; }
+  const btn = document.getElementById('addUserBtn');
+  btn.disabled = true; btn.textContent = 'Adding…';
+  const { error } = await sb.from('profiles').insert({
+    name,
+    handle:     val('u-handle') || null,
+    role:       val('u-role')   || null,
+    company:    val('u-company')|| null,
+    avatar_url: val('u-avatar') || null,
+    bio:        val('u-bio')    || null,
+  });
+  btn.disabled = false; btn.textContent = 'Add User';
+  if (error) showMsg('userMsg', error.message, 'error');
+  else { showMsg('userMsg', '✓ User added successfully!', 'success'); clearIds(['u-name','u-handle','u-role','u-company','u-avatar','u-bio']); }
+}
+
+async function addPost() {
+  const profile_id = document.getElementById('p-user').value;
+  const title      = document.getElementById('p-title').value.trim();
+  if (!profile_id) { showMsg('postMsg', 'Select a user.', 'error'); return; }
+  if (!title)      { showMsg('postMsg', 'Title is required.', 'error'); return; }
+  const btn = document.getElementById('addPostBtn');
+  btn.disabled = true; btn.textContent = 'Adding…';
+  const layout    = document.getElementById('p-layout').value;
+  const rawMedia  = document.getElementById('p-media').value.trim();
+  const mediaUrls = rawMedia ? rawMedia.split('\n').map(s => s.trim()).filter(Boolean) : [];
+  const isVideo   = layout === 'video';
+  const { error } = await sb.from('posts').insert({
+    profile_id,
+    title,
+    app_name:        val('p-appname') || null,
+    description:     val('p-desc')    || null,
+    status:          document.getElementById('p-status').value,
+    category:        document.getElementById('p-category').value,
+    thumbnail_url:   val('p-thumb')   || null,
+    media_layout:    layout,
+    media_urls:      isVideo ? [] : mediaUrls,
+    media_video_url: isVideo ? (mediaUrls[0] || null) : null,
+    featured:        document.getElementById('p-featured').checked,
+  });
+  btn.disabled = false; btn.textContent = 'Add Post';
+  if (error) showMsg('postMsg', error.message, 'error');
+  else { showMsg('postMsg', '✓ Post added successfully!', 'success'); clearIds(['p-appname','p-title','p-desc','p-thumb','p-media']); document.getElementById('p-user').value = ''; }
+}
+
+function val(id) { return document.getElementById(id).value.trim(); }
+function clearIds(ids) { ids.forEach(id => { document.getElementById(id).value = ''; }); }
+function showMsg(id, text, type) {
+  const el = document.getElementById(id);
+  el.textContent = text; el.className = 'msg ' + type; el.style.display = 'block';
+  setTimeout(() => { el.style.display = 'none'; }, 5000);
+}
+</script>
+</body>
+</html>

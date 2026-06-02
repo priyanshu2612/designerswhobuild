@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Designers Who Build — Case Study</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink:      #10192D;
+      --heading:  #10192D;
+      --body:     #4A5568;
+      --muted:    #9AA3B2;
+      --label:    #3169ED;
+      --white:    #FFFFFF;
+      --gray-bg:  #F5F6FA;
+      --warm-bg:  #FFF8F2;
+      --lavender: #EEF3FD;
+      --lav-deep: #C5D9F8;
+      --yellow:   #FFFBE6;
+      --yel-bdr:  #E8D96A;
+      --border:   #E4E7EF;
+      --green:    #16A34A;
+      --green-bg: #F0FDF4;
+      --green-bdr:#BBF7D0;
+      --amber:    #D97706;
+      --amber-bg: #FFFBEB;
+      --amber-bdr:#FDE68A;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      background: var(--white);
+      color: var(--body);
+      font-size: 17px;
+      line-height: 1.75;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Scroll reveal ── */
+    .r { opacity: 0; transform: translateY(18px); transition: opacity .65s ease, transform .65s ease; }
+    .r.in { opacity: 1; transform: none; }
+    .d1{transition-delay:.08s} .d2{transition-delay:.16s} .d3{transition-delay:.24s}
+    .d4{transition-delay:.32s} .d5{transition-delay:.40s} .d6{transition-delay:.48s}
+
+    /* ── Containers ── */
+    .wrap    { max-width: 760px; margin: 0 auto; padding: 0 36px; }
+    .wrap-lg { max-width: 980px; margin: 0 auto; padding: 0 36px; }
+
+    /* ── Section backgrounds ── */
+    .sec      { padding: 88px 0; background: var(--white); }
+    .sec-gray { padding: 88px 0; background: var(--gray-bg); }
+    .sec-lav  { padding: 88px 0; background: var(--lavender); }
+    .sec-warm { padding: 88px 0; background: var(--warm-bg); }
+    .sec-dark { padding: 88px 0; background: var(--ink); }
+
+    .divider { height: 1px; background: var(--border); }
+
+    /* ── Labels ── */
+    .lbl { display:inline-block; font-size:10.5px; font-weight:700; letter-spacing:2.5px; text-transform:uppercase; color:var(--label); margin-bottom:18px; }
+    .lbl-white { color: rgba(255,255,255,0.5); }
+
+    /* ── Headings ── */
+    .h-hero { font-size: clamp(46px,6.5vw,82px); font-weight:900; letter-spacing:-2.5px; line-height:1.03; color:var(--heading); }
+    .h-xl   { font-size: clamp(32px,4.5vw,52px); font-weight:800; letter-spacing:-1.5px; line-height:1.1; color:var(--heading); }
+    .h-lg   { font-size: clamp(24px,3.5vw,38px); font-weight:700; letter-spacing:-1px;   line-height:1.15; color:var(--heading); }
+    .h-white { color: #fff; }
+    .h-accent { color: var(--label); }
+    .b-lg { font-size:18px; color:var(--body); line-height:1.78; }
+    .b-md { font-size:16px; color:var(--body); line-height:1.75; }
+    .b-white { color: rgba(255,255,255,0.65); }
+
+    /* ══════════ NAV ══════════ */
+    .nav {
+      position:sticky; top:0; z-index:200;
+      background:rgba(255,255,255,.92);
+      backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
+      border-bottom:1px solid var(--border);
+    }
+    .nav-inner { max-width:760px; margin:0 auto; padding:14px 36px; display:flex; align-items:center; justify-content:space-between; }
+    .nav-brand { font-size:14px; font-weight:700; color:var(--heading); }
+    .nav-badge {
+      font-size:11.5px; font-weight:700; color:#D97706;
+      background:#FFFBEB; border:1.5px solid #FDE68A;
+      padding:5px 13px; border-radius:100px;
+      display:flex; align-items:center; gap:5px;
+    }
+    .nav-dot { width:7px; height:7px; border-radius:50%; background:#D97706; animation:pulse 1.8s ease-in-out infinite; }
+    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(.85)} }
+
+    /* ══════════ HERO ══════════ */
+    .hero { padding:80px 0 72px; border-bottom:1px solid var(--border); }
+    .hero-eyebrow {
+      display:inline-flex; align-items:center; gap:8px;
+      font-size:12px; font-weight:600; color:var(--label);
+      background:var(--lavender); padding:6px 14px; border-radius:100px; margin-bottom:28px;
+    }
+    .hero-wip {
+      display:inline-flex; align-items:center; gap:7px;
+      font-size:12px; font-weight:700; color:var(--amber);
+      background:var(--amber-bg); border:1.5px solid var(--amber-bdr);
+      padding:6px 14px; border-radius:100px; margin-bottom:28px; margin-left:10px;
+    }
+    .hero-sub  { font-size:20px; color:var(--body); max-width:560px; margin-top:20px; line-height:1.65; }
+    .hero-meta { display:flex; flex-wrap:wrap; gap:10px; margin-top:40px; }
+    .tag {
+      display:inline-flex; align-items:center; gap:6px;
+      border:1.5px solid var(--border); border-radius:100px;
+      padding:7px 15px; font-size:13.5px; font-weight:500; color:var(--heading); background:var(--white);
+    }
+
+    /* ══════════ PILLS ══════════ */
+    .pill-cloud { display:flex; flex-wrap:wrap; gap:8px; margin-top:18px; }
+    .pill { border:1.5px solid var(--border); border-radius:100px; padding:7px 16px; font-size:14px; font-weight:500; color:var(--heading); background:var(--white); }
+    .pill-lav  { background:var(--lavender); border-color:var(--lav-deep); color:var(--label); font-weight:600; }
+    .pill-dark { background:rgba(255,255,255,.1); border-color:rgba(255,255,255,.2); color:#fff; }
+
+    /* ══════════ STATUS BADGES ══════════ */
+    .status {
+      display:inline-flex; align-items:center; gap:5px;
+      font-size:11px; font-weight:700; padding:4px 10px; border-radius:100px;
+    }
+    .status-dot { width:6px; height:6px; border-radius:50%; flex-shrink:0; }
+    .s-done  { background:var(--green-bg);  color:var(--green);  border:1.5px solid var(--green-bdr); }
+    .s-done  .status-dot { background:var(--green); }
+    .s-wip   { background:var(--amber-bg);  color:var(--amber);  border:1.5px solid var(--amber-bdr); }
+    .s-wip   .status-dot { background:var(--amber); animation:pulse 1.5s ease-in-out infinite; }
+    .s-soon  { background:var(--gray-bg);   color:var(--muted);  border:1.5px solid var(--border); }
+    .s-soon  .status-dot { background:var(--muted); }
+
+    /* ══════════ STICKY CARDS ══════════ */
+    .sticky-row   { display:grid; gap:14px; margin-top:32px; }
+    .sticky-row-2 { grid-template-columns:1fr 1fr; }
+    .sticky-row-3 { grid-template-columns:1fr 1fr 1fr; }
+    .sticky { background:var(--yellow); border:1.5px solid var(--yel-bdr); border-radius:18px; padding:26px 24px; }
+    .sticky-ico  { font-size:24px; margin-bottom:12px; display:block; }
+    .sticky-title{ font-size:15px; font-weight:700; color:var(--heading); margin-bottom:8px; }
+    .sticky-body { font-size:14px; color:#5C5830; line-height:1.6; }
+    .sticky-list { list-style:none; margin-top:8px; display:flex; flex-direction:column; gap:5px; }
+    .sticky-list li { font-size:13.5px; color:#5C5830; }
+    .sticky-list li::before { content:"—  "; color:#A89F52; }
+
+    /* ══════════ AUDIT CARDS ══════════ */
+    .audit-row  { display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px; margin-top:32px; }
+    .audit-card { background:var(--white); border:1.5px solid var(--border); border-radius:18px; padding:26px 22px; }
+    .audit-card.is-ours { background:var(--lavender); border-color:var(--lav-deep); }
+    .badge { display:inline-block; padding:4px 13px; border-radius:100px; font-size:12px; font-weight:700; margin-bottom:16px; }
+    .b-orange { background:#FF6B35; color:#fff; }
+    .b-blue   { background:#3B82F6; color:#fff; }
+    .b-purple { background:var(--label); color:#fff; }
+    .audit-list { list-style:none; display:flex; flex-direction:column; gap:8px; }
+    .audit-list li { font-size:13px; color:var(--body); display:flex; align-items:flex-start; gap:8px; line-height:1.5; }
+    .audit-list li .ic { flex-shrink:0; margin-top:1px; }
+
+    /* ══════════ PULL QUOTE ══════════ */
+    .pull-q { font-size:clamp(18px,2.8vw,28px); font-weight:700; font-style:italic; color:var(--heading); border-left:3px solid var(--label); padding:8px 0 8px 28px; line-height:1.4; }
+    .pull-q-white { color:#fff; border-color:rgba(255,255,255,.4); }
+
+    /* ══════════ CALLOUT BOX ══════════ */
+    .callout { background:var(--lavender); border-radius:24px; padding:52px 48px; }
+    .callout-warm { background:var(--warm-bg); border:1.5px solid #FFD8B4; border-radius:24px; padding:52px 48px; }
+
+    /* ══════════ STACK CARDS ══════════ */
+    .stack-row  { display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px; margin-top:32px; }
+    .stack-card { background:var(--white); border:1.5px solid var(--border); border-radius:18px; padding:28px 24px; }
+    .stack-ico  { width:44px; height:44px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:20px; margin-bottom:14px; }
+    .stack-name { font-size:16px; font-weight:700; color:var(--heading); margin-bottom:6px; }
+    .stack-desc { font-size:13.5px; color:var(--body); line-height:1.6; }
+
+    /* ══════════ NUMBERED ROWS ══════════ */
+    .num-list { border:1.5px solid var(--border); border-radius:20px; overflow:hidden; margin-top:32px; }
+    .num-row  { display:grid; grid-template-columns:64px 1fr; border-bottom:1px solid var(--border); }
+    .num-row:last-child { border-bottom:none; }
+    .num-col  { background:var(--lavender); display:flex; align-items:center; justify-content:center; font-size:18px; font-weight:800; color:var(--label); border-right:1px solid var(--lav-deep); padding:28px 0; }
+    .num-body { padding:26px 28px; background:var(--white); }
+    .num-title{ font-size:16px; font-weight:700; color:var(--heading); margin-bottom:4px; }
+    .num-desc { font-size:14px; color:var(--body); line-height:1.6; }
+
+    /* ══════════ DARK SECTION QUOTE (chicken-egg) ══════════ */
+    .dark-quote-box {
+      border:1px solid rgba(255,255,255,.12); border-radius:24px;
+      padding:52px 48px; margin-top:0;
+    }
+    .dark-stat { font-size:clamp(60px,9vw,96px); font-weight:900; color:#fff; letter-spacing:-4px; line-height:1; margin-bottom:12px; }
+    .dark-stat-sub { font-size:18px; color:rgba(255,255,255,.6); max-width:500px; line-height:1.6; }
+
+    /* ══════════ PROGRESS SECTION ══════════ */
+    .progress-bar-wrap { margin-top:28px; }
+    .progress-track { height:10px; background:#E4E7EF; border-radius:100px; overflow:hidden; margin:10px 0 8px; }
+    .progress-fill  { height:100%; border-radius:100px; background:linear-gradient(90deg, var(--label), #6B9EF5); transition:width 1.2s ease; width:0; }
+    .progress-fill.in { width:80%; }
+    .progress-labels{ display:flex; justify-content:space-between; font-size:12px; color:var(--muted); font-weight:600; }
+
+    /* ══════════ MILESTONE TIMELINE ══════════ */
+    .milestone-list { display:flex; flex-direction:column; gap:0; margin-top:36px; }
+    .milestone { display:flex; gap:20px; align-items:flex-start; padding:20px 0; border-bottom:1px solid var(--border); }
+    .milestone:last-child { border-bottom:none; }
+    .ms-left { display:flex; flex-direction:column; align-items:center; gap:0; flex-shrink:0; width:18px; margin-top:4px; }
+    .ms-dot  { width:14px; height:14px; border-radius:50%; flex-shrink:0; }
+    .ms-dot-done { background:var(--green); }
+    .ms-dot-wip  { background:var(--amber); animation:pulse 1.5s ease-in-out infinite; }
+    .ms-dot-soon { background:var(--border); border:2px solid var(--muted); background:var(--white); }
+    .ms-title { font-size:15px; font-weight:700; color:var(--heading); margin-bottom:3px; }
+    .ms-desc  { font-size:13.5px; color:var(--body); line-height:1.5; }
+    .ms-right { flex:1; }
+    .ms-tags  { display:flex; gap:6px; flex-wrap:wrap; margin-top:8px; }
+    .ms-tag   { font-size:11.5px; font-weight:500; padding:3px 10px; border-radius:100px; background:var(--gray-bg); color:var(--body); border:1px solid var(--border); }
+
+    /* ══════════ FEATURE CARDS ══════════ */
+    .feature-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:32px; }
+    .feature-card { background:var(--white); border:1.5px solid var(--border); border-radius:18px; padding:26px 24px; }
+    .feature-card.is-full { grid-column:1/-1; background:var(--lavender); border-color:var(--lav-deep); }
+    .feature-card.is-soon { border-style:dashed; }
+    .f-top   { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:14px; }
+    .f-ico   { font-size:26px; }
+    .f-title { font-size:16px; font-weight:700; color:var(--heading); margin-bottom:6px; }
+    .f-desc  { font-size:13.5px; color:var(--body); line-height:1.6; }
+    .f-pills { display:flex; flex-wrap:wrap; gap:6px; margin-top:12px; }
+    .f-pill  { border:1.5px solid var(--border); border-radius:100px; padding:4px 11px; font-size:12px; font-weight:500; color:var(--body); }
+
+    /* ══════════ LEARNING PILLS ══════════ */
+    .learn-pills { display:flex; flex-wrap:wrap; gap:8px; margin-top:20px; }
+    .learn-pill  { background:var(--white); border:1.5px solid var(--lav-deep); border-radius:100px; padding:8px 18px; font-size:14px; font-weight:600; color:var(--label); }
+
+    /* ══════════ LAUNCH COUNTDOWN BOX ══════════ */
+    .launch-box {
+      background:var(--ink); border-radius:24px; padding:52px 48px;
+      display:grid; grid-template-columns:1fr 1fr; gap:52px; align-items:center;
+    }
+    .launch-stat { font-size:clamp(64px,10vw,110px); font-weight:900; color:#fff; letter-spacing:-4px; line-height:1; }
+    .launch-stat-unit { display:block; font-size:18px; font-weight:500; color:rgba(255,255,255,.5); letter-spacing:0; margin-top:6px; }
+    .launch-items { display:flex; flex-direction:column; gap:14px; }
+    .launch-item { display:flex; align-items:center; gap:12px; }
+    .launch-item-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+    .launch-item-text { font-size:15px; color:rgba(255,255,255,.75); font-weight:500; }
+
+    /* ══════════ CREDIT ══════════ */
+    .credit { display:flex; align-items:center; gap:12px; margin-top:36px; }
+    .credit-av { width:44px; height:44px; border-radius:50%; overflow:hidden; border:2px solid var(--lav-deep); }
+    .credit-av img { width:100%; height:100%; object-fit:cover; display:block; }
+    .credit-name { font-size:15px; font-weight:700; color:var(--heading); }
+    .credit-role { font-size:13px; color:var(--muted); }
+
+    /* ══════════ PHONES ══════════ */
+    .phones-row { display:flex; gap:20px; justify-content:center; flex-wrap:wrap; margin-top:48px; }
+    .phone-item { display:flex; flex-direction:column; align-items:center; gap:12px; }
+    .phone-lbl  { font-size:11px; font-weight:600; color:var(--muted); letter-spacing:1px; text-transform:uppercase; }
+    .iphone { width:200px; background:#1C1C1E; border-radius:44px; padding:12px; box-shadow:0 0 0 1px rgba(255,255,255,.08),0 0 0 2px #3A3A3C,0 24px 56px rgba(0,0,0,.22); }
+    .iph-scr { background:#F8F9FC; border-radius:32px; overflow:hidden; position:relative; }
+    .iph-di  { position:absolute; top:10px; left:50%; transform:translateX(-50%); width:82px; height:24px; background:#1C1C1E; border-radius:20px; z-index:10; }
+    .mn { background:#fff; border-bottom:1px solid #F0F2F7; padding:38px 11px 8px; display:flex; align-items:center; justify-content:space-between; }
+    .mn-logo { font-size:7px; font-weight:700; color:#10192D; }
+    .mn-av { width:17px; height:17px; border-radius:50%; overflow:hidden; background:#EEF3FD; }
+    .mn-av img { width:100%; height:100%; object-fit:cover; }
+    .mlbl { padding:8px 11px 3px; font-size:8px; font-weight:800; color:#10192D; }
+    .mtr  { display:flex; align-items:center; gap:7px; margin:0 9px 4px; padding:7px 9px; background:#fff; border-radius:11px; border:1px solid #F0F2F7; }
+    .mrank{ font-size:7px; font-weight:800; color:#FF8140; width:12px; text-align:center; flex-shrink:0; }
+    .mico { width:22px; height:22px; border-radius:6px; overflow:hidden; flex-shrink:0; }
+    .mico img { width:100%; height:100%; object-fit:cover; display:block; }
+    .mtn  { font-size:7.5px; font-weight:700; color:#10192D; }
+    .mts  { font-size:6px; color:#8492A6; }
+    .mht  { font-size:6.5px; font-weight:600; color:#FF8140; margin-left:auto; white-space:nowrap; }
+    .mtabs{ display:flex; gap:4px; padding:0 9px; margin-bottom:5px; overflow:hidden; }
+    .mtab { font-size:6.5px; font-weight:600; padding:3px 7px; border-radius:20px; background:#F2F4F7; color:#596378; white-space:nowrap; }
+    .mtab.a{ background:#10192D; color:#fff; }
+    .mcard{ margin:0 9px 6px; background:#fff; border-radius:12px; padding:9px; border:1px solid #F0F2F7; }
+    .mchead{ display:flex; align-items:center; gap:7px; margin-bottom:5px; }
+    .maico{ width:26px; height:26px; border-radius:7px; overflow:hidden; flex-shrink:0; background:#EEF3FD; }
+    .maico img { width:100%; height:100%; object-fit:cover; display:block; }
+    .mcn  { font-size:7.5px; font-weight:700; color:#10192D; }
+    .mcs  { font-size:6px; color:#8492A6; }
+    .mct  { font-size:7.5px; font-weight:700; color:#10192D; margin-bottom:2px; }
+    .mcd  { font-size:6.5px; color:#596378; line-height:1.4; margin-bottom:4px; }
+    .mrxn { display:flex; gap:7px; padding-top:6px; border-top:1px solid #F0F2F7; }
+    .mr   { font-size:6.5px; color:#596378; }
+    .mhmiss { margin:0 9px 6px; border-radius:12px; overflow:hidden; position:relative; }
+    .mhmiss img { width:100%; height:88px; object-fit:cover; display:block; }
+    .mhover { position:absolute; inset:0; background:linear-gradient(to top,rgba(0,0,0,.65),transparent 55%); }
+    .mhtext { position:absolute; bottom:7px; left:9px; right:9px; }
+    .mhtit  { font-size:7px; font-weight:700; color:#fff; }
+    .mhauth { font-size:6px; color:rgba(255,255,255,.7); margin-top:1px; }
+    .mptop  { background:linear-gradient(155deg,#EEF3FD,#fff); padding:34px 11px 10px; text-align:center; border-bottom:1px solid #F0F2F7; }
+    .mpav   { width:34px; height:34px; border-radius:50%; overflow:hidden; margin:0 auto 5px; border:2px solid #fff; box-shadow:0 2px 6px rgba(0,0,0,.1); }
+    .mpav img { width:100%; height:100%; object-fit:cover; display:block; }
+    .mpname { font-size:8.5px; font-weight:800; color:#10192D; }
+    .mprole { font-size:6.5px; color:#8492A6; margin-top:1px; }
+    .mpstats{ display:grid; grid-template-columns:1fr 1fr 1fr; border-bottom:1px solid #F0F2F7; background:#fff; }
+    .mpstat { padding:7px 4px; text-align:center; border-right:1px solid #F0F2F7; }
+    .mpstat:last-child { border-right:none; }
+    .mpsn   { font-size:11px; font-weight:800; color:#10192D; }
+    .mpsl   { font-size:6px; color:#8492A6; }
+
+    /* ══════════ RESPONSIVE ══════════ */
+    @media (max-width:820px) {
+      .wrap,.wrap-lg { padding:0 20px; }
+      .audit-row,.stack-row,.sticky-row-2,.sticky-row-3,.feature-grid,.launch-box { grid-template-columns:1fr; }
+      .launch-box { gap:32px; }
+      .callout,.callout-warm,.dark-quote-box { padding:36px 28px; }
+      .iphone { width:170px; }
+    }
+
+    /* ══════════ NAV UPDATES ══════════ */
+    .nav-cs-pill {
+      font-size:12px; font-weight:600; color:var(--muted);
+      background:var(--gray-bg); border:1.5px solid var(--border);
+      padding:5px 13px; border-radius:100px; white-space:nowrap;
+    }
+    .prev-btn {
+      display:inline-flex; align-items:center; gap:7px;
+      font-family:'Outfit',sans-serif; font-size:12px; font-weight:600;
+      color:var(--label); background:var(--lavender); border:1.5px solid var(--lav-deep);
+      padding:6px 14px; border-radius:100px; cursor:pointer;
+      transition:background .2s, color .2s, border-color .2s;
+    }
+    .prev-btn:hover { background:var(--lav-deep); }
+    .prev-btn.on { background:var(--label); color:#fff; border-color:var(--label); }
+    .prev-btn-dot {
+      width:7px; height:7px; border-radius:50%; background:var(--label);
+      transition:background .2s;
+    }
+    .prev-btn.on .prev-btn-dot { background:rgba(255,255,255,.8); }
+
+    /* ══════════ PREVIEW PANEL ══════════ */
+    .preview-overlay {
+      position:fixed; inset:0; z-index:498;
+      background:rgba(16,25,45,.45); backdrop-filter:blur(3px);
+      opacity:0; pointer-events:none;
+      transition:opacity .3s ease;
+    }
+    .preview-overlay.open { opacity:1; pointer-events:auto; }
+
+    .preview-panel {
+      position:fixed; top:0; right:0; bottom:0; width:312px; z-index:499;
+      background:#0D1526;
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+      padding:28px 20px;
+      transform:translateX(110%);
+      transition:transform .38s cubic-bezier(.4,0,.2,1);
+      box-shadow:-16px 0 56px rgba(0,0,0,.5);
+    }
+    .preview-panel.open { transform:translateX(0); }
+
+    .prev-close {
+      position:absolute; top:20px; right:20px;
+      background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.12);
+      color:rgba(255,255,255,.6); width:30px; height:30px; border-radius:50%;
+      display:flex; align-items:center; justify-content:center;
+      font-size:14px; cursor:pointer; transition:background .2s;
+      font-family:'Outfit',sans-serif;
+    }
+    .prev-close:hover { background:rgba(255,255,255,.14); color:#fff; }
+
+    .prev-phone {
+      width:234px;
+      background:#1C1C1E;
+      border-radius:42px;
+      padding:12px;
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,.07),
+        0 0 0 2.5px #3A3A3C,
+        0 36px 80px rgba(0,0,0,.7);
+    }
+    .prev-screen {
+      background:#F8F9FC;
+      border-radius:30px;
+      overflow:hidden;
+      height:472px;
+      position:relative;
+    }
+    .prev-notch {
+      position:absolute; top:10px; left:50%; transform:translateX(-50%);
+      width:80px; height:24px; background:#1C1C1E; border-radius:20px; z-index:10;
+    }
+    .prev-screen iframe {
+      width:100%; height:100%; border:none; display:block;
+    }
+    .prev-lbl {
+      margin-top:20px;
+      font-size:10.5px; font-weight:700; letter-spacing:2px;
+      color:rgba(255,255,255,.28); text-transform:uppercase;
+    }
+    .prev-url-bar {
+      margin-top:10px;
+      display:flex; align-items:center; gap:7px;
+      background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.1);
+      border-radius:100px; padding:6px 14px;
+      font-size:11px; color:rgba(255,255,255,.45); font-family:'Outfit',sans-serif;
+      max-width:234px; overflow:hidden;
+    }
+    .prev-url-dot { width:6px; height:6px; border-radius:50%; background:#2DCB71; flex-shrink:0; }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <span class="nav-brand">designerwhobuild.com</span>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <button class="prev-btn" id="prevBtn" onclick="togglePreview()">
+        <div class="prev-btn-dot"></div> Preview
+      </button>
+      <span class="nav-cs-pill">Case Study · 2025</span>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO IMAGE -->
+<img src="https://ik.imagekit.io/424h6me27c/MacBook%20Pro%2016_%20-%202.png" style="width:100%;display:block;" alt="">
+
+<!-- ░░ HERO TEXT ░░ -->
+<div class="wrap">
+  <div class="hero">
+    <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:28px;">
+      <div class="hero-eyebrow r" style="margin-bottom:0;">✦ Product Design · 2025</div>
+      <div class="hero-wip r" style="margin-bottom:0;"><div class="nav-dot"></div> Work in progress · 80% done</div>
+    </div>
+    <h1 class="h-hero r d1" style="font-size:clamp(30px,6.5vw,76px);">Designers Who Build</h1>
+    <p class="hero-sub r d2">A discovery platform for AI-native creators — being designed and built solo, using AI from end to end.</p>
+    <div class="hero-meta r d3">
+      <span class="tag">👤 Senior Product Designer</span>
+      <span class="tag">🤖 AI-assisted development</span>
+      <span class="tag">📱 Mobile Web</span>
+      <span class="tag">🚀 Launching July 2025</span>
+    </div>
+  </div>
+</div>
+<div class="divider"></div>
+
+
+<!-- ░░ THE SHIFT ░░ -->
+<div class="sec">
+  <div class="wrap">
+    <div class="lbl r">Context</div>
+    <h2 class="h-xl r d1" style="margin-bottom:20px;">The shift I couldn't ignore.</h2>
+    <p class="b-lg r d2" style="max-width:580px;">Designers are no longer just designing. With AI lowering the barrier to shipping, a new kind of creator has emerged.</p>
+
+    <div class="pill-cloud r d2" style="margin-top:28px;">
+      <span class="pill">🛠️ AI tools</span>
+      <span class="pill">📱 Apps</span>
+      <span class="pill">🧩 Plugins</span>
+      <span class="pill">⚙️ Workflows</span>
+      <span class="pill">🧪 Experiments</span>
+      <span class="pill">🌱 Side projects</span>
+    </div>
+
+    <p class="b-lg r d3" style="margin-top:44px;max-width:580px;">But most of this innovation is scattered across LinkedIn feeds. Discovery depends entirely on:</p>
+    <div class="pill-cloud r d3">
+      <span class="pill pill-lav">Mutual connections</span>
+      <span class="pill pill-lav">Likes</span>
+      <span class="pill pill-lav">Reposts</span>
+      <span class="pill pill-lav">Algorithms</span>
+    </div>
+    <p class="b-lg r d4" style="margin-top:28px;max-width:580px;">Which means many great products never reach the right audience.</p>
+  </div>
+</div>
+<div class="divider"></div>
+
+
+<!-- ░░ THE PROBLEM ░░ -->
+<div class="sec-gray">
+  <div class="wrap">
+    <div class="lbl r">The Problem</div>
+    <h2 class="h-xl r d1" style="margin-bottom:20px;">Two sides of the same gap.</h2>
+    <p class="b-lg r d2" style="max-width:580px;margin-bottom:32px;">As a designer, I felt both sides of this personally.</p>
+
+    <div class="sticky-row sticky-row-2">
+      <div class="sticky r d2">
+        <span class="sticky-ico">🔍</span>
+        <div class="sticky-title">The discovery problem</div>
+        <div class="sticky-body">I constantly struggled to keep track of:</div>
+        <ul class="sticky-list">
+          <li>what people were building</li>
+          <li>recent AI developments</li>
+          <li>useful experiments from the design community</li>
+        </ul>
+      </div>
+      <div class="sticky r d3">
+        <span class="sticky-ico">📢</span>
+        <div class="sticky-title">The distribution problem</div>
+        <div class="sticky-body">Creators build something incredible — but reach is completely dependent on LinkedIn's algorithm. There's no dedicated platform for AI-native builders to be found.</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="divider"></div>
+
+
+<!-- ░░ PLATFORM AUDIT ░░ -->
+<div class="sec">
+  <div class="wrap">
+    <div class="lbl r">Platform Audit</div>
+    <h2 class="h-xl r d1" style="margin-bottom:20px;">Existing platforms<br>weren't enough.</h2>
+    <p class="b-lg r d2" style="max-width:580px;margin-bottom:8px;">Each covered a slice. None served the whole person.</p>
+
+    <div class="audit-row r d2">
+      <div class="audit-card">
+        <span class="badge b-orange">Behance &amp; Dribbble</span>
+        <ul class="audit-list">
+          <li><span class="ic">✅</span> Great for visual work</li>
+          <li><span class="ic">❌</span> Creators today ship real products, not just screens</li>
+          <li><span class="ic">❌</span> No building or shipping context</li>
+        </ul>
+      </div>
+      <div class="audit-card">
+        <span class="badge b-blue">Product Hunt</span>
+        <ul class="audit-list">
+          <li><span class="ic">✅</span> Great for startups &amp; launches</li>
+          <li><span class="ic">❌</span> Many creators are just experimenting, validating, building for fun</li>
+          <li><span class="ic">❌</span> Launch-oriented, not community-driven</li>
+        </ul>
+      </div>
+      <div class="audit-card is-ours">
+        <span class="badge b-purple">designerswhobuild</span>
+        <ul class="audit-list">
+          <li><span class="ic">✅</span> Built for experimentation &amp; ongoing creation</li>
+          <li><span class="ic">✅</span> Community-driven discovery</li>
+          <li><span class="ic">✅</span> Visibility without an algorithm gate</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="divider"></div>
+
+
+<!-- ░░ THE IDEA — lavender bg ░░ -->
+<div class="sec-lav">
+  <div class="wrap">
+    <div class="lbl r">The Idea</div>
+    <h2 class="h-xl r d1" style="margin-bottom:8px;">So I'm building it.</h2>
+    <h2 class="h-xl h-accent r d1" style="margin-bottom:24px;">designerswhobuild.com</h2>
+    <p class="b-lg r d2" style="max-width:560px;margin-bottom:28px;">A platform where creators can showcase AI-built products, gain visibility, discover other builds, and validate ideas through community engagement.</p>
+
+    <div class="pill-cloud r d3">
+      <span class="pill">🔍 Showcase builds</span>
+      <span class="pill">🌐 Gain visibility</span>
+      <span class="pill">💡 Discover others</span>
+      <span class="pill">🤝 Community validation</span>
+    </div>
+
+    <p class="b-md r d4" style="margin-top:28px;font-style:italic;color:var(--label);font-weight:600;">
+      Initially focused on designers — expandable to all AI-native builders.
+    </p>
+  </div>
+</div>
+<div class="divider"></div>
+
+
+<!-- ░░ THE CHALLENGE ░░ -->
+<div class="sec">
+  <div class="wrap">
+    <div class="lbl r">The Challenge</div>
+    <h2 class="h-xl r d1" style="margin-bottom:20px;">I'm a Senior Product Designer.<br>Not an engineer.</h2>
+    <p class="b-lg r d2" style="max-width:560px;margin-bottom:36px;">So the project became a larger experiment in itself.</p>
+
+    <div class="r d2">
+      <blockquote class="pull-q">"Can I build a social platform<br>using AI tools alone?"</blockquote>
+    </div>
+
+    <p class="b-lg r d3" style="max-width:560px;margin-top:36px;">This question has changed how I approach the entire product — not just as a design brief, but as a proof of concept for what designers can do independently in 2025.</p>
+  </div>
+</div>
+<div class="divider"></div>
+
+
+<!-- ░░ THE STACK — gray bg ░░ -->
+<div class="sec-gray">
+  <div class="wrap">
+    <div class="lbl r">The Stack</div>
+    <h2 class="h-xl r d1" style="margin-bottom:20px;">Three tools.<br>One product.</h2>
+
+    <div class="stack-row r d2">
+      <div class="stack-card">
+        <div class="stack-ico" style="background:#F0EDFF;">🤖</div>
+        <div class="stack-name">Claude Code</div>
+        <div class="stack-desc">Frontend development and feature building. Writing production code directly from design intent.</div>
+      </div>
+      <div class="stack-card">
+        <div class="stack-ico" style="background:#E8F5E9;">💬</div>
+        <div class="stack-name">ChatGPT</div>
+        <div class="stack-desc">Product thinking, structuring flows, and refining ideas before touching any interface.</div>
+      </div>
+      <div class="stack-card">
+        <div class="stack-ico" style="background:#E3F2FD;">🗄️</div>
+        <div class="stack-name">Supabase</div>
+        <div class="stack-desc">Authentication, backend logic, and database management — the infrastructure layer.</div>
+      </div>
+    </div>
+
+    <div class="callout r d3" style="margin-top:24px;">
+      <p class="b-lg" style="font-style:italic;color:var(--label);font-weight:600;">"Throughout the process, AI isn't just helping me build. It's helping me learn software systems in real time."</p>
+    </div>
+  </div>
+</div>
+<div class="divider"></div>
+
+
+<!-- ░░ CHICKEN AND EGG — DARK ░░ -->
+<div class="sec-dark">
+  <div class="wrap">
+    <div class="lbl lbl-white r">Solving Distribution</div>
+    <h2 class="h-xl h-white r d1" style="margin-bottom:20px;">Cracking the chicken-and-egg problem.</h2>
+    <p class="b-lg b-white r d2" style="max-width:580px;margin-bottom:44px;">Social platforms fail without content. But creators won't post unless users exist. And users won't come unless content exists.</p>
+
+    <div class="dark-quote-box r d2">
+      <div class="dark-stat">Admin layer.</div>
+      <p class="dark-stat-sub">With permission from creators, I'm reposting interesting LinkedIn builds onto the platform and manually creating creator profiles — so the platform feels alive from day one, before a single organic user arrives.</p>
+    </div>
+
+    <div class="pill-cloud r d3" style="margin-top:36px;">
+      <span class="pill pill-dark">Creator permission</span>
+      <span class="pill pill-dark">Hand-curated content</span>
+      <span class="pill pill-dark">Alive from day one</span>
+      <span class="pill pill-dark">No cold-start trap</span>
+    </div>
+  </div>
+</div>
+<div class="divider" style="background:rgba(255,255,255,.08);"></div>
+
+
+<!-- ░░ DESIGNING DISCOVERY — warm bg ░░ -->
+<div class="sec-warm">
+  <div class="wrap">
+    <div class="lbl r" style="color:#C2691A;">Design Thinking</div>
+    <h2 class="h-xl r d1" style="margin-bottom:20px;">Designing for<br>effortless discovery.</h2>
+    <p class="b-lg r d2" style="max-width:560px;margin-bottom:28px;">I took inspiration from platforms that had cracked effortless browsing.</p>
+
+    <div class="pill-cloud r d2">
+      <span class="pill">🍎 App Store</span>
+      <span class="pill">▶️ Play Store</span>
+      <span class="pill">🚀 Product Hunt</span>
+    </div>
+
+    <div class="r d3" style="margin-top:36px;">
+      <blockquote class="pull-q" style="border-color:#E08030;">"Make discovery feel effortless — not algorithmic."</blockquote>
+    </div>
+
+    <p class="b-lg r d4" style="max-width:560px;margin-top:32px;">Instead of a basic feed, the homepage is structured around <strong>exploration</strong> — trending builds, contributor spotlights, community showcase, and category browsing. Every section designed to surface creativity, not just recency.</p>
+  </div>
+</div>
+<div class="divider"></div>
+
+
+<!-- ░░ DESIGNER TO BUILDER ░░ -->
+<div class="sec">
+  <div class="wrap">
+    <div class="lbl r">From Designer to Builder</div>
+    <h2 class="h-xl r d1" style="margin-bottom:20px;">Bridging Figma<br>and production code.</h2>
+    <p class="b-lg r d2" style="max-width:560px;margin-bottom:32px;">Initially, I struggled translating design intent into production-ready UI. So I evolved the process.</p>
+
+    <div class="sticky-row sticky-row-2">
+      <div class="sticky r d2">
+        <span class="sticky-ico">🎨</span>
+        <div class="sticky-title">Figma design system first</div>
+        <div class="sticky-body">Created a minimal design system with reusable layouts and foundational components — giving AI a clear visual grammar to work from.</div>
+      </div>
+      <div class="sticky r d3">
+        <span class="sticky-ico">🔗</span>
+        <div class="sticky-title">Figma MCP + Claude Code</div>
+        <div class="sticky-body">Connected Figma via MCP to Claude Code, allowing AI to directly understand layouts, patterns, and structure. Development speed increased dramatically.</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="divider"></div>
+
+
+<!-- ░░ MY WORKFLOW — gray bg ░░ -->
+<div class="sec-gray">
+  <div class="wrap">
+    <div class="lbl r">My Workflow</div>
+    <h2 class="h-xl r d1" style="margin-bottom:8px;">Idea → Interface → Working product.</h2>
+    <p class="b-lg r d2" style="max-width:560px;margin-bottom:8px;">A repeatable loop that lets me move faster than ever before.</p>
+
+    <div class="num-list r d2">
+      <div class="num-row">
+        <div class="num-col">01</div>
+        <div class="num-body">
+          <div class="num-title">Frame product logic in ChatGPT</div>
+          <div class="num-desc">Think through the problem, structure flows, and refine product rationale before any design work begins.</div>
+        </div>
+      </div>
+      <div class="num-row">
+        <div class="num-col">02</div>
+        <div class="num-body">
+          <div class="num-title">Design systems in Figma</div>
+          <div class="num-desc">Create reusable components and visual patterns. Give AI a clear system to work from.</div>
+        </div>
+      </div>
+      <div class="num-row">
+        <div class="num-col">03</div>
+        <div class="num-body">
+          <div class="num-title">Build using Claude Code</div>
+          <div class="num-desc">Translate design intent into production-ready code — with Figma MCP bridging the gap.</div>
+        </div>
+      </div>
+      <div class="num-row">
+        <div class="num-col">04</div>
+        <div class="num-body">
+          <div class="num-title">Test, refine, repeat</div>
+          <div class="num-desc">Ship, observe, adjust. The loop runs fast because there's no handoff — designer and builder are the same person.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="divider"></div>
+
+
+<!-- ░░ WHERE WE ARE — progress ░░ -->
+<div class="sec">
+  <div class="wrap">
+    <div class="lbl r">Current Status</div>
+    <h2 class="h-xl r d1" style="margin-bottom:20px;">80% done.<br>1 month to launch.</h2>
+    <p class="b-lg r d2" style="max-width:560px;margin-bottom:32px;">Here's where the build stands today — and what's left before the platform goes live.</p>
+
+    <div class="progress-bar-wrap r d2">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <span style="font-size:14px;font-weight:700;color:var(--heading);">Overall progress</span>
+        <span style="font-size:14px;font-weight:800;color:var(--label);">80%</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill r"></div>
+      </div>
+      <div class="progress-labels"><span>Started</span><span>Launching July 2025</span></div>
+    </div>
+
+    <div class="milestone-list r d3" style="margin-top:36px;">
+      <div class="milestone">
+        <div class="ms-left"><div class="ms-dot ms-dot-done"></div></div>
+        <div class="ms-right">
+          <div class="ms-title">Discovery feed &amp; trending system</div>
+          <div class="ms-desc">Trending builds, category browsing, community showcase, hot reactions.</div>
+          <div class="ms-tags"><span class="ms-tag">Feed</span><span class="ms-tag">Trending</span><span class="ms-tag">Reactions</span></div>
+        </div>
+        <span class="status s-done"><span class="status-dot"></span>Done</span>
+      </div>
+      <div class="milestone">
+        <div class="ms-left"><div class="ms-dot ms-dot-done"></div></div>
+        <div class="ms-right">
+          <div class="ms-title">Creator profiles &amp; contributor leaderboard</div>
+          <div class="ms-desc">Profile pages with build history, engagement stats, contribution ranking.</div>
+          <div class="ms-tags"><span class="ms-tag">Profiles</span><span class="ms-tag">Stats</span></div>
+        </div>
+        <span class="status s-done"><span class="status-dot"></span>Done</span>
+      </div>
+      <div class="milestone">
+        <div class="ms-left"><div class="ms-dot ms-dot-done"></div></div>
+        <div class="ms-right">
+          <div class="ms-title">Comments &amp; reactions</div>
+          <div class="ms-desc">Threaded comments, reply system, emoji reactions, anonymous read.</div>
+          <div class="ms-tags"><span class="ms-tag">Comments</span><span class="ms-tag">Replies</span></div>
+        </div>
+        <span class="status s-done"><span class="status-dot"></span>Done</span>
+      </div>
+      <div class="milestone">
+        <div class="ms-left"><div class="ms-dot ms-dot-wip"></div></div>
+        <div class="ms-right">
+          <div class="ms-title">Self-serve build publishing flow</div>
+          <div class="ms-desc">Allowing creators to submit their own builds directly — not just via admin.</div>
+          <div class="ms-tags"><span class="ms-tag">Publishing</span><span class="ms-tag">Forms</span></div>
+        </div>
+        <span class="status s-wip"><span class="status-dot"></span>In progress</span>
+      </div>
+      <div class="milestone">
+        <div class="ms-left"><div class="ms-dot ms-dot-wip"></div></div>
+        <div class="ms-right">
+          <div class="ms-title">Notifications &amp; engagement alerts</div>
+          <div class="ms-desc">Notify creators when their build gets reactions, comments, or hits trending.</div>
+          <div class="ms-tags"><span class="ms-tag">Notifications</span></div>
+        </div>
+        <span class="status s-wip"><span class="status-dot"></span>In progress</span>
+      </div>
+      <div class="milestone">
+        <div class="ms-left"><div class="ms-dot ms-dot-soon"></div></div>
+        <div class="ms-right">
+          <div class="ms-title">Community launch &amp; creator seeding</div>
+          <div class="ms-desc">Onboarding the first wave of creators and opening public access.</div>
+          <div class="ms-tags"><span class="ms-tag">Launch</span><span class="ms-tag">Outreach</span></div>
+        </div>
+        <span class="status s-soon"><span class="status-dot"></span>~4 weeks</span>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="divider"></div>
+
+
+<!-- ░░ PLATFORM FEATURES — gray bg ░░ -->
+<div class="sec-gray">
+  <div class="wrap-lg">
+    <div class="wrap" style="padding:0;margin-bottom:0;">
+      <div class="lbl r">Platform Features</div>
+      <h2 class="h-xl r d1" style="margin-bottom:8px;">What's being built.</h2>
+      <p class="b-lg r d2" style="max-width:560px;">Six core features, each solving a specific community need.</p>
+    </div>
+
+    <div class="phones-row r d2">
+      <div class="phone-item">
+        <div class="iphone">
+          <div class="iph-di"></div>
+          <div class="iph-scr">
+            <div class="mn"><svg width="12" height="9" viewBox="0 0 22 16" fill="none"><rect y="0" width="22" height="2.5" rx="1.25" fill="#10192D"/><rect y="6.5" width="22" height="2.5" rx="1.25" fill="#10192D"/><rect y="13" width="22" height="2.5" rx="1.25" fill="#10192D"/></svg><span class="mn-logo">designerswhobuild.com</span><div class="mn-av"><img src="https://ik.imagekit.io/424h6me27c/1720635179303.jpeg" alt=""></div></div>
+            <div class="mlbl">Trending this week 🔥</div>
+            <div class="mtr"><span class="mrank">#1</span><div class="mico"><img src="https://ik.imagekit.io/424h6me27c/MacOSD.png" alt=""></div><div><div class="mtn">FocusFlow</div><div class="mts">macOS</div></div><span class="mht">🔥+31</span></div>
+            <div class="mtr"><span class="mrank">#2</span><div class="mico"><img src="https://ik.imagekit.io/424h6me27c/MobileD.png" alt=""></div><div><div class="mtn">Clipt</div><div class="mts">iOS</div></div><span class="mht">🔥+24</span></div>
+            <div class="mtr"><span class="mrank">#3</span><div class="mico"><img src="https://ik.imagekit.io/424h6me27c/WebD.png" alt=""></div><div><div class="mtn">GridMaster</div><div class="mts">Web</div></div><span class="mht">🔥+22</span></div>
+            <div class="mtr"><span class="mrank">#4</span><div class="mico"><img src="https://ik.imagekit.io/424h6me27c/InteractiveD.png" alt=""></div><div><div class="mtn">Polaroid</div><div class="mts">Interactive</div></div><span class="mht">🔥+18</span></div>
+            <div style="height:16px;"></div>
+          </div>
+        </div>
+        <div class="phone-lbl">Trending</div>
+      </div>
+      <div class="phone-item">
+        <div class="iphone">
+          <div class="iph-di"></div>
+          <div class="iph-scr">
+            <div class="mn"><svg width="12" height="9" viewBox="0 0 22 16" fill="none"><rect y="0" width="22" height="2.5" rx="1.25" fill="#10192D"/><rect y="6.5" width="22" height="2.5" rx="1.25" fill="#10192D"/><rect y="13" width="22" height="2.5" rx="1.25" fill="#10192D"/></svg><span class="mn-logo">designerswhobuild.com</span><div class="mn-av"><img src="https://ik.imagekit.io/424h6me27c/1720635179303.jpeg" alt=""></div></div>
+            <div class="mlbl">Our community at it's best</div>
+            <div class="mtabs"><span class="mtab a">All</span><span class="mtab">Mobile</span><span class="mtab">macOS</span></div>
+            <div class="mhmiss"><img src="https://ik.imagekit.io/424h6me27c/1769139467912.jpeg" alt=""><div class="mhover"></div><div class="mhtext"><div class="mhtit">Polaroid selfie interaction 📸</div><div class="mhauth">Gowtham · CRED</div></div></div>
+            <div class="mhmiss"><img src="https://ik.imagekit.io/424h6me27c/1774526753952.jpeg" alt="" style="filter:brightness(.6);height:74px;"><div class="mhover"></div><div class="mhtext"><div class="mhtit">Property tour with mobile</div><div class="mhauth">Priya M. · Razorpay</div></div></div>
+            <div style="height:14px;"></div>
+          </div>
+        </div>
+        <div class="phone-lbl">Community</div>
+      </div>
+      <div class="phone-item">
+        <div class="iphone">
+          <div class="iph-di"></div>
+          <div class="iph-scr">
+            <div class="mptop">
+              <div class="mpav"><img src="https://ik.imagekit.io/424h6me27c/1720635179303.jpeg" alt=""></div>
+              <div class="mpname">Priyanshu Barnwal</div>
+              <div class="mprole">Product Designer · Zomato</div>
+            </div>
+            <div class="mpstats">
+              <div class="mpstat"><div class="mpsn">12</div><div class="mpsl">Projects</div></div>
+              <div class="mpstat"><div class="mpsn">07</div><div class="mpsl">Live</div></div>
+              <div class="mpstat"><div class="mpsn">6yr</div><div class="mpsl">Exp</div></div>
+            </div>
+            <div class="mlbl" style="font-size:7px;padding:7px 9px 3px;">Projects</div>
+            <div class="mtr" style="margin:0 9px 4px;"><div class="mico"><img src="https://ik.imagekit.io/424h6me27c/MacOSD.png" alt=""></div><div><div class="mtn">FocusFlow</div><div class="mts">macOS · Live</div></div></div>
+            <div class="mtr" style="margin:0 9px 4px;"><div class="mico"><img src="https://ik.imagekit.io/424h6me27c/MobileD.png" alt=""></div><div><div class="mtn">Clipt iOS</div><div class="mts">iOS · Live</div></div></div>
+            <div class="mtr" style="margin:0 9px;"><div class="mico"><img src="https://ik.imagekit.io/424h6me27c/WebD.png" alt=""></div><div><div class="mtn">PortfolioKit</div><div class="mts">Web · WIP</div></div></div>
+          </div>
+        </div>
+        <div class="phone-lbl">Profile</div>
+      </div>
+      <div class="phone-item">
+        <div class="iphone">
+          <div class="iph-di"></div>
+          <div class="iph-scr">
+            <div class="mn"><svg width="12" height="9" viewBox="0 0 22 16" fill="none"><rect y="0" width="22" height="2.5" rx="1.25" fill="#10192D"/><rect y="6.5" width="22" height="2.5" rx="1.25" fill="#10192D"/><rect y="13" width="22" height="2.5" rx="1.25" fill="#10192D"/></svg><span class="mn-logo">designerswhobuild.com</span><div class="mn-av"><img src="https://ik.imagekit.io/424h6me27c/1720635179303.jpeg" alt=""></div></div>
+            <div class="mcard" style="margin-top:7px;">
+              <div class="mchead"><div class="maico" style="border:1px solid #E0E5EF;"><img src="https://ik.imagekit.io/424h6me27c/MobileD.png" alt=""></div><div><div class="mcn">Gowtham Oleti</div><div class="mcs">CRED · iOS · 2d</div></div></div>
+              <div class="mct">Clipt — Clipboard History</div>
+              <div class="mcd">Beautifully engineered clipboard manager with sync across devices.</div>
+              <img src="https://ik.imagekit.io/424h6me27c/1769139467912.jpeg" style="width:100%;height:48px;object-fit:cover;border-radius:7px;display:block;margin-bottom:4px;" alt="">
+              <div class="mrxn"><span class="mr">🔥 +12</span><span class="mr">❤️ +8</span><span class="mr">💬 4</span></div>
+            </div>
+            <div class="mcard">
+              <div class="mchead"><div class="maico"><img src="https://ik.imagekit.io/424h6me27c/MacOSD.png" alt=""></div><div><div class="mcn">Priyanshu</div><div class="mcs">Zomato · macOS · 1d</div></div></div>
+              <div class="mct">FocusFlow — Deep work timer</div>
+              <div class="mrxn"><span class="mr">🔥 +31</span><span class="mr">❤️ +14</span><span class="mr">💬 7</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="phone-lbl">Feed</div>
+      </div>
+    </div>
+
+    <div class="wrap" style="padding:0;margin-top:24px;">
+      <div class="feature-grid r d3">
+        <div class="feature-card">
+          <div class="f-top"><span class="f-ico">🏠</span><span class="status s-done"><span class="status-dot"></span>Done</span></div>
+          <div class="f-title">Discovery-first Homepage</div>
+          <div class="f-desc">Trending builds, contributors, community activity — structured around exploration, not chronology.</div>
+          <div class="f-pills"><span class="f-pill">Trending</span><span class="f-pill">Contributors</span></div>
+        </div>
+        <div class="feature-card">
+          <div class="f-top"><span class="f-ico">👤</span><span class="status s-done"><span class="status-dot"></span>Done</span></div>
+          <div class="f-title">Creator Profiles</div>
+          <div class="f-desc">A portfolio that grows with you — build history, engagement metrics, and contribution history in one place.</div>
+          <div class="f-pills"><span class="f-pill">Build history</span><span class="f-pill">Engagement</span></div>
+        </div>
+        <div class="feature-card">
+          <div class="f-top"><span class="f-ico">🔥</span><span class="status s-done"><span class="status-dot"></span>Done</span></div>
+          <div class="f-title">Trending &amp; Reactions</div>
+          <div class="f-desc">Community heat — not follower count. Builds rise based on engagement, not who you know.</div>
+          <div class="f-pills"><span class="f-pill">Heat score</span><span class="f-pill">Weekly reset</span></div>
+        </div>
+        <div class="feature-card">
+          <div class="f-top"><span class="f-ico">📦</span><span class="status s-wip"><span class="status-dot"></span>In progress</span></div>
+          <div class="f-title">Self-serve Build Publishing</div>
+          <div class="f-desc">Creators will be able to publish tools, apps, and experiments directly — with full context, not just a link.</div>
+          <div class="f-pills"><span class="f-pill">Tools</span><span class="f-pill">Apps</span><span class="f-pill">Workflows</span></div>
+        </div>
+        <div class="feature-card is-full">
+          <div class="f-top"><span class="f-ico">🛡️</span><span class="status s-done"><span class="status-dot"></span>Done · Active now</span></div>
+          <div class="f-title">Admin Publishing Layer</div>
+          <div class="f-desc">Solving the cold-start problem by hand-curating content with creator permission. The platform feels alive before a single organic post goes up — a deliberate launch strategy, not a workaround.</div>
+          <div class="f-pills"><span class="f-pill">Curated seeding</span><span class="f-pill">Creator permission</span><span class="f-pill">Day-one content</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="divider"></div>
+
+
+<!-- ░░ WHAT I'M LEARNING — lavender ░░ -->
+<div class="sec-lav">
+  <div class="wrap">
+    <div class="lbl r">What I'm Learning</div>
+    <h2 class="h-xl r d1" style="margin-bottom:20px;">AI is changing the role<br>of designers.</h2>
+    <p class="b-lg r d2" style="max-width:580px;margin-bottom:28px;">The value is no longer just in creating screens. Because AI can build quickly — but it still needs <strong>clarity</strong>.</p>
+    <p class="b-md r d2" style="max-width:580px;margin-bottom:20px;font-weight:600;color:var(--heading);">The designer's new edge is in:</p>
+    <div class="learn-pills r d3">
+      <span class="learn-pill">🧠 Product thinking</span>
+      <span class="learn-pill">⚙️ Systems thinking</span>
+      <span class="learn-pill">🎯 Prioritization</span>
+      <span class="learn-pill">🧭 Direction</span>
+      <span class="learn-pill">✨ Taste</span>
+    </div>
+    <div class="r d4" style="margin-top:40px;">
+      <blockquote class="pull-q">"AI can execute at speed. Designers who understand systems can now direct at scale."</blockquote>
+    </div>
+  </div>
+</div>
+<div class="divider"></div>
+
+
+<!-- ░░ WHAT'S NEXT — dark launch box ░░ -->
+<div class="sec">
+  <div class="wrap">
+    <div class="lbl r">What's Next</div>
+    <h2 class="h-xl r d1" style="margin-bottom:20px;">From building<br>to launching.</h2>
+    <p class="b-lg r d2" style="max-width:560px;margin-bottom:36px;">The goal is simple: get the platform in front of real creators and let the community take over.</p>
+
+    <div class="launch-box r d2">
+      <div>
+        <div style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:16px;">Time to launch</div>
+        <div class="launch-stat">~4<span class="launch-stat-unit">weeks from now</span></div>
+      </div>
+      <div class="launch-items">
+        <div style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:8px;">Before launch</div>
+        <div class="launch-item"><div class="launch-item-dot" style="background:var(--green);"></div><span class="launch-item-text">Finish self-serve build publishing</span></div>
+        <div class="launch-item"><div class="launch-item-dot" style="background:var(--green);animation:pulse 1.5s ease-in-out infinite;"></div><span class="launch-item-text">Add notifications &amp; engagement alerts</span></div>
+        <div class="launch-item"><div class="launch-item-dot" style="background:rgba(255,255,255,.25);"></div><span class="launch-item-text">Seed 20+ curated creator profiles</span></div>
+        <div class="launch-item"><div class="launch-item-dot" style="background:rgba(255,255,255,.25);"></div><span class="launch-item-text">Soft launch to designer community on LinkedIn</span></div>
+        <div class="launch-item"><div class="launch-item-dot" style="background:rgba(255,255,255,.25);"></div><span class="launch-item-text">Iterate based on early feedback</span></div>
+      </div>
+    </div>
+
+    <div class="callout r d3" style="margin-top:24px;">
+      <p class="b-lg" style="font-weight:600;color:var(--heading);margin-bottom:12px;">The bigger ambition</p>
+      <p class="b-md">AI has dramatically reduced the gap between <em>"I have an idea"</em> and <em>"I built it."</em> This project is proof. The plan is to keep going — open it up, let the community shape it, and see where it goes.</p>
+    </div>
+
+    <div class="credit r d3" style="margin-top:40px;">
+      <div class="credit-av"><img src="https://ik.imagekit.io/424h6me27c/1720635179303.jpeg" alt="Priyanshu"></div>
+      <div>
+        <div class="credit-name">Priyanshu Barnwal</div>
+        <div class="credit-role">Senior Product Designer · Zomato · 6 years experience</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div style="height:80px;"></div>
+
+<!-- PREVIEW PANEL -->
+<div class="preview-overlay" id="prevOverlay" onclick="togglePreview()"></div>
+<div class="preview-panel" id="prevPanel">
+  <button class="prev-close" onclick="togglePreview()">✕</button>
+  <div class="prev-phone">
+    <div class="prev-screen">
+      <div class="prev-notch"></div>
+      <iframe id="prevIframe" src="" loading="lazy" allow="fullscreen"></iframe>
+    </div>
+  </div>
+  <div class="prev-lbl">Live Preview</div>
+  <div class="prev-url-bar">
+    <div class="prev-url-dot"></div>
+    <span id="prevUrlText">designerwhobuild.com</span>
+  </div>
+</div>
+
+<script>
+  /* ── Replace with your Netlify URL ── */
+  const PREVIEW_URL = 'https://cozy-custard-0b9ec8.netlify.app';
+
+  function togglePreview() {
+    const panel   = document.getElementById('prevPanel');
+    const overlay = document.getElementById('prevOverlay');
+    const btn     = document.getElementById('prevBtn');
+    const iframe  = document.getElementById('prevIframe');
+    const isOpen  = panel.classList.toggle('open');
+    overlay.classList.toggle('open', isOpen);
+    btn.classList.toggle('on', isOpen);
+    if (isOpen && !iframe.src) iframe.src = PREVIEW_URL;
+  }
+
+  /* ── Scroll reveal ── */
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('in');
+        if (e.target.classList.contains('progress-fill')) {
+          setTimeout(() => e.target.style.width = '80%', 100);
+        }
+        obs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.r').forEach(el => obs.observe(el));
+</script>
+</body>
+</html>

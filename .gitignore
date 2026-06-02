@@ -1,0 +1,17 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Xcode build artifacts
+DerivedData/
+DerivedDataDevice/
+ModuleCache/
+*.xcodeproj/
+ChillTree/
+
+# Node
+node_modules/
+
+# Logs
+*.log
