@@ -141,6 +141,15 @@
 
   // ── Auth init ───────────────────────────────────
   async function initAuth() {
+    // Handle OAuth PKCE redirect — exchange ?code= for a session immediately
+    const _urlParams = new URLSearchParams(window.location.search);
+    const _oauthCode = _urlParams.get('code');
+    if (_oauthCode) {
+      await sb.auth.exchangeCodeForSession(_oauthCode).catch(() => {});
+      // Clean up the URL so the code isn't reused on refresh
+      window.history.replaceState({}, '', window.location.pathname);
+    }
+
     // Register listener FIRST so no auth events are missed (including the
     // SIGNED_IN that fires after an OAuth / magic-link redirect PKCE exchange).
     sb.auth.onAuthStateChange(async (event, session) => {
@@ -4286,7 +4295,7 @@ Download now for free : pasteryapp.xyz</div>
   async function handleGoogleAuth() {
     const { error } = await sb.auth.signInWithOAuth({
       provider: 'google',
-      options: { redirectTo: window.location.href }
+      options: { redirectTo: window.location.origin + window.location.pathname }
     });
     if (error) showAuthMsg(error.message, 'error');
   }
