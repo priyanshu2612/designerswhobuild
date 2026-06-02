@@ -18,7 +18,7 @@
         persistSession: true,
         autoRefreshToken: true,
         detectSessionInUrl: true,
-        flowType: 'pkce',
+        flowType: 'implicit',
         storage: typeof window !== 'undefined' ? window.localStorage : undefined
       }
     }
@@ -142,15 +142,6 @@
 
   // ── Auth init ───────────────────────────────────
   async function initAuth() {
-    // PKCE OAuth redirect — exchange ?code= for a real session.
-    // Must happen BEFORE registering onAuthStateChange so the SIGNED_IN
-    // event includes the exchanged session.
-    const _oauthCode = new URLSearchParams(window.location.search).get('code');
-    if (_oauthCode) {
-      try { await sb.auth.exchangeCodeForSession(_oauthCode); } catch(e) {}
-      window.history.replaceState({}, '', window.location.pathname);
-    }
-
     // Register listener FIRST so no auth events are missed (including the
     // SIGNED_IN that fires after an OAuth / magic-link redirect PKCE exchange).
     sb.auth.onAuthStateChange(async (event, session) => {
