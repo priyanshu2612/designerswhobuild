@@ -4697,7 +4697,7 @@ Download now for free : pasteryapp.xyz</div>
     const all = [...rxItems, ...cmItems].sort((a,b) => new Date(b.created_at) - new Date(a.created_at));
 
     if (!all.length) {
-      list.innerHTML = '<div class="notif-empty">No notifications yet.<br>When someone reacts or comments on your posts, it'll show here.</div>';
+      list.innerHTML = '<div class="notif-empty">No notifications yet.<br>When someone reacts or comments on your posts, it will show here.</div>';
       return;
     }
 
