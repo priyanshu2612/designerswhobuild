@@ -764,98 +764,168 @@
     gap: 12px;
     width: max-content;
   }
+  /* ── Full-bleed community card ─────────────── */
   .hmiss-card {
-    width: 300px;
+    width: 310px;
+    aspect-ratio: 3 / 4;
     border-radius: 20px;
-    padding: 12px;
-    display: flex;
-    flex-direction: column;
-  }
-  .hmiss-thumb {
-    width: 100%;
-    height: auto;
-    aspect-ratio: 4/3;
-    background: #D0D5DD;
-    border-radius: 14px;
-    display: block;
-  }
-  .hmiss-thumb-wrap {
     position: relative;
-    width: 100%;
+    overflow: hidden;
+    flex-shrink: 0;
+    cursor: pointer;
+    background: #1D2433;
   }
-  .hmiss-thumb-unused {
+  .hmiss-video {
+    position: absolute;
+    inset: 0;
     width: 100%;
-    height: 224px;
-    background: #D0D5DD;
-    border-radius: 14px;
+    height: 100%;
+    object-fit: cover;
     display: block;
   }
-  .play-btn {
+  /* Static image fallback (no video) */
+  .hmiss-img-fill {
     position: absolute;
-    bottom: -20px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    background: #1D2433;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  /* ── Progressive blur layers (stacked, bottom-heavy) ── */
+  .hmiss-blur-1,
+  .hmiss-blur-2,
+  .hmiss-blur-3,
+  .hmiss-blur-4 {
+    position: absolute;
+    inset: 0;
     pointer-events: none;
   }
-  .hmiss-thumb-wrap { cursor: pointer; }
-  .play-btn svg { display: block; }
-  .hmiss-title {
-    font-size: 16px;
-    font-weight: 700;
-    color: #10192D;
-    line-height: 1.35;
-    margin-top: 28px;
+  .hmiss-blur-1 {
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+    -webkit-mask-image: linear-gradient(to top, black 0%, black 20%, transparent 45%);
+    mask-image: linear-gradient(to top, black 0%, black 20%, transparent 45%);
   }
-  .hmiss-subtitle {
-    font-size: 13px;
-    font-weight: 400;
-    color: #596378;
-    margin-top: 4px;
+  .hmiss-blur-2 {
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    -webkit-mask-image: linear-gradient(to top, black 0%, black 14%, transparent 32%);
+    mask-image: linear-gradient(to top, black 0%, black 14%, transparent 32%);
   }
-  .hmiss-divider {
-    height: 1px;
-    background: rgba(0,0,0,0.08);
-    margin: 8px 0;
+  .hmiss-blur-3 {
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    -webkit-mask-image: linear-gradient(to top, black 0%, black 8%, transparent 22%);
+    mask-image: linear-gradient(to top, black 0%, black 8%, transparent 22%);
   }
-  .hmiss-footer {
+  .hmiss-blur-4 {
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    -webkit-mask-image: linear-gradient(to top, black 0%, black 4%, transparent 14%);
+    mask-image: linear-gradient(to top, black 0%, black 4%, transparent 14%);
+  }
+  /* Dark gradient on top of blur — deepens the bottom */
+  .hmiss-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 16px;
+    background: linear-gradient(
+      to top,
+      rgba(0,0,0,0.88) 0%,
+      rgba(0,0,0,0.72) 20%,
+      rgba(0,0,0,0.38) 42%,
+      rgba(0,0,0,0.1)  62%,
+      transparent      80%
+    );
+  }
+  /* "iOS app · 2d ago  🔥 +12" row */
+  .hmiss-meta-label {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-top: 6px;
+    font-size: 10px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.65);
+    letter-spacing: 0.7px;
+    text-transform: uppercase;
+    font-family: 'Outfit', sans-serif;
+    margin-bottom: 7px;
   }
-  .hmiss-stat {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 13px;
-    color: #454C5F;
-    font-weight: 400;
+  .hmiss-meta-fire {
+    font-size: 11px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.9);
+    letter-spacing: 0;
+    text-transform: none;
   }
-  .hmiss-reactions {
+  /* Post title — 2 lines max */
+  .hmiss-title {
+    font-size: 17px;
+    font-weight: 600;
+    color: #fff;
+    line-height: 1.28;
+    font-family: 'Outfit', sans-serif;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin-bottom: 14px;
+  }
+  /* Author section — 2 rows */
+  .hmiss-author-row {
     display: flex;
     align-items: center;
     gap: 10px;
-    margin-top: 10px;
+    border-top: 1px solid rgba(255,255,255,0.18);
+    padding-top: 10px;
   }
-  .hmiss-reaction-pill {
+  .hmiss-author-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    overflow: hidden;
+    flex-shrink: 0;
+    background: rgba(255,255,255,0.2);
     display: flex;
     align-items: center;
-    gap: 4px;
-    font-size: 12px;
-    color: #454C5F;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 800;
+    color: #fff;
+    font-family: 'Outfit', sans-serif;
+    border: 1.5px solid rgba(255,255,255,0.28);
   }
-  .hmiss-comments {
-    font-size: 12px;
-    color: #454C5F;
-    margin-left: auto;
+  .hmiss-author-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    border-radius: 50%;
+  }
+  .hmiss-author-info { flex: 1; min-width: 0; }
+  .hmiss-author-name {
+    font-size: 13px;
+    font-weight: 700;
+    color: #fff;
+    font-family: 'Outfit', sans-serif;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.3;
+  }
+  .hmiss-author-role {
+    font-size: 11px;
+    color: rgba(255,255,255,0.6);
+    font-family: 'Outfit', sans-serif;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.3;
+    margin-top: 1px;
   }
   .hot-count {
     font-size: 14px;
@@ -1728,6 +1798,38 @@
   }
   #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
+  /* ── Post detail page ─────────────────────────── */
+  .pd-scroll { padding: 0 0 100px; }
+  .pd-hero { position: relative; width: 100%; background: #1D2433; }
+  .pd-hero-img { width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block; }
+  .pd-hero-video { width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block; }
+  .pd-body { padding: 20px 16px 0; }
+  .pd-status-row { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+  .pd-title { font-size: 22px; font-weight: 800; color: #10192D; line-height: 1.25; margin-bottom: 10px; font-family: 'Outfit', sans-serif; }
+  .pd-desc { font-size: 15px; color: #454C5F; line-height: 1.55; margin-bottom: 20px; }
+  .pd-author-row { display: flex; align-items: center; gap: 12px; padding: 16px 0; border-top: 1px solid #F2F4F7; border-bottom: 1px solid #F2F4F7; margin-bottom: 20px; cursor: pointer; }
+  .pd-author-avatar { width: 44px; height: 44px; border-radius: 50%; overflow: hidden; flex-shrink: 0; background: #EEF2FF; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 800; color: #3169ED; font-family: 'Outfit', sans-serif; }
+  .pd-author-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .pd-author-name { font-size: 15px; font-weight: 700; color: #10192D; font-family: 'Outfit', sans-serif; }
+  .pd-author-role { font-size: 13px; color: #8492A6; margin-top: 1px; }
+  .pd-cta-row { padding: 0 0 24px; }
+  .pd-live-btn { width: 100%; height: 50px; border-radius: 14px; background: #3169ED; color: #fff; font-family: 'Outfit', sans-serif; font-size: 16px; font-weight: 700; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
+  .pd-live-btn:active { opacity: 0.85; }
+  /* ── Journey section ─────────────────────────── */
+  .pd-journey { padding: 0 16px 32px; }
+  .pd-journey-label { font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #8492A6; margin-bottom: 24px; }
+  .pd-step { display: flex; gap: 16px; }
+  .pd-step-left { display: flex; flex-direction: column; align-items: center; width: 28px; flex-shrink: 0; }
+  .pd-step-num { font-size: 22px; font-weight: 800; color: #10192D; line-height: 1; font-family: 'Outfit', sans-serif; }
+  .pd-step-line { flex: 1; width: 1.5px; background: #E4E7EC; margin-top: 8px; min-height: 24px; }
+  .pd-step:last-child .pd-step-line { display: none; }
+  .pd-step-right { flex: 1; padding-bottom: 32px; padding-top: 2px; }
+  .pd-step-q { font-size: 16px; font-weight: 700; color: #10192D; line-height: 1.3; margin-bottom: 8px; font-family: 'Outfit', sans-serif; }
+  .pd-step-a { font-size: 14px; color: #596378; line-height: 1.6; }
+  .pd-step-carousel { display: flex; gap: 10px; overflow-x: auto; scrollbar-width: none; margin-top: 14px; padding-bottom: 4px; }
+  .pd-step-carousel::-webkit-scrollbar { display: none; }
+  .pd-step-img { width: 220px; height: 140px; border-radius: 12px; object-fit: cover; flex-shrink: 0; background: #F2F4F7; }
+
   /* ── Enhanced profile page ────────────────────── */
   /* ── Dynamic profile view ─────────────────────── */
   .pv-avatar-row { display:flex; align-items:flex-start; padding:24px 16px 0; margin-bottom:12px; }
@@ -2508,7 +2610,7 @@
 
 
       <!-- Card #1 -->
-      <div class="project-card">
+      <div class="project-card" onclick="openPostDetail('screenflow')" style="cursor:pointer;">
         <div class="card-top-row">
           <div class="card-thumb-wrap">
             <span class="rank-badge" style="color:#FF8140">#1</span>
@@ -2533,7 +2635,7 @@
       </div>
 
       <!-- Card #2 -->
-      <div class="project-card">
+      <div class="project-card" onclick="openPostDetail('pasteboard')" style="cursor:pointer;">
         <div class="card-top-row">
           <div class="card-thumb-wrap">
             <span class="rank-badge" style="color:#EFB351">#2</span>
@@ -2558,7 +2660,7 @@
       </div>
 
       <!-- Card #3 -->
-      <div class="project-card">
+      <div class="project-card" onclick="openPostDetail('focusflow')" style="cursor:pointer;">
         <div class="card-top-row">
           <div class="card-thumb-wrap">
             <span class="rank-badge" style="color:#596378">#3</span>
@@ -2583,7 +2685,7 @@
       </div>
 
       <!-- Card #4 -->
-      <div class="project-card">
+      <div class="project-card" onclick="openPostDetail('motionkit')" style="cursor:pointer;">
         <div class="card-top-row">
           <div class="card-thumb-wrap">
             <span class="rank-badge" style="color:#293142">#4</span>
@@ -2608,7 +2710,7 @@
       </div>
 
       <!-- Card #5 -->
-      <div class="project-card">
+      <div class="project-card" onclick="openPostDetail('colorsnap')" style="cursor:pointer;">
         <div class="card-top-row">
           <div class="card-thumb-wrap">
             <span class="rank-badge" style="color:#293142">#5</span>
@@ -2633,7 +2735,7 @@
       </div>
 
       <!-- Card #6 -->
-      <div class="project-card">
+      <div class="project-card" onclick="openPostDetail('typolens')" style="cursor:pointer;">
         <div class="card-top-row">
           <div class="card-thumb-wrap">
             <span class="rank-badge" style="color:#293142">#6</span>
@@ -2658,7 +2760,7 @@
       </div>
 
       <!-- Card #7 -->
-      <div class="project-card">
+      <div class="project-card" onclick="openPostDetail('gridmaster')" style="cursor:pointer;">
         <div class="card-top-row">
           <div class="card-thumb-wrap">
             <span class="rank-badge" style="color:#293142">#7</span>
@@ -2683,7 +2785,7 @@
       </div>
 
       <!-- Card #8 -->
-      <div class="project-card">
+      <div class="project-card" onclick="openPostDetail('swipenotes')" style="cursor:pointer;">
         <div class="card-top-row">
           <div class="card-thumb-wrap">
             <span class="rank-badge" style="color:#293142">#8</span>
@@ -2708,7 +2810,7 @@
       </div>
 
       <!-- Card #9 -->
-      <div class="project-card">
+      <div class="project-card" onclick="openPostDetail('iconforge')" style="cursor:pointer;">
         <div class="card-top-row">
           <div class="card-thumb-wrap">
             <span class="rank-badge" style="color:#293142">#9</span>
@@ -2755,52 +2857,74 @@
   <div class="hmiss-scroll">
     <div class="hmiss-row">
 
-      <div class="hmiss-card" style="background:#D8EFFE;">
-        <div class="hmiss-thumb-wrap" onclick="toggleHmissVideo(this)">
-          <video class="hmiss-thumb hmiss-video" src="https://ik.imagekit.io/424h6me27c/linkedin-video-3.mp4" loop muted playsinline style="object-fit:cover;width:100%;border-radius:14px;display:block;"></video>
-          <div class="play-btn hmiss-play-icon">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 2.5L13 8L4 13.5V2.5Z" fill="white"/></svg>
+      <!-- Card 1 — Polaroid (video) -->
+      <div class="hmiss-card" onclick="openPostDetail('polaroid')" style="cursor:pointer;">
+        <video class="hmiss-video" src="https://ik.imagekit.io/424h6me27c/linkedin-video-3.mp4" loop muted playsinline></video>
+        <div class="hmiss-blur-1"></div>
+        <div class="hmiss-blur-2"></div>
+        <div class="hmiss-blur-3"></div>
+        <div class="hmiss-blur-4"></div>
+        <div class="hmiss-overlay">
+          <div class="hmiss-meta-label">
+            <span>iOS app · 2d ago</span>
+            <span class="hmiss-meta-fire">🔥 +12</span>
+          </div>
+          <div class="hmiss-title">Polaroid. Was trying out a fun interaction in my portfolio. You can click and download a Polaroid style selfie</div>
+          <div class="hmiss-author-row" onclick="event.stopPropagation();viewProfile('11111111-0000-0000-0000-000000000007')">
+            <div class="hmiss-author-avatar">
+              <img src="https://ik.imagekit.io/424h6me27c/1745770693685.jpeg" alt="">
+            </div>
+            <div class="hmiss-author-info">
+              <div class="hmiss-author-name">Gowtham Oleti</div>
+              <div class="hmiss-author-role">Product Designer · CRED</div>
+            </div>
           </div>
         </div>
-        <div class="hmiss-title">Polaroid. Was trying out a fun interaction in my portfolio. You can click and download a Polaroid style selfie :)</div>
-        <div class="hmiss-footer">
-          <div class="hmiss-stat">iOS app · Interaction</div>
-          <div class="hmiss-stat">🔥 <span class="hot-count">+12</span></div>
-        </div>
-        <div class="hmiss-divider"></div>
-        <div class="hmiss-subtitle" onclick="viewProfile('11111111-0000-0000-0000-000000000007')" style="cursor:pointer;">Gowtham Oleti · Product Designer · CRED</div>
       </div>
 
-      <div class="hmiss-card" style="background:#C8F0C8;">
-        <div class="hmiss-thumb-wrap" onclick="toggleHmissVideo(this)">
-          <video class="hmiss-thumb hmiss-video" src="https://ik.imagekit.io/424h6me27c/linkedin-video.mp4" loop muted playsinline style="object-fit:cover;width:100%;border-radius:14px;display:block;"></video>
-          <div class="play-btn hmiss-play-icon">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 2.5L13 8L4 13.5V2.5Z" fill="white"/></svg>
+      <!-- Card 2 — Property tours (video) -->
+      <div class="hmiss-card" onclick="openPostDetail('propertytours')" style="cursor:pointer;">
+        <video class="hmiss-video" src="https://ik.imagekit.io/424h6me27c/linkedin-video.mp4" loop muted playsinline></video>
+        <div class="hmiss-blur-1"></div>
+        <div class="hmiss-blur-2"></div>
+        <div class="hmiss-blur-3"></div>
+        <div class="hmiss-blur-4"></div>
+        <div class="hmiss-overlay">
+          <div class="hmiss-meta-label">
+            <span>macOS · 3d ago</span>
+            <span class="hmiss-meta-fire">🔥 +8</span>
+          </div>
+          <div class="hmiss-title">Record impressive property tours with just your mobile</div>
+          <div class="hmiss-author-row" onclick="event.stopPropagation();viewProfile('11111111-0000-0000-0000-000000000007')">
+            <div class="hmiss-author-avatar">
+              <img src="https://ik.imagekit.io/424h6me27c/1745770693685.jpeg" alt="">
+            </div>
+            <div class="hmiss-author-info">
+              <div class="hmiss-author-name">Gowtham Oleti</div>
+              <div class="hmiss-author-role">Product Designer · CRED</div>
+            </div>
           </div>
         </div>
-        <div class="hmiss-title">Record impressive property tours with mobile</div>
-        <div class="hmiss-footer">
-          <div class="hmiss-stat">macOS · 3d ago</div>
-          <div class="hmiss-stat">🔥 <span class="hot-count">+8</span></div>
-        </div>
-        <div class="hmiss-divider"></div>
-        <div class="hmiss-subtitle" onclick="viewProfile('11111111-0000-0000-0000-000000000007')" style="cursor:pointer;">Gowtham Oleti · Product Designer · CRED</div>
       </div>
 
-      <div class="hmiss-card" style="background:#FFF0D8;">
-        <div class="hmiss-thumb-wrap">
-          <div class="hmiss-thumb"></div>
-          <div class="play-btn">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 2.5L13 8L4 13.5V2.5Z" fill="white"/></svg>
+      <!-- Card 3 — iOS app (static bg) -->
+      <div class="hmiss-card" onclick="openPostDetail('iosapp30')" style="background: linear-gradient(135deg,#2D1B4E 0%,#1a1030 100%);cursor:pointer;">
+        <div class="hmiss-overlay" style="background:linear-gradient(to top,rgba(0,0,0,0.88) 0%,rgba(0,0,0,0.55) 40%,rgba(0,0,0,0.1) 100%);">
+          <div class="hmiss-meta-label">
+            <span>Web · 5d ago</span>
+            <span class="hmiss-meta-fire">🔥 +21</span>
+          </div>
+          <div class="hmiss-title">Build a full iOS app in 30 days from scratch</div>
+          <div class="hmiss-author-row" onclick="event.stopPropagation();viewProfile('11111111-0000-0000-0000-000000000003')">
+            <div class="hmiss-author-avatar">
+              <img src="https://ik.imagekit.io/424h6me27c/1758728645137.jpeg" alt="">
+            </div>
+            <div class="hmiss-author-info">
+              <div class="hmiss-author-name">Arjun Sethi</div>
+              <div class="hmiss-author-role">Interaction Designer · CRED</div>
+            </div>
           </div>
         </div>
-        <div class="hmiss-title">Build a full iOS app in 30 days from scratch</div>
-        <div class="hmiss-footer">
-          <div class="hmiss-stat">Web · 5d ago</div>
-          <div class="hmiss-stat">🔥 <span class="hot-count">+21</span></div>
-        </div>
-        <div class="hmiss-divider"></div>
-        <div class="hmiss-subtitle" onclick="viewProfile('11111111-0000-0000-0000-000000000003')" style="cursor:pointer;">Arjun Sethi · Interaction Designer · CRED</div>
       </div>
 
     </div>
@@ -3364,6 +3488,11 @@ Download now for free : pasteryapp.xyz</div>
     <div class="bottom-pad"></div>
   </div>
 
+  <!-- Post detail view -->
+  <div id="view-postdetail" class="tab-view hidden">
+    <div id="postDetailContent" class="pd-scroll"></div>
+  </div>
+
   <!-- Post Create Modal -->
   <div id="postCreateModal">
     <div class="post-create-sheet">
@@ -3572,30 +3701,23 @@ Download now for free : pasteryapp.xyz</div>
     }
   }
 
-  function toggleHmissVideo(wrap) {
-    const video = wrap.querySelector('.hmiss-video');
-    const icon = wrap.querySelector('.hmiss-play-icon');
-    if (video.paused) {
-      video.play();
-      icon.style.display = 'none';
-    } else {
-      video.pause();
-      icon.style.display = 'flex';
-    }
+  function toggleHmissVideo(card) {
+    const video = card.querySelector('.hmiss-video');
+    if (!video) return;
+    if (video.paused) { video.play().catch(() => {}); }
+    else { video.pause(); }
   }
 
   const hmissObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       const video = entry.target;
-      const icon = video.closest('.hmiss-thumb-wrap').querySelector('.hmiss-play-icon');
       if (entry.isIntersecting) {
-        video.play().then(() => { icon.style.display = 'none'; }).catch(() => {});
+        video.play().catch(() => {});
       } else {
         video.pause();
-        icon.style.display = 'flex';
       }
     });
-  }, { threshold: 0.5 });
+  }, { threshold: 0.4 });
 
   document.querySelectorAll('.hmiss-video').forEach(v => hmissObserver.observe(v));
 
@@ -3638,24 +3760,24 @@ Download now for free : pasteryapp.xyz</div>
   // ── Helpful builds for you ──────────────────────
   const helpfulData = {
     utility: [
-      { img:'https://ik.imagekit.io/424h6me27c/images.png', name:'ScreenFlow', status:'live', desc:'Record your screen with one tap', meta:'iOS app · 2d ago', hot:'+24', author:'Arjun', role:'Product Designer · Swiggy' },
-      { img:'https://ik.imagekit.io/424h6me27c/icon.png', name:'PasteBoard Pro', status:'wip', desc:'Smart clipboard manager for iOS', meta:'iOS app · 3d ago', hot:'+18', author:'Sagar', role:'Designer · CRED' },
-      { img:'https://ik.imagekit.io/424h6me27c/1757355199034.jpeg', name:'Pastery', status:'live', desc:'Single-hotkey clipboard recall for macOS', meta:'macOS · 1d ago', hot:'+21', author:'Priyanshu', role:'Product Designer · Zomato' },
+      { key:'screenflow', img:'https://ik.imagekit.io/424h6me27c/images.png', name:'ScreenFlow', status:'live', desc:'Record your screen with one tap', meta:'iOS app · 2d ago', hot:'+24', author:'Arjun', role:'Product Designer · Swiggy' },
+      { key:'pasteboard', img:'https://ik.imagekit.io/424h6me27c/icon.png', name:'PasteBoard Pro', status:'wip', desc:'Smart clipboard manager for iOS', meta:'iOS app · 3d ago', hot:'+18', author:'Sagar', role:'Designer · CRED' },
+      { key:'pastery', img:'https://ik.imagekit.io/424h6me27c/1757355199034.jpeg', name:'Pastery', status:'live', desc:'Single-hotkey clipboard recall for macOS', meta:'macOS · 1d ago', hot:'+21', author:'Priyanshu', role:'Product Designer · Zomato' },
     ],
     fun: [
-      { img:'https://ik.imagekit.io/424h6me27c/Calm_(company)_logo.svg', name:'FocusFlow', status:'live', desc:'Deep work timer with habit tracking', meta:'macOS · 1d ago', hot:'+31', author:'Rohan', role:'Interaction Designer' },
-      { img:'https://ik.imagekit.io/424h6me27c/1773811274544.jpeg', name:'MotionKit', status:'wip', desc:'Animate your designs in real time', meta:'iOS app · 4d ago', hot:'+9', author:'Rohit', role:'Interaction Designer' },
-      { img:'https://ik.imagekit.io/424h6me27c/1773811274764.jpeg', name:'TypoLens', status:'wip', desc:'Font inspector and pairing tool', meta:'Web · 5d ago', hot:'+7', author:'Maya', role:'Visual Designer' },
+      { key:'focusflow', img:'https://ik.imagekit.io/424h6me27c/Calm_(company)_logo.svg', name:'FocusFlow', status:'live', desc:'Deep work timer with habit tracking', meta:'macOS · 1d ago', hot:'+31', author:'Rohan', role:'Interaction Designer' },
+      { key:'motionkit', img:'https://ik.imagekit.io/424h6me27c/1773811274544.jpeg', name:'MotionKit', status:'wip', desc:'Animate your designs in real time', meta:'iOS app · 4d ago', hot:'+9', author:'Rohit', role:'Interaction Designer' },
+      { key:'typolens', img:'https://ik.imagekit.io/424h6me27c/1773811274764.jpeg', name:'TypoLens', status:'wip', desc:'Font inspector and pairing tool', meta:'Web · 5d ago', hot:'+7', author:'Maya', role:'Visual Designer' },
     ],
     productivity: [
-      { img:'https://ik.imagekit.io/424h6me27c/Calm_(company)_logo.svg', name:'FocusFlow', status:'live', desc:'Deep work timer with habit tracking', meta:'macOS · 1d ago', hot:'+31', author:'Rohan', role:'Interaction Designer' },
-      { img:'https://ik.imagekit.io/424h6me27c/icon.png', name:'PasteBoard Pro', status:'wip', desc:'Smart clipboard manager for iOS', meta:'iOS app · 3d ago', hot:'+18', author:'Sagar', role:'Designer · CRED' },
-      { img:'https://ik.imagekit.io/424h6me27c/images.png', name:'ScreenFlow', status:'live', desc:'Record your screen with one tap', meta:'iOS app · 2d ago', hot:'+24', author:'Arjun', role:'Product Designer · Swiggy' },
+      { key:'focusflow', img:'https://ik.imagekit.io/424h6me27c/Calm_(company)_logo.svg', name:'FocusFlow', status:'live', desc:'Deep work timer with habit tracking', meta:'macOS · 1d ago', hot:'+31', author:'Rohan', role:'Interaction Designer' },
+      { key:'pasteboard', img:'https://ik.imagekit.io/424h6me27c/icon.png', name:'PasteBoard Pro', status:'wip', desc:'Smart clipboard manager for iOS', meta:'iOS app · 3d ago', hot:'+18', author:'Sagar', role:'Designer · CRED' },
+      { key:'screenflow', img:'https://ik.imagekit.io/424h6me27c/images.png', name:'ScreenFlow', status:'live', desc:'Record your screen with one tap', meta:'iOS app · 2d ago', hot:'+24', author:'Arjun', role:'Product Designer · Swiggy' },
     ],
     'self-care': [
-      { img:'https://ik.imagekit.io/424h6me27c/1773811274487.jpeg', name:'Serenity', status:'live', desc:'Guided breathing & mindfulness habits', meta:'iOS app · 2d ago', hot:'+15', author:'Neha', role:'Visual Designer · Flipkart' },
-      { img:'https://ik.imagekit.io/424h6me27c/1773811274764.jpeg', name:'TypoLens', status:'wip', desc:'Font inspector and pairing tool', meta:'Web · 5d ago', hot:'+7', author:'Maya', role:'Visual Designer' },
-      { img:'https://ik.imagekit.io/424h6me27c/1773811274527.jpeg', name:'DayLog', status:'live', desc:'Simple one-tap daily mood journal', meta:'iOS app · 3d ago', hot:'+11', author:'Sana', role:'UI Designer · Meesho' },
+      { key:'serenity', img:'https://ik.imagekit.io/424h6me27c/1773811274487.jpeg', name:'Serenity', status:'live', desc:'Guided breathing & mindfulness habits', meta:'iOS app · 2d ago', hot:'+15', author:'Neha', role:'Visual Designer · Flipkart' },
+      { key:'typolens', img:'https://ik.imagekit.io/424h6me27c/1773811274764.jpeg', name:'TypoLens', status:'wip', desc:'Font inspector and pairing tool', meta:'Web · 5d ago', hot:'+7', author:'Maya', role:'Visual Designer' },
+      { key:'daylog', img:'https://ik.imagekit.io/424h6me27c/1773811274527.jpeg', name:'DayLog', status:'live', desc:'Simple one-tap daily mood journal', meta:'iOS app · 3d ago', hot:'+11', author:'Sana', role:'UI Designer · Meesho' },
     ]
   };
 
@@ -3665,7 +3787,7 @@ Download now for free : pasteryapp.xyz</div>
       const badge = c.status === 'live'
         ? `<span class="badge-live">Live</span>`
         : `<span class="badge-platform" style="background:#FFF4E6;color:#FF8C00">WIP</span>`;
-      return `<div class="project-card">
+      return `<div class="project-card" onclick="openPostDetail('${c.key}')" style="cursor:pointer;">
         <div class="card-top-row">
           <div class="card-thumb-wrap">
             <img src="${c.img || _categoryIcon(c.meta)}" style="width:64px;height:64px;border-radius:14px;object-fit:cover;display:block;${!c.img?'border:1px solid #E0E5EF;':''}" alt="">
@@ -3714,7 +3836,7 @@ Download now for free : pasteryapp.xyz</div>
     document.body.setAttribute('data-tab', tab);
     updateNavIcons(tab);
     // Track previous tab for Back navigation
-    if (tab !== 'profile') {
+    if (tab !== 'profile' && tab !== 'postdetail') {
       _prevTab = tab;
       viewingProfileId = null;
       _showNavHamburger();
@@ -3723,9 +3845,11 @@ Download now for free : pasteryapp.xyz</div>
     if (tab === 'contributors') { _contribCache = null; renderContribPage(); }
     if (tab === 'feed') renderFeedPosts();
     if (tab === 'profile') renderProfileTab();
-    window.scrollTo(0,0);
-    // Persist so refresh lands back on same tab
-    try { localStorage.setItem('dwb_tab', tab); } catch(e) {}
+    if (tab !== 'postdetail') window.scrollTo(0,0);
+    // Persist so refresh lands back on same tab (don't persist detail view)
+    if (tab !== 'postdetail') {
+      try { localStorage.setItem('dwb_tab', tab); } catch(e) {}
+    }
   }
 
   function updateNavIcons(active) {
@@ -4030,40 +4154,40 @@ Download now for free : pasteryapp.xyz</div>
   // previewImg: large product screenshot (null = no image attached)
   const trendingData = {
     '24h': [
-      { rank:1,  rankColor:'#FF8140', img:'https://ik.imagekit.io/424h6me27c/images.png',                name:'ScreenFlow',    status:'live', desc:'Record your screen with one tap',                   meta:'iOS app · 2h ago',  hot:'+24', author:'Arjun',     role:'Product Designer · Swiggy',      previewImg:'https://ik.imagekit.io/424h6me27c/1769139467912.jpeg', liveUrl:'#' },
-      { rank:2,  rankColor:'#EFB351', img:'https://ik.imagekit.io/424h6me27c/icon.png',                  name:'PasteBoard Pro',status:'wip',  desc:'Smart clipboard manager for iOS',                 meta:'iOS app · 3h ago',  hot:'+18', author:'Sagar',     role:'Designer · CRED',               previewImg:'https://ik.imagekit.io/424h6me27c/1773811274544.jpeg', liveUrl:'#' },
-      { rank:3,  rankColor:'#596378', img:'https://ik.imagekit.io/424h6me27c/Calm_(company)_logo.svg',   name:'FocusFlow',     status:'live', desc:'Deep work timer with habit tracking',             meta:'macOS · 4h ago',    hot:'+31', author:'Rohan',     role:'Interaction Designer',           previewImg:null,                                                    liveUrl:'#' },
-      { rank:4,  rankColor:'#293142', img:'https://ik.imagekit.io/424h6me27c/1769139467912.jpeg',        name:'Clipt',         status:'live', desc:'Clipboard history for iPhone',                   meta:'iOS app · 5h ago',  hot:'+14', author:'Gowtham',   role:'Product Designer · CRED',        previewImg:'https://ik.imagekit.io/424h6me27c/1773811274487.jpeg', liveUrl:'#' },
-      { rank:5,  rankColor:'#293142', img:'https://ik.imagekit.io/424h6me27c/1773811274544.jpeg',        name:'Polaroid',      status:'live', desc:'Click and download a Polaroid style selfie',     meta:'iOS app · 6h ago',  hot:'+12', author:'Gowtham',   role:'Product Designer · CRED',        previewImg:null,                                                    liveUrl:'#' },
-      { rank:6,  rankColor:'#293142', img:'https://ik.imagekit.io/424h6me27c/1773811274764.jpeg',        name:'Brink',         status:'wip',  desc:'Podcast player, superpowered',                  meta:'iOS app · 8h ago',  hot:'+21', author:'Gowtham',   role:'Product Designer · CRED',        previewImg:'https://ik.imagekit.io/424h6me27c/1773811274764.jpeg', liveUrl:'#' },
-      { rank:7,  rankColor:'#293142', img:'https://ik.imagekit.io/424h6me27c/1593694785946.jpeg',        name:'Voice Blob',    status:'live', desc:'Voice interactive blob particles using SwiftUI', meta:'iOS app · 10h ago', hot:'+33', author:'Sagar',     role:'Lead Designer · Urban Company',  previewImg:'https://ik.imagekit.io/424h6me27c/1593694785946.jpeg', liveUrl:'#' },
-      { rank:8,  rankColor:'#293142', img:'https://ik.imagekit.io/424h6me27c/1757355199034.jpeg',        name:'Pastery',       status:'live', desc:'Single-hotkey clipboard recall for macOS',       meta:'macOS · 12h ago',   hot:'+21', author:'Priyanshu', role:'Product Designer · Zomato',      previewImg:null,                                                    liveUrl:'#' },
-      { rank:9,  rankColor:'#293142', img:'https://ik.imagekit.io/424h6me27c/1773811274487.jpeg',        name:'ColorSnap',     status:'live', desc:'Pick any colour from your screen instantly',     meta:'macOS · 14h ago',   hot:'+16', author:'Anika',     role:'Visual Designer',                previewImg:'https://ik.imagekit.io/424h6me27c/1757355199034.jpeg', liveUrl:'#' },
-      { rank:10, rankColor:'#293142', img:'https://ik.imagekit.io/424h6me27c/1773811274527.jpeg',        name:'MotionKit',     status:'wip',  desc:'Animate your designs in real time',              meta:'iOS app · 18h ago', hot:'+9',  author:'Rohit',     role:'Interaction Designer',           previewImg:null,                                                    liveUrl:'#' },
+      { key:'screenflow', rank:1,  rankColor:'#FF8140', img:'https://ik.imagekit.io/424h6me27c/images.png',                name:'ScreenFlow',    status:'live', desc:'Record your screen with one tap',                   meta:'iOS app · 2h ago',  hot:'+24', author:'Arjun',     role:'Product Designer · Swiggy',      previewImg:'https://ik.imagekit.io/424h6me27c/1769139467912.jpeg', liveUrl:'#' },
+      { key:'pasteboard', rank:2,  rankColor:'#EFB351', img:'https://ik.imagekit.io/424h6me27c/icon.png',                  name:'PasteBoard Pro',status:'wip',  desc:'Smart clipboard manager for iOS',                 meta:'iOS app · 3h ago',  hot:'+18', author:'Sagar',     role:'Designer · CRED',               previewImg:'https://ik.imagekit.io/424h6me27c/1773811274544.jpeg', liveUrl:'#' },
+      { key:'focusflow',  rank:3,  rankColor:'#596378', img:'https://ik.imagekit.io/424h6me27c/Calm_(company)_logo.svg',   name:'FocusFlow',     status:'live', desc:'Deep work timer with habit tracking',             meta:'macOS · 4h ago',    hot:'+31', author:'Rohan',     role:'Interaction Designer',           previewImg:null,                                                    liveUrl:'#' },
+      { key:'clipt',      rank:4,  rankColor:'#293142', img:'https://ik.imagekit.io/424h6me27c/1769139467912.jpeg',        name:'Clipt',         status:'live', desc:'Clipboard history for iPhone',                   meta:'iOS app · 5h ago',  hot:'+14', author:'Gowtham',   role:'Product Designer · CRED',        previewImg:'https://ik.imagekit.io/424h6me27c/1773811274487.jpeg', liveUrl:'#' },
+      { key:'polaroid',   rank:5,  rankColor:'#293142', img:'https://ik.imagekit.io/424h6me27c/1773811274544.jpeg',        name:'Polaroid',      status:'live', desc:'Click and download a Polaroid style selfie',     meta:'iOS app · 6h ago',  hot:'+12', author:'Gowtham',   role:'Product Designer · CRED',        previewImg:null,                                                    liveUrl:'#' },
+      { key:'brink',      rank:6,  rankColor:'#293142', img:'https://ik.imagekit.io/424h6me27c/1773811274764.jpeg',        name:'Brink',         status:'wip',  desc:'Podcast player, superpowered',                  meta:'iOS app · 8h ago',  hot:'+21', author:'Gowtham',   role:'Product Designer · CRED',        previewImg:'https://ik.imagekit.io/424h6me27c/1773811274764.jpeg', liveUrl:'#' },
+      { key:'voiceblob',  rank:7,  rankColor:'#293142', img:'https://ik.imagekit.io/424h6me27c/1593694785946.jpeg',        name:'Voice Blob',    status:'live', desc:'Voice interactive blob particles using SwiftUI', meta:'iOS app · 10h ago', hot:'+33', author:'Sagar',     role:'Lead Designer · Urban Company',  previewImg:'https://ik.imagekit.io/424h6me27c/1593694785946.jpeg', liveUrl:'#' },
+      { key:'pastery',    rank:8,  rankColor:'#293142', img:'https://ik.imagekit.io/424h6me27c/1757355199034.jpeg',        name:'Pastery',       status:'live', desc:'Single-hotkey clipboard recall for macOS',       meta:'macOS · 12h ago',   hot:'+21', author:'Priyanshu', role:'Product Designer · Zomato',      previewImg:null,                                                    liveUrl:'#' },
+      { key:'colorsnap',  rank:9,  rankColor:'#293142', img:'https://ik.imagekit.io/424h6me27c/1773811274487.jpeg',        name:'ColorSnap',     status:'live', desc:'Pick any colour from your screen instantly',     meta:'macOS · 14h ago',   hot:'+16', author:'Anika',     role:'Visual Designer',                previewImg:'https://ik.imagekit.io/424h6me27c/1757355199034.jpeg', liveUrl:'#' },
+      { key:'motionkit',  rank:10, rankColor:'#293142', img:'https://ik.imagekit.io/424h6me27c/1773811274527.jpeg',        name:'MotionKit',     status:'wip',  desc:'Animate your designs in real time',              meta:'iOS app · 18h ago', hot:'+9',  author:'Rohit',     role:'Interaction Designer',           previewImg:null,                                                    liveUrl:'#' },
     ],
     'week': [
-      { rank:1,  rankColor:'#FF8140', img:'https://ik.imagekit.io/424h6me27c/Calm_(company)_logo.svg',   name:'FocusFlow',     status:'live', desc:'Deep work timer with habit tracking',             meta:'macOS · 1d ago',    hot:'+31', author:'Rohan',     role:'Interaction Designer',           previewImg:'https://ik.imagekit.io/424h6me27c/1757355199034.jpeg', liveUrl:'#' },
-      { rank:2,  rankColor:'#EFB351', img:'https://ik.imagekit.io/424h6me27c/1593694785946.jpeg',        name:'Voice Blob',    status:'live', desc:'Voice interactive blob particles using SwiftUI', meta:'iOS app · 5h ago',  hot:'+33', author:'Sagar',     role:'Lead Designer · Urban Company',  previewImg:'https://ik.imagekit.io/424h6me27c/1593694785946.jpeg', liveUrl:'#' },
-      { rank:3,  rankColor:'#596378', img:'https://ik.imagekit.io/424h6me27c/images.png',                name:'ScreenFlow',    status:'live', desc:'Record your screen with one tap',                meta:'iOS app · 2d ago',  hot:'+24', author:'Arjun',     role:'Product Designer · Swiggy',      previewImg:'https://ik.imagekit.io/424h6me27c/1769139467912.jpeg', liveUrl:'#' },
-      { rank:4,  rankColor:'#293142', img:'https://ik.imagekit.io/424h6me27c/1773811274764.jpeg',        name:'Brink',         status:'wip',  desc:'Podcast player, superpowered',                  meta:'iOS app · 1d ago',  hot:'+21', author:'Gowtham',   role:'Product Designer · CRED',        previewImg:null,                                                    liveUrl:'#' },
-      { rank:5,  rankColor:'#293142', img:'https://ik.imagekit.io/424h6me27c/1757355199034.jpeg',        name:'Pastery',       status:'live', desc:'Single-hotkey clipboard recall for macOS',       meta:'macOS · 1d ago',    hot:'+21', author:'Priyanshu', role:'Product Designer · Zomato',      previewImg:'https://ik.imagekit.io/424h6me27c/1773811274487.jpeg', liveUrl:'#' },
-      { rank:6,  rankColor:'#293142', img:'https://ik.imagekit.io/424h6me27c/icon.png',                  name:'PasteBoard Pro',status:'wip',  desc:'Smart clipboard manager for iOS',                meta:'iOS app · 3d ago',  hot:'+18', author:'Sagar',     role:'Designer · CRED',               previewImg:null,                                                    liveUrl:'#' },
-      { rank:7,  rankColor:'#293142', img:'https://ik.imagekit.io/424h6me27c/1773811274487.jpeg',        name:'ColorSnap',     status:'live', desc:'Pick any colour from your screen instantly',     meta:'macOS · 4d ago',    hot:'+16', author:'Anika',     role:'Visual Designer',                previewImg:'https://ik.imagekit.io/424h6me27c/1773811274544.jpeg', liveUrl:'#' },
-      { rank:8,  rankColor:'#293142', img:null,                                                            name:'Clipt',         status:'live', desc:'Clipboard history for iPhone',                   meta:'iOS app · 2d ago',  hot:'+14', author:'Gowtham',   role:'Product Designer · CRED',        previewImg:null,                                                    liveUrl:'#' },
-      { rank:9,  rankColor:'#293142', img:null,                                                            name:'Polaroid',      status:'live', desc:'Click and download a Polaroid style selfie',     meta:'iOS app · 3d ago',  hot:'+12', author:'Gowtham',   role:'Product Designer · CRED',        previewImg:'https://ik.imagekit.io/424h6me27c/1773811274764.jpeg', liveUrl:'#' },
-      { rank:10, rankColor:'#293142', img:'https://ik.imagekit.io/424h6me27c/1773811274527.jpeg',        name:'MotionKit',     status:'wip',  desc:'Animate your designs in real time',              meta:'iOS app · 6d ago',  hot:'+9',  author:'Rohit',     role:'Interaction Designer',           previewImg:null,                                                    liveUrl:'#' },
+      { key:'focusflow',  rank:1,  rankColor:'#FF8140', img:'https://ik.imagekit.io/424h6me27c/Calm_(company)_logo.svg',   name:'FocusFlow',     status:'live', desc:'Deep work timer with habit tracking',             meta:'macOS · 1d ago',    hot:'+31', author:'Rohan',     role:'Interaction Designer',           previewImg:'https://ik.imagekit.io/424h6me27c/1757355199034.jpeg', liveUrl:'#' },
+      { key:'voiceblob',  rank:2,  rankColor:'#EFB351', img:'https://ik.imagekit.io/424h6me27c/1593694785946.jpeg',        name:'Voice Blob',    status:'live', desc:'Voice interactive blob particles using SwiftUI', meta:'iOS app · 5h ago',  hot:'+33', author:'Sagar',     role:'Lead Designer · Urban Company',  previewImg:'https://ik.imagekit.io/424h6me27c/1593694785946.jpeg', liveUrl:'#' },
+      { key:'screenflow', rank:3,  rankColor:'#596378', img:'https://ik.imagekit.io/424h6me27c/images.png',                name:'ScreenFlow',    status:'live', desc:'Record your screen with one tap',                meta:'iOS app · 2d ago',  hot:'+24', author:'Arjun',     role:'Product Designer · Swiggy',      previewImg:'https://ik.imagekit.io/424h6me27c/1769139467912.jpeg', liveUrl:'#' },
+      { key:'brink',      rank:4,  rankColor:'#293142', img:'https://ik.imagekit.io/424h6me27c/1773811274764.jpeg',        name:'Brink',         status:'wip',  desc:'Podcast player, superpowered',                  meta:'iOS app · 1d ago',  hot:'+21', author:'Gowtham',   role:'Product Designer · CRED',        previewImg:null,                                                    liveUrl:'#' },
+      { key:'pastery',    rank:5,  rankColor:'#293142', img:'https://ik.imagekit.io/424h6me27c/1757355199034.jpeg',        name:'Pastery',       status:'live', desc:'Single-hotkey clipboard recall for macOS',       meta:'macOS · 1d ago',    hot:'+21', author:'Priyanshu', role:'Product Designer · Zomato',      previewImg:'https://ik.imagekit.io/424h6me27c/1773811274487.jpeg', liveUrl:'#' },
+      { key:'pasteboard', rank:6,  rankColor:'#293142', img:'https://ik.imagekit.io/424h6me27c/icon.png',                  name:'PasteBoard Pro',status:'wip',  desc:'Smart clipboard manager for iOS',                meta:'iOS app · 3d ago',  hot:'+18', author:'Sagar',     role:'Designer · CRED',               previewImg:null,                                                    liveUrl:'#' },
+      { key:'colorsnap',  rank:7,  rankColor:'#293142', img:'https://ik.imagekit.io/424h6me27c/1773811274487.jpeg',        name:'ColorSnap',     status:'live', desc:'Pick any colour from your screen instantly',     meta:'macOS · 4d ago',    hot:'+16', author:'Anika',     role:'Visual Designer',                previewImg:'https://ik.imagekit.io/424h6me27c/1773811274544.jpeg', liveUrl:'#' },
+      { key:'clipt',      rank:8,  rankColor:'#293142', img:null,                                                            name:'Clipt',         status:'live', desc:'Clipboard history for iPhone',                   meta:'iOS app · 2d ago',  hot:'+14', author:'Gowtham',   role:'Product Designer · CRED',        previewImg:null,                                                    liveUrl:'#' },
+      { key:'polaroid',   rank:9,  rankColor:'#293142', img:null,                                                            name:'Polaroid',      status:'live', desc:'Click and download a Polaroid style selfie',     meta:'iOS app · 3d ago',  hot:'+12', author:'Gowtham',   role:'Product Designer · CRED',        previewImg:'https://ik.imagekit.io/424h6me27c/1773811274764.jpeg', liveUrl:'#' },
+      { key:'motionkit',  rank:10, rankColor:'#293142', img:'https://ik.imagekit.io/424h6me27c/1773811274527.jpeg',        name:'MotionKit',     status:'wip',  desc:'Animate your designs in real time',              meta:'iOS app · 6d ago',  hot:'+9',  author:'Rohit',     role:'Interaction Designer',           previewImg:null,                                                    liveUrl:'#' },
     ],
     'month': [
-      { rank:1,  rankColor:'#FF8140', img:'https://ik.imagekit.io/424h6me27c/1593694785946.jpeg',        name:'Voice Blob',    status:'live', desc:'Voice interactive blob particles using SwiftUI', meta:'iOS app · 5d ago',  hot:'+33', author:'Sagar',     role:'Lead Designer · Urban Company',  previewImg:'https://ik.imagekit.io/424h6me27c/1593694785946.jpeg', liveUrl:'#' },
-      { rank:2,  rankColor:'#EFB351', img:'https://ik.imagekit.io/424h6me27c/Calm_(company)_logo.svg',   name:'FocusFlow',     status:'live', desc:'Deep work timer with habit tracking',             meta:'macOS · 1d ago',    hot:'+31', author:'Rohan',     role:'Interaction Designer',           previewImg:'https://ik.imagekit.io/424h6me27c/1757355199034.jpeg', liveUrl:'#' },
-      { rank:3,  rankColor:'#596378', img:'https://ik.imagekit.io/424h6me27c/images.png',                name:'ScreenFlow',    status:'live', desc:'Record your screen with one tap',                meta:'iOS app · 2d ago',  hot:'+24', author:'Arjun',     role:'Product Designer · Swiggy',      previewImg:'https://ik.imagekit.io/424h6me27c/1769139467912.jpeg', liveUrl:'#' },
-      { rank:4,  rankColor:'#293142', img:'https://ik.imagekit.io/424h6me27c/1757355199034.jpeg',        name:'Pastery',       status:'live', desc:'Single-hotkey clipboard recall for macOS',       meta:'macOS · 8d ago',    hot:'+21', author:'Priyanshu', role:'Product Designer · Zomato',      previewImg:null,                                                    liveUrl:'#' },
-      { rank:5,  rankColor:'#293142', img:'https://ik.imagekit.io/424h6me27c/1773811274764.jpeg',        name:'Brink',         status:'wip',  desc:'Podcast player, superpowered',                  meta:'iOS app · 7d ago',  hot:'+21', author:'Gowtham',   role:'Product Designer · CRED',        previewImg:'https://ik.imagekit.io/424h6me27c/1773811274764.jpeg', liveUrl:'#' },
-      { rank:6,  rankColor:'#293142', img:'https://ik.imagekit.io/424h6me27c/icon.png',                  name:'PasteBoard Pro',status:'wip',  desc:'Smart clipboard manager for iOS',                meta:'iOS app · 10d ago', hot:'+18', author:'Sagar',     role:'Designer · CRED',               previewImg:'https://ik.imagekit.io/424h6me27c/1773811274544.jpeg', liveUrl:'#' },
-      { rank:7,  rankColor:'#293142', img:'https://ik.imagekit.io/424h6me27c/1773811274487.jpeg',        name:'ColorSnap',     status:'live', desc:'Pick any colour from your screen instantly',     meta:'macOS · 12d ago',   hot:'+16', author:'Anika',     role:'Visual Designer',                previewImg:null,                                                    liveUrl:'#' },
-      { rank:8,  rankColor:'#293142', img:'https://ik.imagekit.io/424h6me27c/1769139467912.jpeg',        name:'Clipt',         status:'live', desc:'Clipboard history for iPhone',                   meta:'iOS app · 6d ago',  hot:'+14', author:'Gowtham',   role:'Product Designer · CRED',        previewImg:'https://ik.imagekit.io/424h6me27c/1773811274487.jpeg', liveUrl:'#' },
-      { rank:9,  rankColor:'#293142', img:'https://ik.imagekit.io/424h6me27c/1773811274544.jpeg',        name:'Polaroid',      status:'live', desc:'Click and download a Polaroid style selfie',     meta:'iOS app · 14d ago', hot:'+12', author:'Gowtham',   role:'Product Designer · CRED',        previewImg:null,                                                    liveUrl:'#' },
-      { rank:10, rankColor:'#293142', img:'https://ik.imagekit.io/424h6me27c/1773811274527.jpeg',        name:'MotionKit',     status:'wip',  desc:'Animate your designs in real time',              meta:'iOS app · 18d ago', hot:'+9',  author:'Rohit',     role:'Interaction Designer',           previewImg:'https://ik.imagekit.io/424h6me27c/1757355199034.jpeg', liveUrl:'#' },
+      { key:'voiceblob',  rank:1,  rankColor:'#FF8140', img:'https://ik.imagekit.io/424h6me27c/1593694785946.jpeg',        name:'Voice Blob',    status:'live', desc:'Voice interactive blob particles using SwiftUI', meta:'iOS app · 5d ago',  hot:'+33', author:'Sagar',     role:'Lead Designer · Urban Company',  previewImg:'https://ik.imagekit.io/424h6me27c/1593694785946.jpeg', liveUrl:'#' },
+      { key:'focusflow',  rank:2,  rankColor:'#EFB351', img:'https://ik.imagekit.io/424h6me27c/Calm_(company)_logo.svg',   name:'FocusFlow',     status:'live', desc:'Deep work timer with habit tracking',             meta:'macOS · 1d ago',    hot:'+31', author:'Rohan',     role:'Interaction Designer',           previewImg:'https://ik.imagekit.io/424h6me27c/1757355199034.jpeg', liveUrl:'#' },
+      { key:'screenflow', rank:3,  rankColor:'#596378', img:'https://ik.imagekit.io/424h6me27c/images.png',                name:'ScreenFlow',    status:'live', desc:'Record your screen with one tap',                meta:'iOS app · 2d ago',  hot:'+24', author:'Arjun',     role:'Product Designer · Swiggy',      previewImg:'https://ik.imagekit.io/424h6me27c/1769139467912.jpeg', liveUrl:'#' },
+      { key:'pastery',    rank:4,  rankColor:'#293142', img:'https://ik.imagekit.io/424h6me27c/1757355199034.jpeg',        name:'Pastery',       status:'live', desc:'Single-hotkey clipboard recall for macOS',       meta:'macOS · 8d ago',    hot:'+21', author:'Priyanshu', role:'Product Designer · Zomato',      previewImg:null,                                                    liveUrl:'#' },
+      { key:'brink',      rank:5,  rankColor:'#293142', img:'https://ik.imagekit.io/424h6me27c/1773811274764.jpeg',        name:'Brink',         status:'wip',  desc:'Podcast player, superpowered',                  meta:'iOS app · 7d ago',  hot:'+21', author:'Gowtham',   role:'Product Designer · CRED',        previewImg:'https://ik.imagekit.io/424h6me27c/1773811274764.jpeg', liveUrl:'#' },
+      { key:'pasteboard', rank:6,  rankColor:'#293142', img:'https://ik.imagekit.io/424h6me27c/icon.png',                  name:'PasteBoard Pro',status:'wip',  desc:'Smart clipboard manager for iOS',                meta:'iOS app · 10d ago', hot:'+18', author:'Sagar',     role:'Designer · CRED',               previewImg:'https://ik.imagekit.io/424h6me27c/1773811274544.jpeg', liveUrl:'#' },
+      { key:'colorsnap',  rank:7,  rankColor:'#293142', img:'https://ik.imagekit.io/424h6me27c/1773811274487.jpeg',        name:'ColorSnap',     status:'live', desc:'Pick any colour from your screen instantly',     meta:'macOS · 12d ago',   hot:'+16', author:'Anika',     role:'Visual Designer',                previewImg:null,                                                    liveUrl:'#' },
+      { key:'clipt',      rank:8,  rankColor:'#293142', img:'https://ik.imagekit.io/424h6me27c/1769139467912.jpeg',        name:'Clipt',         status:'live', desc:'Clipboard history for iPhone',                   meta:'iOS app · 6d ago',  hot:'+14', author:'Gowtham',   role:'Product Designer · CRED',        previewImg:'https://ik.imagekit.io/424h6me27c/1773811274487.jpeg', liveUrl:'#' },
+      { key:'polaroid',   rank:9,  rankColor:'#293142', img:'https://ik.imagekit.io/424h6me27c/1773811274544.jpeg',        name:'Polaroid',      status:'live', desc:'Click and download a Polaroid style selfie',     meta:'iOS app · 14d ago', hot:'+12', author:'Gowtham',   role:'Product Designer · CRED',        previewImg:null,                                                    liveUrl:'#' },
+      { key:'motionkit',  rank:10, rankColor:'#293142', img:'https://ik.imagekit.io/424h6me27c/1773811274527.jpeg',        name:'MotionKit',     status:'wip',  desc:'Animate your designs in real time',              meta:'iOS app · 18d ago', hot:'+9',  author:'Rohit',     role:'Interaction Designer',           previewImg:'https://ik.imagekit.io/424h6me27c/1757355199034.jpeg', liveUrl:'#' },
     ]
   };
 
@@ -4087,7 +4211,7 @@ Download now for free : pasteryapp.xyz</div>
           ? `<img class="trending-preview-img" src="${c.previewImg}" alt="">`
           : `<div class="card-no-preview">${_noImgIcon}<span class="card-no-preview-text">No image attached</span></div>`;
       }
-      return `<div class="project-card">
+      return `<div class="project-card" onclick="openPostDetail('${c.key}')" style="cursor:pointer;">
         <div class="card-top-row">
           <div class="card-thumb-wrap">
             <span class="rank-badge" style="color:${c.rankColor}">#${c.rank}</span>
@@ -4643,6 +4767,207 @@ Download now for free : pasteryapp.xyz</div>
 
   function closeToolsSheet() {
     document.getElementById('toolsSheet').classList.remove('open');
+  }
+
+  // ── Post Detail ─────────────────────────────────
+  const _postDetailData = {
+    screenflow: {
+      key: 'screenflow',
+      title: 'ScreenFlow',
+      desc: 'Record your screen with one tap. No clunky settings, no export hell. Tap once, it records. Tap again, it saves to your camera roll ready to share.',
+      status: 'live', category: 'iOS app',
+      img: 'https://ik.imagekit.io/424h6me27c/1769139467912.jpeg',
+      liveUrl: '#',
+      author: { name: 'Arjun', role: 'Product Designer', company: 'Swiggy', avatar: 'https://ik.imagekit.io/424h6me27c/1758728645137.jpeg', id: '11111111-0000-0000-0000-000000000003' },
+      journey: [
+        {
+          q: 'What problem were you actually trying to solve?',
+          a: 'Screen recording on iOS was clunky — record the whole screen, trim in iMovie, export, repeat. I wanted one tap to record and another to share. That was it.',
+          imgs: []
+        },
+        {
+          q: 'How did you design the first version?',
+          a: 'Started with a napkin sketch of a floating button. Spent a week in Figma on wireframes before writing a single line of Swift. The hardest decision was where to put the stop button.',
+          imgs: ['https://ik.imagekit.io/424h6me27c/1769139467912.jpeg', 'https://ik.imagekit.io/424h6me27c/1773811274487.jpeg']
+        },
+        {
+          q: 'What was the hardest thing to build?',
+          a: 'Getting the ReplayKit integration to work reliably across iOS versions. Spent 3 weeks and 47 Stack Overflow tabs on this alone. iOS 17 broke everything I had working on 16.',
+          imgs: []
+        },
+        {
+          q: 'How did you test it with real users?',
+          a: 'Shared a TestFlight link in 3 design Slack communities. Got 40 testers in 2 days. Their feedback completely changed the export flow — I had it backwards.',
+          imgs: ['https://ik.imagekit.io/424h6me27c/1773811274544.jpeg']
+        },
+        {
+          q: 'What would you do differently?',
+          a: 'Build the sharing flow first, not last. Users care deeply about what happens after they record, not the recording itself. I wasted a month polishing the wrong end.',
+          imgs: []
+        }
+      ]
+    },
+    pasteboard: {
+      key: 'pasteboard', title: 'PasteBoard Pro', desc: 'Smart clipboard manager for iOS. Everything you copy lives here — text, links, images. Sync across all your devices.',
+      status: 'wip', category: 'iOS app', img: 'https://ik.imagekit.io/424h6me27c/1773811274544.jpeg', liveUrl: null,
+      author: { name: 'Sagar', role: 'Designer', company: 'CRED', avatar: 'https://ik.imagekit.io/424h6me27c/1593694785946.jpeg', id: null }
+    },
+    focusflow: {
+      key: 'focusflow', title: 'FocusFlow', desc: 'Deep work timer with habit tracking. Built on the science of flow states — it adapts session lengths to your personal rhythm.',
+      status: 'live', category: 'macOS', img: 'https://ik.imagekit.io/424h6me27c/1757355199034.jpeg', liveUrl: '#',
+      author: { name: 'Priya', role: 'Product Designer', company: 'Razorpay', avatar: 'https://ik.imagekit.io/424h6me27c/1774526753952.jpeg', id: null }
+    },
+    motionkit: {
+      key: 'motionkit', title: 'MotionKit', desc: 'Animation toolkit for iOS designers. Design animations visually and export production-ready Swift code with one click.',
+      status: 'live', category: 'iOS app', img: 'https://ik.imagekit.io/424h6me27c/1773811274527.jpeg', liveUrl: '#',
+      author: { name: 'Rohit', role: 'Interaction Designer', company: 'Zomato', avatar: 'https://ik.imagekit.io/424h6me27c/1769139467912.jpeg', id: null }
+    },
+    colorsnap: {
+      key: 'colorsnap', title: 'ColorSnap', desc: 'Pick any color from your screen instantly. Works system-wide, saves your palette, exports hex/rgb/hsl with one tap.',
+      status: 'live', category: 'macOS', img: 'https://ik.imagekit.io/424h6me27c/1757355199034.jpeg', liveUrl: '#',
+      author: { name: 'Anika', role: 'Visual Designer', company: 'Flipkart', avatar: 'https://ik.imagekit.io/424h6me27c/1669709292471.jpeg', id: null }
+    },
+    polaroid: {
+      key: 'polaroid', title: 'Polaroid', desc: 'Was trying out a fun interaction in my portfolio. You can click and download a Polaroid style selfie from your browser.',
+      status: 'live', category: 'iOS app', img: 'https://ik.imagekit.io/424h6me27c/1773811274487.jpeg', liveUrl: '#',
+      author: { name: 'Gowtham Oleti', role: 'Product Designer', company: 'CRED', avatar: 'https://ik.imagekit.io/424h6me27c/1745770693685.jpeg', id: '11111111-0000-0000-0000-000000000007' }
+    },
+    propertytours: {
+      key: 'propertytours', title: 'Record impressive property tours with just your mobile', desc: 'A guide and tool for real estate agents to shoot professional property walkthroughs using only an iPhone.',
+      status: 'live', category: 'macOS', img: 'https://ik.imagekit.io/424h6me27c/1773811274764.jpeg', liveUrl: '#',
+      author: { name: 'Gowtham Oleti', role: 'Product Designer', company: 'CRED', avatar: 'https://ik.imagekit.io/424h6me27c/1745770693685.jpeg', id: '11111111-0000-0000-0000-000000000007' }
+    },
+    iosapp30: {
+      key: 'iosapp30', title: 'Build a full iOS app in 30 days from scratch', desc: 'A structured 30-day course-style build log. Each day covers a real concept — from Xcode setup to App Store submission.',
+      status: 'wip', category: 'Web', img: 'https://ik.imagekit.io/424h6me27c/1758728645137.jpeg', liveUrl: null,
+      author: { name: 'Arjun Sethi', role: 'Interaction Designer', company: 'CRED', avatar: 'https://ik.imagekit.io/424h6me27c/1758728645137.jpeg', id: '11111111-0000-0000-0000-000000000003' }
+    },
+    typolens: {
+      key: 'typolens', title: 'TypoLens', desc: 'A font inspector and type pairing tool for the web. Hover over any website element to instantly identify fonts, sizes, weights, and perfect pairings.',
+      status: 'wip', category: 'Web', img: 'https://ik.imagekit.io/424h6me27c/Screenshot%202026-05-01%20at%202.42.54%E2%80%AFPM.png', liveUrl: null,
+      author: { name: 'Dev', role: 'UI Designer', company: 'Paytm', avatar: 'https://ik.imagekit.io/424h6me27c/1746609724722.jpeg', id: null }
+    },
+    gridmaster: {
+      key: 'gridmaster', title: 'GridMaster', desc: 'Visual CSS grid layout generator for the web. Draw your grid, adjust columns and rows visually, then copy the production-ready CSS in one click.',
+      status: 'live', category: 'Web', img: 'https://ik.imagekit.io/424h6me27c/Screenshot%202026-05-01%20at%202.40.20%E2%80%AFPM.png', liveUrl: '#',
+      author: { name: 'Neha', role: 'Product Designer', company: 'Meesho', avatar: 'https://ik.imagekit.io/424h6me27c/1669709292471.jpeg', id: null }
+    },
+    swipenotes: {
+      key: 'swipenotes', title: 'SwipeNotes', desc: 'Gesture-based notes for quick capture on iOS. Swipe up to jot, swipe left to archive, swipe right to pin. Your thoughts, no friction.',
+      status: 'wip', category: 'iOS app', img: 'https://ik.imagekit.io/424h6me27c/1773811274527.jpeg', liveUrl: null,
+      author: { name: 'Karan', role: 'Designer', company: 'PhonePe', avatar: 'https://ik.imagekit.io/424h6me27c/1746609724722.jpeg', id: null }
+    },
+    iconforge: {
+      key: 'iconforge', title: 'IconForge', desc: 'Generate beautiful app icons from a text prompt. Powered by AI, exports all required sizes for App Store, Play Store, and web in one ZIP.',
+      status: 'live', category: 'Web', img: 'https://ik.imagekit.io/424h6me27c/1773811274487.jpeg', liveUrl: '#',
+      author: { name: 'Meera', role: 'Product Designer', company: 'Groww', avatar: 'https://ik.imagekit.io/424h6me27c/1774526753952.jpeg', id: null }
+    },
+    pastery: {
+      key: 'pastery', title: 'Pastery', desc: 'Single-hotkey clipboard recall for macOS. Press one key and your last 20 clips appear in a floating picker. Never lose a copy-paste again.',
+      status: 'live', category: 'macOS', img: 'https://ik.imagekit.io/424h6me27c/1757355199034.jpeg', liveUrl: '#',
+      author: { name: 'Priyanshu', role: 'Product Designer', company: 'Zomato', avatar: 'https://ik.imagekit.io/424h6me27c/1720635179303.jpeg', id: '11111111-0000-0000-0000-000000000001' }
+    },
+    serenity: {
+      key: 'serenity', title: 'Serenity', desc: 'Guided breathing and mindfulness habits for iOS. Science-backed sessions that adapt to your stress level. Five minutes a day, measurable calm.',
+      status: 'live', category: 'iOS app', img: 'https://ik.imagekit.io/424h6me27c/1773811274487.jpeg', liveUrl: '#',
+      author: { name: 'Neha', role: 'Visual Designer', company: 'Flipkart', avatar: 'https://ik.imagekit.io/424h6me27c/1669709292471.jpeg', id: null }
+    },
+    daylog: {
+      key: 'daylog', title: 'DayLog', desc: 'Simple one-tap daily mood journal for iOS. Just tap how you feel, add a note if you want, and watch your mood patterns emerge over weeks.',
+      status: 'live', category: 'iOS app', img: 'https://ik.imagekit.io/424h6me27c/1773811274527.jpeg', liveUrl: '#',
+      author: { name: 'Sana', role: 'UI Designer', company: 'Meesho', avatar: 'https://ik.imagekit.io/424h6me27c/1745770693685.jpeg', id: null }
+    },
+    clipt: {
+      key: 'clipt', title: 'Clipt', desc: 'Clipboard history for iPhone. Every text, link, and image you copy is saved and searchable. Access your full copy history from any app with a quick tap.',
+      status: 'live', category: 'iOS app', img: 'https://ik.imagekit.io/424h6me27c/1769139467912.jpeg', liveUrl: '#',
+      author: { name: 'Gowtham', role: 'Product Designer', company: 'CRED', avatar: 'https://ik.imagekit.io/424h6me27c/1745770693685.jpeg', id: '11111111-0000-0000-0000-000000000007' }
+    },
+    brink: {
+      key: 'brink', title: 'Brink', desc: 'Podcast player, superpowered. Variable speed without chipmunk voice, chapter markers, AI-generated summaries, and a clip-to-notes feature for deep listeners.',
+      status: 'wip', category: 'iOS app', img: 'https://ik.imagekit.io/424h6me27c/1773811274764.jpeg', liveUrl: null,
+      author: { name: 'Gowtham', role: 'Product Designer', company: 'CRED', avatar: 'https://ik.imagekit.io/424h6me27c/1745770693685.jpeg', id: '11111111-0000-0000-0000-000000000007' }
+    },
+    voiceblob: {
+      key: 'voiceblob', title: 'Voice Blob', desc: 'Voice-reactive blob particles built in SwiftUI. Speak and watch the blob pulse, stretch, and morph in real time. A living visualizer for your voice.',
+      status: 'live', category: 'iOS app', img: 'https://ik.imagekit.io/424h6me27c/1593694785946.jpeg', liveUrl: '#',
+      author: { name: 'Sagar', role: 'Lead Designer', company: 'Urban Company', avatar: 'https://ik.imagekit.io/424h6me27c/1593694785946.jpeg', id: null }
+    }
+  };
+
+  function openPostDetail(key) {
+    const data = _postDetailData[key];
+    if (!data) return;
+    _showNavBack();
+    switchTab('postdetail');
+    renderPostDetailPage(data);
+    window.scrollTo(0, 0);
+  }
+
+  function renderPostDetailPage(data) {
+    const el = document.getElementById('postDetailContent');
+    if (!el) return;
+
+    const statusTag = data.status === 'live'
+      ? '<span class="post-tag post-tag-live">Live</span>'
+      : '<span class="post-tag post-tag-wip">WIP</span>';
+    const categoryTag = data.category
+      ? `<span class="post-tag post-tag-type">${data.category}</span>` : '';
+
+    const avatarHtml = data.author.avatar
+      ? `<img src="${data.author.avatar}" onerror="_onAvatarErr(this)" alt="">`
+      : `<div style="width:100%;height:100%;border-radius:50%;background:#EEF2FF;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;color:#3169ED;font-family:Outfit,sans-serif;">${(data.author.name||'?')[0].toUpperCase()}</div>`;
+
+    const profileClick = data.author.id
+      ? `onclick="viewProfile('${data.author.id}')"` : '';
+
+    const liveBtn = data.liveUrl && data.liveUrl !== '#'
+      ? `<button class="pd-live-btn" onclick="window.open('${data.liveUrl}','_blank')">Visit live site <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="display:inline-block;vertical-align:middle"><path d="M2.5 11.5L11.5 2.5M11.5 2.5H5.5M11.5 2.5V8.5" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>`
+      : `<button class="pd-live-btn" style="opacity:.45;cursor:not-allowed;">Coming soon</button>`;
+
+    // Journey section (only if data.journey exists)
+    let journeyHtml = '';
+    if (data.journey && data.journey.length) {
+      const stepsHtml = data.journey.map((step, i) => {
+        const carouselHtml = step.imgs && step.imgs.length
+          ? `<div class="pd-step-carousel">${step.imgs.map(src => `<img class="pd-step-img" src="${src}" alt="">`).join('')}</div>` : '';
+        return `
+          <div class="pd-step">
+            <div class="pd-step-left">
+              <div class="pd-step-num">0${i+1}</div>
+              <div class="pd-step-line"></div>
+            </div>
+            <div class="pd-step-right">
+              <div class="pd-step-q">${step.q}</div>
+              <div class="pd-step-a">${step.a}</div>
+              ${carouselHtml}
+            </div>
+          </div>`;
+      }).join('');
+      journeyHtml = `
+        <div class="pd-journey">
+          <div class="pd-journey-label">How it was built</div>
+          ${stepsHtml}
+        </div>`;
+    }
+
+    el.innerHTML = `
+      <div class="pd-hero">
+        <img class="pd-hero-img" src="${data.img}" alt="${data.title}">
+      </div>
+      <div class="pd-body">
+        <div class="pd-status-row">${statusTag}${categoryTag}</div>
+        <div class="pd-title">${data.title}</div>
+        <div class="pd-desc">${data.desc}</div>
+        <div class="pd-cta-row">${liveBtn}</div>
+        <div class="pd-author-row" ${profileClick}>
+          <div class="pd-author-avatar">${avatarHtml}</div>
+          <div>
+            <div class="pd-author-name">${data.author.name}</div>
+            <div class="pd-author-role">${data.author.role}${data.author.company ? ' · ' + data.author.company : ''}</div>
+          </div>
+        </div>
+      </div>
+      ${journeyHtml}`;
   }
 
   // ── Notification System ──────────────────────────
