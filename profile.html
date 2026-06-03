@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Profile · designerswhobuild.com</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:#fff; font-family:'Outfit',sans-serif; }
+
+/* Cover */
+.cover-section {
+  position:relative; width:100%; height:200px;
+  background: #EAECF0;
+  overflow:hidden;
+}
+.cover-glow { position:absolute; border-radius:50%; filter:blur(40px); pointer-events:none; }
+.cover-glow-1 { width:180px;height:180px;background:rgba(49,105,237,0.35);top:-40px;right:20px; }
+.cover-glow-2 { width:120px;height:120px;background:rgba(139,46,255,0.2);bottom:-20px;left:30%; }
+.cover-header {
+  position:absolute; top:0; left:0; right:0;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:52px 16px 0;
+}
+.back-btn, .icon-btn {
+  width:36px; height:36px; background:rgba(255,255,255,0.6);
+  border:none; border-radius:50%;
+  display:flex; align-items:center; justify-content:center; cursor:pointer;
+}
+.cover-right-btns { display:flex; gap:8px; }
+
+/* Profile top */
+.profile-top { background:#fff; padding:0 16px 24px; position:relative; z-index:5; }
+.avatar-actions-row {
+  display:flex; align-items:flex-end; justify-content:space-between;
+  margin-top:-40px; margin-bottom:14px; position:relative; z-index:10;
+}
+.profile-avatar {
+  width:102px; height:102px; border-radius:50%; border:2px solid #fff;
+  overflow:hidden; flex-shrink:0; background:#e0e4ec; position:relative; z-index:10;
+}
+.profile-avatar img { width:100%; height:100%; object-fit:cover; display:block; }
+.profile-social-row { display:flex; align-items:center; gap:8px; padding-bottom:4px; }
+.social-icon-btn {
+  width:36px; height:36px; border-radius:50%; border:1.5px solid #EDEFF2;
+  background:#fff; display:flex; align-items:center; justify-content:center; cursor:pointer;
+}
+.follow-btn {
+  background:#3169ED; color:#fff; border:none; border-radius:20px;
+  height:36px; padding:0 20px; font-family:'Outfit',sans-serif;
+  font-size:14px; font-weight:600; cursor:pointer;
+}
+.profile-name { font-size:22px; font-weight:700; color:#10192D; letter-spacing:-0.3px; margin-bottom:2px; }
+.profile-role { font-size:15px; font-weight:500; color:#10192D; margin-bottom:2px; }
+.profile-exp { font-size:13px; font-weight:400; color:#8492A6; }
+
+/* Stats */
+.stats-card {
+  display:flex; align-items:stretch; background:#fff;
+  border:1px solid #EDEFF2; border-radius:14px; margin-top:16px; overflow:hidden;
+}
+.stat-col { flex:1; padding:14px 16px; display:flex; flex-direction:column; gap:2px; }
+.stat-num { font-size:20px; font-weight:700; color:#10192D; }
+.stat-unit { font-size:13px; font-weight:500; color:#10192D; }
+.stat-unit.live { color:#22C55E; }
+.stat-sub { font-size:12px; color:#8492A6; font-weight:400; }
+.stat-divider { width:1px; background:#EDEFF2; align-self:stretch; }
+
+/* Section blocks */
+.profile-section-block { background:#fff; margin-top:0; padding:16px 16px 0; }
+.section-title { font-size:20px; font-weight:700; color:#10192D; margin-bottom:14px; }
+.profile-divider { height:8px; background:#EDF1F2; margin:16px 0 0; }
+
+/* What people felt */
+.felt-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.felt-item {
+  display:flex; align-items:center; gap:8px; background:#F8F9FC;
+  border-radius:10px; padding:10px 12px;
+}
+.felt-badge { font-size:14px; font-weight:700; color:#10192D; white-space:nowrap; }
+.felt-label { font-size:12px; font-weight:500; color:#596378; }
+
+/* Impact */
+.impact-row { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.impact-item { background:#F8F9FC; border-radius:10px; padding:12px 14px; }
+.impact-num { font-size:18px; font-weight:700; color:#10192D; margin-bottom:2px; }
+.impact-label { font-size:12px; font-weight:400; color:#8492A6; }
+
+/* Tech stack */
+.tech-row { display:flex; gap:10px; flex-wrap:wrap; }
+.tech-chip {
+  display:flex; align-items:center; gap:6px; background:#F8F9FC;
+  border-radius:20px; padding:6px 12px 6px 8px;
+}
+.tech-chip img { width:24px; height:24px; border-radius:50%; object-fit:cover; flex-shrink:0; }
+.tech-name { font-size:13px; font-weight:500; color:#10192D; }
+
+/* Featured (hmiss identical to homepage) */
+.featured-section { background:#fff; padding-bottom:16px; }
+.featured-heading { padding:16px 16px 10px; margin-top:0; }
+.featured-heading .section-title { margin-bottom:0; }
+.hmiss-scroll { overflow-x:auto; scrollbar-width:none; padding:0 16px 0; }
+.hmiss-scroll::-webkit-scrollbar { display:none; }
+.hmiss-row { display:flex; gap:12px; width:max-content; }
+.hmiss-card { width:300px; border-radius:20px; padding:12px; display:flex; flex-direction:column; }
+.hmiss-thumb { width:100%; height:auto; aspect-ratio:4/3; background:#D0D5DD; border-radius:14px; display:block; }
+.hmiss-thumb-wrap { position:relative; width:100%; cursor:pointer; }
+.play-btn {
+  position:absolute; bottom:-20px; left:50%; transform:translateX(-50%);
+  width:44px; height:44px; border-radius:50%; background:#1D2433;
+  display:flex; align-items:center; justify-content:center; flex-shrink:0; pointer-events:none;
+}
+.hmiss-title { font-size:16px; font-weight:700; color:#10192D; line-height:1.35; margin-top:28px; margin-bottom:8px; }
+.hmiss-footer { display:flex; justify-content:space-between; align-items:center; margin-top:auto; padding-top:8px; }
+.hmiss-stat { font-size:13px; font-weight:500; color:#596378; }
+.hmiss-divider { height:1px; background:#EDEFF2; margin:8px 0; }
+.hmiss-subtitle { font-size:12px; color:#717684; }
+.hmiss-play-icon {
+  position:absolute; bottom:-20px; left:50%; transform:translateX(-50%);
+  width:44px; height:44px; border-radius:50%; background:#1D2433;
+  display:flex; align-items:center; justify-content:center; flex-shrink:0; pointer-events:none;
+}
+.hmiss-video { width:100%; height:auto; aspect-ratio:4/3; background:#D0D5DD; border-radius:14px; display:block; object-fit:cover; }
+
+/* Tabs */
+.tabs-wrap { background:#fff; margin-top:0; overflow-x:auto; scrollbar-width:none; border-bottom:1px solid #EDEFF2; }
+.tabs-wrap::-webkit-scrollbar { display:none; }
+.tabs-inner { display:flex; gap:0; width:max-content; padding:0 16px; }
+.ptab {
+  padding:14px 16px 12px; font-size:13px; font-weight:500; color:#8492A6;
+  cursor:pointer; border-bottom:2px solid transparent; white-space:nowrap; transition:color 0.15s;
+}
+.ptab.active { color:#3169ED; border-bottom-color:#3169ED; font-weight:600; }
+
+/* Post cards — identical CSS to homepage */
+.posts-wrap { background:#F2F4F7; }
+.post-card { background:#fff; border-bottom:8px solid #EDF1F2; }
+.post-header { display:flex; align-items:flex-start; gap:10px; padding:16px; cursor:pointer; }
+.post-avatar { width:54px; height:54px; border-radius:50%; flex-shrink:0; overflow:hidden; display:flex; align-items:center; justify-content:center; }
+.post-meta { flex:1; min-width:0; }
+.post-name { font-size:14px; font-weight:600; color:#10192D; line-height:1.3; }
+.post-role { font-size:14px; font-weight:400; color:#717684; margin-top:1px; }
+.post-subtext { font-size:14px; font-weight:400; color:#717684; margin-top:1px; }
+.post-content { padding:0 16px 12px; }
+.post-title-row { display:flex; align-items:center; gap:7px; flex-wrap:wrap; margin-bottom:5px; }
+.post-title { font-size:16px; font-weight:600; color:#10192D; }
+.post-desc { font-size:14px; font-weight:400; color:#10192D; line-height:20px; }
+.post-desc-container { position:relative; }
+.post-desc-container:not(.expanded-container) .post-desc { height:40px; overflow:hidden; display:block; }
+.post-desc-container.expanded-container .post-desc { height:auto; overflow:visible; display:block; }
+.read-more-btn { font-size:14px; font-weight:400; color:#3169ED; cursor:pointer; line-height:20px; }
+.post-desc-container:not(.expanded-container) .read-more-btn { position:absolute; bottom:0; right:0; background:linear-gradient(to right,rgba(255,255,255,0),#fff 28%); padding-left:32px; }
+.post-desc-container.expanded-container .read-more-btn { display:block; margin-top:2px; }
+.post-tech { display:flex; align-items:center; gap:8px; padding:0 16px 12px; }
+.post-tech-pill { display:flex; align-items:center; gap:8px; background:#F2F4F7; border-radius:8px; height:30px; padding:0 10px; font-size:12px; color:#454C5F; font-weight:500; white-space:nowrap; cursor:pointer; line-height:1; }
+.post-tag { height:30px; display:inline-flex; align-items:center; padding:0 8px; border-radius:8px; font-size:12px; font-weight:500; white-space:nowrap; line-height:1; font-family:'Outfit',sans-serif; }
+.post-tag-live { background:#E6F7F0; color:#009A51; }
+.post-tag-wip { background:#FFF4E6; color:#FF8C00; }
+.post-tag-type { background:#F2F4F7; color:#454C5F; }
+.post-tech-icons { display:flex; align-items:center; }
+.post-tech-dot { width:20px; height:20px; border-radius:50%; border:1.5px solid #fff; margin-left:-5px; overflow:hidden; flex-shrink:0; background:#F2F4F7; box-shadow:0 0 0 1px #fff; }
+.post-tech-dot img { width:100%; height:100%; object-fit:cover; display:block; }
+.post-tech-dot:first-child { margin-left:0; }
+.post-media-single { width:100%; aspect-ratio:4/3; position:relative; overflow:hidden; }
+.post-media-single img { width:100%; height:100%; object-fit:cover; display:block; }
+.media-views { position:absolute; bottom:10px; right:12px; display:flex; align-items:center; gap:5px; font-size:12px; font-weight:500; color:#fff; background:rgba(0,0,0,0.38); padding:4px 10px; border-radius:20px; backdrop-filter:blur(4px); }
+.post-media-5grid { width:100%; overflow:hidden; }
+.grid5-row { display:flex; gap:2px; margin-bottom:2px; }
+.grid5-row:last-child { margin-bottom:0; }
+.g5-cell { flex:1; height:148px; position:relative; overflow:hidden; }
+.g5-cell img { width:100%; height:100%; object-fit:cover; display:block; }
+.post-media-video { width:100%; aspect-ratio:9/16; max-height:480px; position:relative; overflow:hidden; display:flex; align-items:center; justify-content:center; }
+.video-play-btn { width:60px; height:60px; border-radius:50%; background:rgba(255,255,255,0.18); backdrop-filter:blur(8px); border:1.5px solid rgba(255,255,255,0.38); display:flex; align-items:center; justify-content:center; }
+.post-play-overlay { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); }
+.post-media-carousel { display:flex; overflow-x:auto; gap:8px; padding:0 16px 12px 0; scrollbar-width:none; }
+.post-media-carousel::-webkit-scrollbar { display:none; }
+.carousel-item { width:70vw; aspect-ratio:16/9; border-radius:10px; flex-shrink:0; overflow:hidden; }
+.carousel-item img { width:100%; height:100%; object-fit:cover; display:block; }
+.post-react-vdivider { width:1px; height:32px; background:#E4E7EC; flex-shrink:0; align-self:center; }
+.post-reactions { display:flex; align-items:center; justify-content:space-between; padding:10px 24px 0; border-top:1px solid #F2F4F7; }
+.reaction-item { display:flex; flex-direction:column; align-items:center; gap:8px; cursor:pointer; padding:6px 10px; border-radius:8px; transition:background 0.15s; user-select:none; }
+.reaction-item.selected { background:#F2F4F7; }
+.reaction-emoji-wrap { display:flex; flex-direction:row; align-items:center; font-size:22px; line-height:1; gap:1px; }
+.reaction-count-badge { font-size:20px; font-weight:900; color:#10192D; font-family:'Outfit',sans-serif; -webkit-text-stroke:5px #fff; paint-order:stroke fill; text-shadow:0 1px 5px rgba(0,0,0,0.13); line-height:1; white-space:nowrap; display:inline-block; transform:rotate(8deg); pointer-events:none; }
+.reaction-label { font-size:10px; font-weight:400; color:#293142; white-space:nowrap; }
+.reaction-item.selected .reaction-label { font-weight:600; }
+.comment-reaction { display:flex; flex-direction:column; align-items:center; gap:8px; cursor:pointer; padding:6px 10px; border-radius:8px; background:#fff; transition:background 0.15s; user-select:none; }
+.comment-reaction .reaction-label { font-size:10px; font-weight:400; color:#293142; }
+.post-ctas { display:flex; gap:10px; padding:4px 16px 16px; }
+.post-btn-primary { flex:1; height:36px; padding:0 8px; background:#3169ED; color:#fff; border:none; border-radius:8px; font-family:'Outfit',sans-serif; font-size:14px; font-weight:500; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+.post-btn-outline { flex:1; height:36px; padding:0 8px; background:#fff; color:#3169ED; border:1.5px solid #AFC7FD; border-radius:8px; font-family:'Outfit',sans-serif; font-size:14px; font-weight:500; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+.no-posts { text-align:center; padding:40px 0; color:#8492A6; font-size:14px; }
+</style>
+</head>
+<body>
+<div class="phone">
+
+  <!-- Cover -->
+  <div class="cover-section">
+    <div class="cover-header">
+      <button class="back-btn" onclick="history.back()">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M11 14L6 9L11 4" stroke="#10192D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="cover-right-btns">
+        <button class="icon-btn"><svg width="17" height="17" viewBox="0 0 17 17" fill="none"><circle cx="7.5" cy="7.5" r="5.5" stroke="#10192D" stroke-width="1.7"/><path d="M12 12L15.5 15.5" stroke="#10192D" stroke-width="1.7" stroke-linecap="round"/></svg></button>
+        <button class="icon-btn"><svg width="17" height="13" viewBox="0 0 17 13" fill="none"><rect y="0" width="17" height="2" rx="1" fill="#10192D"/><rect y="5.5" width="17" height="2" rx="1" fill="#10192D"/><rect y="11" width="17" height="2" rx="1" fill="#10192D"/></svg></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Profile top -->
+  <div class="profile-top">
+    <div class="avatar-actions-row">
+      <div class="profile-avatar"><img id="pAvatar" src="" alt=""></div>
+      <div class="profile-social-row">
+        <button class="social-icon-btn"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="2" y="2" width="20" height="20" rx="5" stroke="#10192D" stroke-width="1.8"/><circle cx="12" cy="12" r="4" stroke="#10192D" stroke-width="1.8"/><circle cx="17.5" cy="6.5" r="1" fill="#10192D"/></svg></button>
+        <button class="social-icon-btn"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="2" y="2" width="20" height="20" rx="3" stroke="#10192D" stroke-width="1.8"/><path d="M8 11v5M8 8v.01M12 16v-5M12 11a3 3 0 016 0v5" stroke="#10192D" stroke-width="1.8" stroke-linecap="round"/></svg></button>
+        <button class="follow-btn">Follow</button>
+      </div>
+    </div>
+    <div class="profile-name" id="pName"></div>
+    <div class="profile-role" id="pRole"></div>
+    <div class="profile-exp" id="pExp"></div>
+    <div class="stats-card">
+      <div class="stat-col">
+        <div class="stat-num"><span id="pTotal"></span> <span class="stat-unit">projects posted</span></div>
+        <div class="stat-sub">till date</div>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-col">
+        <div class="stat-num"><span id="pLive"></span> <span class="stat-unit live">live projects</span></div>
+        <div class="stat-sub">this week</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- What people felt -->
+  <div class="profile-section-block">
+    <div class="section-title">What people felt about you...</div>
+    <div class="felt-grid" id="feltGrid"></div>
+  </div>
+
+  <div class="profile-divider"></div>
+
+  <!-- Impact -->
+  <div class="profile-section-block">
+    <div class="section-title">Impact created</div>
+    <div class="impact-row" id="impactRow"></div>
+  </div>
+
+  <div class="profile-divider"></div>
+
+  <!-- Tech stack -->
+  <div class="profile-section-block">
+    <div class="section-title">Tech stack</div>
+    <div class="tech-row" id="techRow"></div>
+  </div>
+
+  <div class="profile-divider"></div>
+
+  <!-- Featured projects -->
+  <div class="featured-section">
+    <div class="featured-heading"><div class="section-title">Featured projects</div></div>
+    <div class="hmiss-scroll">
+      <div class="hmiss-row" id="featuredRow"></div>
+    </div>
+  </div>
+
+  <div class="profile-divider"></div>
+
+  <!-- Tabs -->
+  <div class="tabs-wrap"><div class="tabs-inner" id="tabsInner"></div></div>
+
+  <!-- Posts -->
+  <div class="posts-wrap" id="postsWrap"></div>
+
+</div>
+
+<script>
+const CLAUDE   = 'https://ik.imagekit.io/424h6me27c/images.png';
+const CHATGPT  = 'https://ik.imagekit.io/424h6me27c/chatgpt-logo-chat-gpt-icon-on-white-background-free-vector.jpg';
+const CODEX    = 'https://ik.imagekit.io/424h6me27c/chatgpt-logo-chat-gpt-icon-on-white-background-free-vector.jpg';
+const XCODE    = 'https://ik.imagekit.io/424h6me27c/Screenshot%202026-05-02%20at%204.09.45%E2%80%AFAM.png';
+
+const profiles = {
+  1: {
+    name:'Priyanshu Barnwal 🇮🇳', role:'Sr. Product Designer · Zomato', exp:'5 yrs experience',
+    avatar:'https://ik.imagekit.io/424h6me27c/1720635179303.jpeg', total:'12', live:'07',
+    felt:[{e:'🙏',c:'+14',l:'I learnt new'},{e:'💰',c:'+3',l:"I'd buy this"},{e:'🔥',c:'+14',l:"I'd use this"}],
+    impact:[{n:'1200+',l:'downloads'},{n:'300+',l:'unique visitors'}],
+    tech:[{name:'ChatGPT',img:CHATGPT},{name:'Claude',img:CLAUDE},{name:'Xcode',img:XCODE}],
+    featured:[{
+      bg:'#FFF0D8', video:null,
+      img:'https://ik.imagekit.io/424h6me27c/1757355199034.jpeg',
+      title:'Pastery — macOS clipboard manager with single-hotkey recall',
+      s1:'macOS · Tool', s2:'🔥 +21',
+      sub:'Priyanshu Barnwal · Sr. Product Designer · Zomato'
+    }],
+    posts:[{
+      avatar:'https://ik.imagekit.io/424h6me27c/1720635179303.jpeg',
+      name:'Priyanshu Barnwal', role:'Sr. Product Designer · Zomato · 5yr exp',
+      subtext:'3d ago · LinkedIn', title:'Introducing Pastery',
+      desc:'A clipboard app for macOS that brings up all your previous copied items with a single hotkey\n\nNo more switching between windows multiple times. Just copy everything at once, and paste seamlessly right where you need them.\n\nDownload now for free : pasteryapp.xyz',
+      longDesc:true, status:'live', platform:'macOS',
+      techIcons:[CHATGPT,CLAUDE], techCount:2,
+      media:'carousel',
+      mediaImages:['https://ik.imagekit.io/424h6me27c/1757355199034.jpeg','https://ik.imagekit.io/424h6me27c/Screenshot%202026-05-02%20at%203.57.30%E2%80%AFAM.png'],
+      reactions:[{e:'🙏',c:11,l:'Teach me'},{e:'🤑',c:2,l:"I'd buy this"},{e:'🔥',c:18,l:"I'd use this"}],
+      id:1
+    }]
+  },
+  2: {
+    name:'Priya Menon 🇮🇳', role:'UX Designer · Razorpay', exp:'4 yrs experience',
+    avatar:'https://ik.imagekit.io/424h6me27c/1774526753952.jpeg', total:'09', live:'04',
+    felt:[{e:'🙏',c:'+9',l:'I learnt new'},{e:'💰',c:'+5',l:"I'd buy this"},{e:'🔥',c:'+7',l:"I'd use this"}],
+    impact:[{n:'800+',l:'downloads'},{n:'150+',l:'unique visitors'}],
+    tech:[{name:'Figma',img:CLAUDE},{name:'ChatGPT',img:CHATGPT}],
+    featured:[{
+      bg:'#D8EFFE', video:null,
+      img:'https://ik.imagekit.io/424h6me27c/1773811274544.jpeg',
+      title:'Razorpay Checkout v3 — reducing drop-offs by 18%',
+      s1:'Web · 3d ago', s2:'💰 +5',
+      sub:'Priya Menon · UX Designer · Razorpay'
+    }],
+    posts:[{
+      avatar:'https://ik.imagekit.io/424h6me27c/1774526753952.jpeg',
+      name:'Priya Menon', role:'UX Designer · Razorpay · 4yr exp',
+      subtext:'3d ago · LinkedIn', title:'Razorpay Checkout v3',
+      desc:'Redesigned checkout flow reducing drop-offs by 18% with a single-screen payment UX and smart auto-fill.',
+      longDesc:false, status:'live', platform:'Web',
+      techIcons:[CHATGPT,CLAUDE], techCount:2,
+      media:'single',
+      mediaImages:['https://ik.imagekit.io/424h6me27c/1773811274544.jpeg'],
+      reactions:[{e:'🙏',c:9,l:'Teach me'},{e:'🤑',c:5,l:"I'd buy this"},{e:'🔥',c:7,l:"I'd use this"}],
+      id:2
+    }]
+  },
+  3: {
+    name:'Arjun Sethi 🇮🇳', role:'Interaction Designer · CRED', exp:'6 yrs experience',
+    avatar:'https://ik.imagekit.io/424h6me27c/1758728645137.jpeg', total:'15', live:'05',
+    felt:[{e:'🙏',c:'+18',l:'I learnt new'},{e:'💰',c:'+2',l:"I'd buy this"},{e:'🔥',c:'+20',l:"I'd use this"}],
+    impact:[{n:'2100+',l:'downloads'},{n:'500+',l:'unique visitors'}],
+    tech:[{name:'Claude',img:CLAUDE},{name:'Xcode',img:XCODE}],
+    featured:[{
+      bg:'#C8F0C8', video:'https://ik.imagekit.io/424h6me27c/linkedin-video.mp4',
+      img:null,
+      title:'Build a full iOS app in 30 days from scratch',
+      s1:'Web · 5d ago', s2:'🔥 +21',
+      sub:'Arjun Sethi · Interaction Designer · CRED'
+    }],
+    posts:[{
+      avatar:'https://ik.imagekit.io/424h6me27c/1758728645137.jpeg',
+      name:'Arjun Sethi', role:'Interaction Designer · CRED · 6yr exp',
+      subtext:'Web · 5d ago · LinkedIn', title:'Build a full iOS app in 30 days from scratch',
+      desc:'Built this entire app in 30 days using SwiftUI and Cursor. From idea to App Store. Full journey documented.',
+      longDesc:false, status:'live', platform:'Web',
+      techIcons:[CLAUDE,XCODE], techCount:2,
+      media:'video',
+      mediaVideo:'https://ik.imagekit.io/424h6me27c/linkedin-video.mp4',
+      mediaViews:'218 Views',
+      reactions:[{e:'🙏',c:18,l:'Teach me'},{e:'🤑',c:2,l:"I'd buy this"},{e:'🔥',c:20,l:"I'd use this"}],
+      id:3
+    }]
+  },
+  4: {
+    name:'Neha Kapoor 🇮🇳', role:'Visual Designer · Flipkart', exp:'3 yrs experience',
+    avatar:'https://ik.imagekit.io/424h6me27c/1669709292471.jpeg', total:'08', live:'03',
+    felt:[{e:'🙏',c:'+7',l:'I learnt new'},{e:'💰',c:'+4',l:"I'd buy this"},{e:'🔥',c:'+6',l:"I'd use this"}],
+    impact:[{n:'600+',l:'downloads'},{n:'120+',l:'unique visitors'}],
+    tech:[{name:'ChatGPT',img:CHATGPT},{name:'Claude',img:CLAUDE}],
+    featured:[{
+      bg:'#FFF0D8', video:null,
+      img:'https://ik.imagekit.io/424h6me27c/1769139467912.jpeg',
+      title:'Flipkart Big Billion Days — bold editorial rebrand exploration',
+      s1:'Web · 2d ago', s2:'💰 +4',
+      sub:'Neha Kapoor · Visual Designer · Flipkart'
+    }],
+    posts:[{
+      avatar:'https://ik.imagekit.io/424h6me27c/1669709292471.jpeg',
+      name:'Neha Kapoor', role:'Visual Designer · Flipkart · 3yr exp',
+      subtext:'2d ago · LinkedIn', title:'Flipkart Big Billion Days Rebrand',
+      desc:'Exploratory visual rebrand for the Big Billion Days campaign with bold editorial typography and full-bleed imagery.',
+      longDesc:false, status:'wip', platform:'Web',
+      techIcons:[CHATGPT,CLAUDE], techCount:2,
+      media:'single',
+      mediaImages:['https://ik.imagekit.io/424h6me27c/1769139467912.jpeg'],
+      reactions:[{e:'🙏',c:7,l:'Teach me'},{e:'🤑',c:4,l:"I'd buy this"},{e:'🔥',c:6,l:"I'd use this"}],
+      id:4
+    }]
+  },
+  5: {
+    name:'Rohan Verma 🇮🇳', role:'Product Designer · Swiggy', exp:'4 yrs experience',
+    avatar:'https://ik.imagekit.io/424h6me27c/1746609724722.jpeg', total:'11', live:'06',
+    felt:[{e:'🙏',c:'+11',l:'I learnt new'},{e:'💰',c:'+6',l:"I'd buy this"},{e:'🔥',c:'+13',l:"I'd use this"}],
+    impact:[{n:'950+',l:'downloads'},{n:'220+',l:'unique visitors'}],
+    tech:[{name:'ChatGPT',img:CHATGPT},{name:'Xcode',img:XCODE}],
+    featured:[{
+      bg:'#D8EFFE', video:null,
+      img:'https://ik.imagekit.io/424h6me27c/1773811274527.jpeg',
+      title:'Swiggy Genie Redesign — clearer ETA & map experience',
+      s1:'iOS app · 1d ago', s2:'💰 +6',
+      sub:'Rohan Verma · Product Designer · Swiggy'
+    }],
+    posts:[{
+      avatar:'https://ik.imagekit.io/424h6me27c/1746609724722.jpeg',
+      name:'Rohan Verma', role:'Product Designer · Swiggy · 4yr exp',
+      subtext:'iOS app · 1d ago · LinkedIn', title:'Swiggy Genie Redesign',
+      desc:'Redesigned the instant delivery experience with clearer ETA communication and map UX. Drop-off reduced significantly.',
+      longDesc:false, status:'live', platform:'iOS app',
+      techIcons:[CHATGPT,XCODE], techCount:2,
+      media:'grid',
+      mediaImages:[
+        'https://ik.imagekit.io/424h6me27c/1773811274544.jpeg',
+        'https://ik.imagekit.io/424h6me27c/1773811274764.jpeg',
+        'https://ik.imagekit.io/424h6me27c/1773811274487.jpeg',
+        'https://ik.imagekit.io/424h6me27c/1773811274527.jpeg'
+      ],
+      reactions:[{e:'🙏',c:11,l:'Teach me'},{e:'🤑',c:6,l:"I'd buy this"},{e:'🔥',c:13,l:"I'd use this"}],
+      id:5
+    }]
+  },
+  6: {
+    name:'Sana Mirza 🇮🇳', role:'UI Designer · Meesho', exp:'2 yrs experience',
+    avatar:'https://ik.imagekit.io/424h6me27c/1745770693685.jpeg', total:'06', live:'02',
+    felt:[{e:'🙏',c:'+5',l:'I learnt new'},{e:'💰',c:'+2',l:"I'd buy this"},{e:'🔥',c:'+4',l:"I'd use this"}],
+    impact:[{n:'300+',l:'downloads'},{n:'80+',l:'unique visitors'}],
+    tech:[{name:'Claude',img:CLAUDE},{name:'ChatGPT',img:CHATGPT}],
+    featured:[{
+      bg:'#C8F0C8', video:null,
+      img:'https://ik.imagekit.io/424h6me27c/1773811274764.jpeg',
+      title:'Meesho Seller Dashboard — mobile-first data visualisation',
+      s1:'iOS app · 3d ago', s2:'🙏 +5',
+      sub:'Sana Mirza · UI Designer · Meesho'
+    }],
+    posts:[{
+      avatar:'https://ik.imagekit.io/424h6me27c/1745770693685.jpeg',
+      name:'Sana Mirza', role:'UI Designer · Meesho · 2yr exp',
+      subtext:'iOS app · 3d ago · LinkedIn', title:'Meesho Seller Dashboard',
+      desc:'Simplified seller analytics dashboard with mobile-first data visualisations and clear KPI hierarchy.',
+      longDesc:false, status:'live', platform:'iOS app',
+      techIcons:[CLAUDE,CHATGPT], techCount:2,
+      media:'single',
+      mediaImages:['https://ik.imagekit.io/424h6me27c/1773811274764.jpeg'],
+      reactions:[{e:'🙏',c:5,l:'Teach me'},{e:'🤑',c:2,l:"I'd buy this"},{e:'🔥',c:4,l:"I'd use this"}],
+      id:6
+    }]
+  },
+  7: {
+    name:'Gowtham Oleti 🇮🇳', role:'Product Designer · CRED', exp:'4 yrs experience',
+    avatar:'https://ik.imagekit.io/424h6me27c/1745770693685.jpeg', total:'18', live:'08',
+    felt:[{e:'🙏',c:'+22',l:'I learnt new'},{e:'💰',c:'+8',l:"I'd buy this"},{e:'🔥',c:'+35',l:"I'd use this"}],
+    impact:[{n:'3400+',l:'downloads'},{n:'800+',l:'unique visitors'}],
+    tech:[{name:'Claude',img:CLAUDE},{name:'ChatGPT',img:CHATGPT},{name:'Xcode',img:XCODE}],
+    featured:[
+      {bg:'#D8EFFE', video:'https://ik.imagekit.io/424h6me27c/linkedin-video-3.mp4', img:null,
+       title:'Polaroid. Click and download a Polaroid style selfie from my portfolio :)',
+       s1:'iOS app · Interaction', s2:'🔥 +12', sub:'Gowtham Oleti · Product Designer · CRED'},
+      {bg:'#C8F0C8', video:'https://ik.imagekit.io/424h6me27c/linkedin-video.mp4', img:null,
+       title:'Record impressive property tours with mobile',
+       s1:'macOS · 3d ago', s2:'🔥 +8', sub:'Gowtham Oleti · Product Designer · CRED'}
+    ],
+    posts:[
+      {avatar:'https://ik.imagekit.io/424h6me27c/1745770693685.jpeg',
+       name:'Gowtham Oleti', role:'Product Designer · CRED · 4yr exp',
+       subtext:'iOS app · 2d ago · LinkedIn', title:'Introducing Clipt - Clipboard History for iPhone.',
+       desc:'Clipt is a beautifully engineered clipboard manager with seamless sync across iPhone, Mac and iPad, along with keyboard clipboard history for iPhone. Simple, secure, and native. Best use case? You can use it as your personal bookmark vault. Just copy from anywhere, and it is in your app.',
+       longDesc:true, status:'live', platform:'iOS app',
+       techIcons:[CHATGPT,CODEX,CLAUDE], techCount:5,
+       media:'single',
+       mediaImages:['https://ik.imagekit.io/424h6me27c/1769139467912.jpeg'],
+       mediaViews:'124 Views',
+       reactions:[{e:'🙏',c:14,l:'Teach me'},{e:'🤑',c:3,l:"I'd buy this"},{e:'🔥',c:14,l:"I'd use this"}],
+       id:7},
+      {avatar:'https://ik.imagekit.io/424h6me27c/1745770693685.jpeg',
+       name:'Gowtham Oleti', role:'Product Designer · CRED · 4yr exp',
+       subtext:'iOS app · 1d ago · Twitter', title:'Brink — Podcast player, superpowered',
+       desc:'Dynamic themes that adapt to each podcast artwork. Smart folders, offline sync, and granular playback speed controls.',
+       longDesc:false, status:'wip', platform:'iOS app',
+       techIcons:[CLAUDE,CHATGPT,CODEX], techCount:3,
+       media:'grid',
+       mediaImages:[
+         'https://ik.imagekit.io/424h6me27c/1773811274544.jpeg',
+         'https://ik.imagekit.io/424h6me27c/1773811274764.jpeg',
+         'https://ik.imagekit.io/424h6me27c/1773811274487.jpeg',
+         'https://ik.imagekit.io/424h6me27c/1773811274527.jpeg'
+       ],
+       reactions:[{e:'🙏',c:8,l:'Teach me'},{e:'🤑',c:5,l:"I'd buy this"},{e:'🔥',c:21,l:"I'd use this"}],
+       id:7}
+    ]
+  },
+  8: {
+    name:'Sagar Bhardwaj 🇮🇳', role:'Lead Product Designer · Urban Company', exp:'7 yrs experience',
+    avatar:'https://ik.imagekit.io/424h6me27c/1593694785946.jpeg', total:'22', live:'10',
+    felt:[{e:'🙏',c:'+19',l:'I learnt new'},{e:'💰',c:'+7',l:"I'd buy this"},{e:'🔥',c:'+33',l:"I'd use this"}],
+    impact:[{n:'4200+',l:'downloads'},{n:'1100+',l:'unique visitors'}],
+    tech:[{name:'Codex',img:CODEX},{name:'Claude',img:CLAUDE}],
+    featured:[{
+      bg:'#FFF0D8', video:'https://ik.imagekit.io/424h6me27c/linkedin-video-2.mp4', img:null,
+      title:'Voice interactive blob particles using SwiftUI and Cursor. Sound on 🔊',
+      s1:'iOS app · Interaction', s2:'🔥 +33',
+      sub:'Sagar Bhardwaj · Lead Product Designer · Urban Company'
+    }],
+    posts:[{
+      avatar:'https://ik.imagekit.io/424h6me27c/1593694785946.jpeg',
+      name:'Sagar Bhardwaj', role:'Lead Product Designer · Urban Company',
+      subtext:'iOS app · 5h ago · LinkedIn', title:'Voice interactive blob particles using SwiftUI and Cursor.',
+      desc:'Sound on 🔊 Random giggles at the end 💁‍♂️',
+      longDesc:false, status:'live', platform:'iOS app',
+      techIcons:[CODEX,CLAUDE], techCount:2,
+      media:'video',
+      mediaVideo:'https://ik.imagekit.io/424h6me27c/linkedin-video-2.mp4',
+      mediaViews:'318 Views',
+      reactions:[{e:'🙏',c:19,l:'Teach me'},{e:'🤑',c:7,l:"I'd buy this"},{e:'🔥',c:33,l:"I'd use this"}],
+      id:8
+    }]
+  }
+};
+
+let activeTab = 'all';
+let postCounter = 0;
+
+function render() {
+  const id = parseInt(new URLSearchParams(location.search).get('id')) || 1;
+  const p = profiles[id] || profiles[1];
+
+  document.getElementById('pAvatar').src = p.avatar;
+  document.getElementById('pName').textContent = p.name;
+  document.getElementById('pRole').textContent = p.role;
+  document.getElementById('pExp').textContent = p.exp;
+  document.getElementById('pTotal').textContent = p.total;
+  document.getElementById('pLive').textContent = p.live;
+
+  // Felt
+  document.getElementById('feltGrid').innerHTML = p.felt.map(r =>
+    `<div class="felt-item"><span class="felt-badge">${r.e}${r.c}</span><span class="felt-label">${r.l}</span></div>`
+  ).join('');
+
+  // Impact
+  document.getElementById('impactRow').innerHTML = p.impact.map(i =>
+    `<div class="impact-item"><div class="impact-num">${i.n}</div><div class="impact-label">${i.l}</div></div>`
+  ).join('');
+
+  // Tech
+  document.getElementById('techRow').innerHTML = p.tech.map(t =>
+    `<div class="tech-chip"><img src="${t.img}" alt="${t.name}"><span class="tech-name">${t.name}</span></div>`
+  ).join('');
+
+  // Featured
+  document.getElementById('featuredRow').innerHTML = p.featured.map((f, fi) => {
+    const mediaHTML = f.video
+      ? `<div class="hmiss-thumb-wrap" onclick="toggleHmissVideo(this)">
+           <video class="hmiss-thumb hmiss-video" src="${f.video}" loop muted playsinline style="object-fit:cover;width:100%;border-radius:14px;display:block;"></video>
+           <div class="hmiss-play-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 2.5L13 8L4 13.5V2.5Z" fill="white"/></svg></div>
+         </div>`
+      : `<div class="hmiss-thumb-wrap">
+           <img class="hmiss-thumb" src="${f.img}" alt="" style="object-fit:cover;">
+           <div class="play-btn"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 2.5L13 8L4 13.5V2.5Z" fill="white"/></svg></div>
+         </div>`;
+    return `<div class="hmiss-card" style="background:${f.bg};">
+      ${mediaHTML}
+      <div class="hmiss-title">${f.title}</div>
+      <div class="hmiss-footer">
+        <div class="hmiss-stat">${f.s1}</div>
+        <div class="hmiss-stat">${f.s2}</div>
+      </div>
+      <div class="hmiss-divider"></div>
+      <div class="hmiss-subtitle">${f.sub}</div>
+    </div>`;
+  }).join('');
+
+  // Tabs
+  const platforms = ['all', ...new Set(p.posts.map(post => post.platform))];
+  const tabLabels = { all: 'All' };
+  p.posts.forEach(post => { tabLabels[post.platform] = post.platform; });
+  document.getElementById('tabsInner').innerHTML = platforms.map(key => {
+    const count = key === 'all' ? p.posts.length : p.posts.filter(post => post.platform === key).length;
+    return `<div class="ptab${key === activeTab ? ' active' : ''}" onclick="setTab('${key}')">${tabLabels[key]} (${count})</div>`;
+  }).join('');
+
+  // Posts
+  postCounter = 0;
+  const filtered = activeTab === 'all' ? p.posts : p.posts.filter(post => post.platform === activeTab);
+  if (!filtered.length) {
+    document.getElementById('postsWrap').innerHTML = '<div class="no-posts">No posts in this category yet.</div>';
+    return;
+  }
+  document.getElementById('postsWrap').innerHTML = filtered.map((post, pi) => buildPost(post, pi)).join('');
+
+  // Start video observers
+  document.querySelectorAll('.hmiss-video').forEach(v => hmissObserver.observe(v));
+  document.querySelectorAll('.post-video').forEach(v => postVideoObserver.observe(v));
+}
+
+function buildPost(p, idx) {
+  const descId = `pdesc-${idx}`;
+  const descHTML = p.longDesc
+    ? `<div class="post-desc-container"><div class="post-desc" id="${descId}">${p.desc.replace(/\n/g,'<br>')}</div><span class="read-more-btn" data-expanded="false" onclick="toggleDesc(this)">read more</span></div>`
+    : `<div class="post-desc">${p.desc}</div>`;
+
+  const techDots = p.techIcons.map(ic => `<div class="post-tech-dot"><img src="${ic}" alt=""></div>`).join('');
+  const statusClass = p.status === 'live' ? 'post-tag-live' : 'post-tag-wip';
+  const statusLabel = p.status === 'live' ? 'Live' : 'WIP';
+
+  let mediaHTML = '';
+  if (p.media === 'single') {
+    const views = p.mediaViews ? `<div class="media-views"><svg width="13" height="13" viewBox="0 0 13 13" fill="none"><circle cx="6.5" cy="6.5" r="5.5" stroke="white" stroke-width="1.2"/><circle cx="6.5" cy="6.5" r="2.2" fill="white"/></svg>${p.mediaViews}</div>` : '';
+    mediaHTML = `<div class="post-media-single"><img src="${p.mediaImages[0]}" alt="">${views}</div>`;
+  } else if (p.media === 'grid') {
+    mediaHTML = `<div class="post-media-5grid">
+      <div class="grid5-row"><div class="g5-cell"><img src="${p.mediaImages[0]}" alt=""></div><div class="g5-cell"><img src="${p.mediaImages[1]}" alt=""></div></div>
+      <div class="grid5-row"><div class="g5-cell"><img src="${p.mediaImages[2]}" alt=""></div><div class="g5-cell"><img src="${p.mediaImages[3]}" alt=""></div></div>
+    </div>`;
+  } else if (p.media === 'carousel') {
+    mediaHTML = `<div class="post-media-carousel">${p.mediaImages.map(img => `<div class="carousel-item" style="border-radius:0"><img src="${img}" alt=""></div>`).join('')}</div>`;
+  } else if (p.media === 'video') {
+    const views = p.mediaViews ? `<div class="media-views"><svg width="13" height="13" viewBox="0 0 13 13" fill="none"><circle cx="6.5" cy="6.5" r="5.5" stroke="white" stroke-width="1.2"/><circle cx="6.5" cy="6.5" r="2.2" fill="white"/></svg>${p.mediaViews}</div>` : '';
+    mediaHTML = `<div class="post-media-video" style="background:#000;cursor:pointer;" onclick="togglePostVideo(this)">
+      <video class="post-video" src="${p.mediaVideo}" loop muted playsinline style="width:100%;height:100%;object-fit:cover;display:block;position:absolute;inset:0;"></video>
+      <div class="video-play-btn post-play-overlay"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M6 3.5L18 11L6 18.5V3.5Z" fill="white"/></svg></div>
+      ${views}
+    </div>`;
+  }
+
+  const reactionsHTML = p.reactions.map(r =>
+    `<div class="reaction-item" onclick="toggleReaction(this)">
+       <div class="reaction-emoji-wrap">${r.e}<span class="reaction-count-badge" data-count="${r.c}">+${r.c}</span></div>
+       <div class="reaction-label">${r.l}</div>
+     </div>`
+  ).join('') + `<div class="post-react-vdivider"></div>
+    <div class="comment-reaction"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M4 4h14a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H7l-4 3V5a1 1 0 0 1 1-1z" stroke="#293142" stroke-width="1.4" stroke-linejoin="round"/></svg><div class="reaction-label">Comment</div></div>`;
+
+  return `<div class="post-card">
+    <div class="post-header" onclick="location.href='profile.html?id=${p.id}'" style="cursor:pointer;">
+      <div class="post-avatar" style="padding:0;background:none;"><img src="${p.avatar}" style="width:54px;height:54px;object-fit:cover;border-radius:50%;display:block;" alt=""></div>
+      <div class="post-meta">
+        <div class="post-name">${p.name}</div>
+        <div class="post-role">${p.role}</div>
+        <div class="post-subtext">${p.subtext}</div>
+      </div>
+    </div>
+    <div class="post-content">
+      <div class="post-title-row"><span class="post-title">${p.title}</span></div>
+      ${descHTML}
+    </div>
+    <div class="post-tech">
+      <span class="post-tag ${statusClass}">${statusLabel}</span>
+      <span class="post-tag post-tag-type">${p.platform}</span>
+      <div class="post-tech-pill">
+        <div class="post-tech-icons">${techDots}</div>
+        ${p.techCount} tools used <svg width="12" height="8" viewBox="0 0 12 8" fill="none" style="display:inline-block;vertical-align:middle;margin-left:2px"><path d="M1 1L6 6.5L11 1" stroke="#454C5F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+    </div>
+    ${mediaHTML}
+    <div class="post-reactions">${reactionsHTML}</div>
+    <div style="height:1px;background:#F2F4F7;margin:8px 12px 12px;"></div>
+    <div class="post-ctas">
+      <button class="post-btn-primary">Visit live site ↗</button>
+      <button class="post-btn-outline">View journey 📊</button>
+    </div>
+  </div>`;
+}
+
+function setTab(key) { activeTab = key; render(); }
+
+function toggleReaction(el) {
+  const badge = el.querySelector('.reaction-count-badge');
+  if (!badge) return;
+  const current = parseInt(badge.dataset.count);
+  if (el.classList.contains('selected')) {
+    el.classList.remove('selected');
+    const next = current - 1;
+    badge.dataset.count = next;
+    badge.textContent = '+' + next;
+  } else {
+    el.classList.add('selected');
+    const next = current + 1;
+    badge.dataset.count = next;
+    badge.textContent = '+' + next;
+  }
+}
+
+function toggleDesc(el) {
+  const container = el.parentElement;
+  const expanded = container.classList.contains('expanded-container');
+  container.classList.toggle('expanded-container', !expanded);
+  el.textContent = expanded ? 'read more' : 'show less';
+  el.dataset.expanded = !expanded;
+}
+
+function toggleHmissVideo(wrap) {
+  const video = wrap.querySelector('.hmiss-video');
+  const icon  = wrap.querySelector('.hmiss-play-icon');
+  if (video.paused) { video.play(); if(icon) icon.style.display='none'; }
+  else { video.pause(); if(icon) icon.style.display='flex'; }
+}
+
+function togglePostVideo(wrap) {
+  const video = wrap.querySelector('.post-video');
+  const icon  = wrap.querySelector('.post-play-overlay');
+  if (video.paused) { video.play(); if(icon) icon.style.display='none'; }
+  else { video.pause(); if(icon) icon.style.display='flex'; }
+}
+
+const hmissObserver = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    const video = entry.target;
+    const icon  = video.closest('.hmiss-thumb-wrap')?.querySelector('.hmiss-play-icon');
+    if (entry.isIntersecting) {
+      video.play().then(() => { if(icon) icon.style.display='none'; }).catch(()=>{});
+    } else {
+      video.pause();
+      if(icon) icon.style.display='flex';
+    }
+  });
+}, { threshold: 0.5 });
+
+const postVideoObserver = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    const video = entry.target;
+    const wrap  = video.closest('.post-media-video');
+    const icon  = wrap?.querySelector('.post-play-overlay');
+    if (entry.isIntersecting) {
+      video.play().then(() => { if(icon) icon.style.display='none'; }).catch(()=>{});
+    } else {
+      video.pause();
+      if(icon) icon.style.display='flex';
+    }
+  });
+}, { threshold: 0.5 });
+
+render();
+</script>
+</body>
+</html>

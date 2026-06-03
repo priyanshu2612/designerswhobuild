@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Relax My Mind — Case Study</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink:      #0E1A0C;
+      --heading:  #0E1A0C;
+      --body:     #4A5568;
+      --muted:    #9AA3B2;
+      --label:    #4B6E3D;
+      --white:    #FFFFFF;
+      --gray-bg:  #F5F6FA;
+      --warm-bg:  #F4FAF2;
+      --lavender: #EBF2E7;
+      --lav-deep: #BDD4B5;
+      --yellow:   #FFFBE6;
+      --yel-bdr:  #E8D96A;
+      --border:   #E4E7EF;
+      --green:    #16A34A;
+      --green-bg: #F0FDF4;
+      --green-bdr:#BBF7D0;
+      --amber:    #D97706;
+      --amber-bg: #FFFBEB;
+      --amber-bdr:#FDE68A;
+      --forest:   #1A2D16;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Outfit', sans-serif;
+      background: var(--white);
+      color: var(--body);
+      font-size: 17px;
+      line-height: 1.75;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Scroll reveal ── */
+    .r { opacity: 0; transform: translateY(18px); transition: opacity .65s ease, transform .65s ease; }
+    .r.in { opacity: 1; transform: none; }
+    .d1{transition-delay:.08s} .d2{transition-delay:.16s} .d3{transition-delay:.24s}
+    .d4{transition-delay:.32s} .d5{transition-delay:.40s} .d6{transition-delay:.48s}
+
+    /* ── Containers ── */
+    .wrap    { max-width: 760px; margin: 0 auto; padding: 0 36px; }
+    .wrap-lg { max-width: 980px; margin: 0 auto; padding: 0 36px; }
+
+    /* ── Section backgrounds ── */
+    .sec      { padding: 88px 0; background: var(--white); }
+    .sec-gray { padding: 88px 0; background: var(--gray-bg); }
+    .sec-lav  { padding: 88px 0; background: var(--lavender); }
+    .sec-warm { padding: 88px 0; background: var(--warm-bg); }
+    .sec-dark { padding: 88px 0; background: var(--forest); }
+
+    .divider { height: 1px; background: var(--border); }
+
+    /* ── Labels ── */
+    .lbl { display:inline-block; font-size:10.5px; font-weight:700; letter-spacing:2.5px; text-transform:uppercase; color:var(--label); margin-bottom:18px; }
+    .lbl-white { color: rgba(255,255,255,0.5); }
+
+    /* ── Headings ── */
+    .h-hero { font-size: clamp(46px,6.5vw,82px); font-weight:900; letter-spacing:-2.5px; line-height:1.03; color:var(--heading); }
+    .h-xl   { font-size: clamp(32px,4.5vw,52px); font-weight:800; letter-spacing:-1.5px; line-height:1.1; color:var(--heading); }
+    .h-lg   { font-size: clamp(24px,3.5vw,38px); font-weight:700; letter-spacing:-1px;   line-height:1.15; color:var(--heading); }
+    .h-white { color: #fff; }
+    .h-accent { color: var(--label); }
+    .b-lg { font-size:18px; color:var(--body); line-height:1.78; }
+    .b-md { font-size:16px; color:var(--body); line-height:1.75; }
+    .b-white { color: rgba(255,255,255,0.65); }
+
+    /* ══════════ NAV ══════════ */
+    .nav {
+      position:sticky; top:0; z-index:200;
+      background:rgba(255,255,255,.92);
+      backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
+      border-bottom:1px solid var(--border);
+    }
+    .nav-inner { max-width:760px; margin:0 auto; padding:14px 36px; display:flex; align-items:center; justify-content:space-between; }
+    .nav-brand { font-size:14px; font-weight:700; color:var(--heading); }
+    .nav-cs-pill {
+      font-size:12px; font-weight:600; color:var(--muted);
+      background:var(--gray-bg); border:1.5px solid var(--border);
+      padding:5px 13px; border-radius:100px; white-space:nowrap;
+    }
+
+    /* ══════════ HERO CSS VISUAL ══════════ */
+    .rmm-hero-visual {
+      background: linear-gradient(150deg, #1A2D16 0%, #243E1C 30%, #3A5C2E 60%, #567A49 85%, #6B9558 100%);
+      min-height: 400px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      gap: 24px;
+      padding: 56px 36px;
+    }
+    /* Ambient orbs */
+    .rmm-hero-visual::before {
+      content: '';
+      position: absolute;
+      width: 700px; height: 700px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(107,149,88,.18) 0%, transparent 70%);
+      top: -200px; right: -150px;
+      pointer-events: none;
+    }
+    .rmm-hero-visual::after {
+      content: '';
+      position: absolute;
+      width: 500px; height: 500px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,255,255,.05) 0%, transparent 70%);
+      bottom: -180px; left: -100px;
+      pointer-events: none;
+    }
+
+    /* ── Phone frames in hero ── */
+    .rmm-phones { display:flex; gap:20px; align-items:center; position:relative; z-index:1; }
+    .rmm-phone-wrap {
+      background: #1C1C1E;
+      border-radius: 36px;
+      padding: 10px;
+      box-shadow: 0 0 0 1px rgba(255,255,255,.08), 0 0 0 2px #3A3A3C, 0 24px 56px rgba(0,0,0,.4);
+    }
+    .rmm-phone-wrap.side { transform: scale(.82) translateY(24px); opacity:.7; }
+    .rmm-phone-screen {
+      background: #F0FAF0;
+      border-radius: 26px;
+      overflow: hidden;
+      width: 200px;
+      height: 360px;
+      position: relative;
+    }
+    .rmm-phone-wrap.side .rmm-phone-screen { width: 176px; height: 314px; border-radius: 22px; }
+    .rmm-di {
+      position: absolute; top: 8px; left: 50%; transform: translateX(-50%);
+      width: 72px; height: 20px; background: #1C1C1E; border-radius: 20px; z-index: 10;
+    }
+
+    /* Screen 1 — Onboarding */
+    .rms1 { background: #fff; padding: 36px 14px 14px; display: flex; flex-direction: column; align-items: center; height: 100%; }
+    .rms1-logo { font-size: 8px; font-weight: 800; color: #4B6E3D; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 20px; }
+    .rms1-icon { font-size: 28px; margin-bottom: 8px; }
+    .rms1-title { font-size: 10px; font-weight: 800; color: #0E1A0C; text-align: center; line-height: 1.4; margin-bottom: 6px; }
+    .rms1-sub   { font-size: 7.5px; color: #6B7A6E; text-align: center; line-height: 1.5; margin-bottom: 18px; padding: 0 4px; }
+    .rms1-opts  { display: flex; flex-direction: column; gap: 7px; width: 100%; }
+    .rms1-opt {
+      border: 1.5px solid #BDD4B5; border-radius: 10px;
+      padding: 8px 10px; display: flex; align-items: center; gap: 7px;
+      font-size: 7.5px; font-weight: 600; color: #0E1A0C; background: #fff; cursor: pointer;
+    }
+    .rms1-opt.sel { background: #EBF2E7; border-color: #4B6E3D; }
+    .rms1-dot { width: 14px; height: 14px; border-radius: 50%; background: #EBF2E7; border: 1.5px solid #BDD4B5; flex-shrink: 0; }
+    .rms1-opt.sel .rms1-dot { background: #4B6E3D; border-color: #4B6E3D; }
+
+    /* Screen 2 — Main Calm screen */
+    .rms2 { background: #fff; height: 100%; display: flex; flex-direction: column; }
+    .rms2-header { background: linear-gradient(135deg, #EBF2E7, #D8EBD2); padding: 36px 14px 18px; text-align: center; }
+    .rms2-greeting { font-size: 7px; color: #6B8B64; font-weight: 600; letter-spacing: .5px; margin-bottom: 4px; }
+    .rms2-q { font-size: 10.5px; font-weight: 800; color: #0E1A0C; line-height: 1.35; }
+    .rms2-emotions { display: flex; flex-wrap: wrap; gap: 5px; padding: 12px 10px 6px; }
+    .rms2-em {
+      padding: 5px 9px; border-radius: 20px; font-size: 7px; font-weight: 600;
+      background: #F5F8F4; border: 1.5px solid #BDD4B5; color: #4A5568; cursor: pointer;
+    }
+    .rms2-em.sel { background: #4B6E3D; color: #fff; border-color: #4B6E3D; }
+    .rms2-intensity { padding: 8px 10px; }
+    .rms2-int-lbl { font-size: 7px; font-weight: 700; color: #0E1A0C; margin-bottom: 5px; }
+    .rms2-slider { width: 100%; height: 4px; background: linear-gradient(to right, #4B6E3D 60%, #BDD4B5 60%); border-radius: 4px; }
+    .rms2-btn {
+      margin: 8px 10px 10px;
+      background: #4B6E3D; color: #fff;
+      border-radius: 12px; padding: 11px 0;
+      text-align: center; font-size: 8.5px; font-weight: 800;
+      letter-spacing: .5px;
+    }
+
+    /* Screen 3 — Technique */
+    .rms3 { background: #fff; height: 100%; display: flex; flex-direction: column; }
+    .rms3-top { background: linear-gradient(160deg, #2D4A22, #4B6E3D); padding: 32px 12px 18px; }
+    .rms3-step { font-size: 7px; font-weight: 700; color: rgba(255,255,255,.6); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 4px; }
+    .rms3-name { font-size: 11px; font-weight: 800; color: #fff; line-height: 1.3; }
+    .rms3-body { padding: 12px 12px 10px; flex: 1; }
+    .rms3-card { background: #EBF2E7; border-radius: 10px; padding: 10px 10px; margin-bottom: 7px; }
+    .rms3-card-title { font-size: 7.5px; font-weight: 800; color: #0E1A0C; margin-bottom: 3px; }
+    .rms3-card-body  { font-size: 6.5px; color: #4A5568; line-height: 1.5; }
+    .rms3-next { margin: 0 12px 10px; background: #4B6E3D; color: #fff; border-radius: 10px; padding: 9px; text-align: center; font-size: 7.5px; font-weight: 800; }
+
+    /* ══════════ HERO TEXT ══════════ */
+    .hero { padding:80px 0 72px; border-bottom:1px solid var(--border); }
+    .hero-eyebrow {
+      display:inline-flex; align-items:center; gap:8px;
+      font-size:12px; font-weight:600; color:var(--label);
+      background:var(--lavender); padding:6px 14px; border-radius:100px; margin-bottom:28px;
+    }
+    .hero-sub  { font-size:20px; color:var(--body); max-width:560px; margin-top:20px; line-height:1.65; }
+    .hero-meta { display:flex; flex-wrap:wrap; gap:10px; margin-top:40px; }
+    .tag {
+      display:inline-flex; align-items:center; gap:6px;
+      border:1.5px solid var(--border); border-radius:100px;
+      padding:7px 15px; font-size:13.5px; font-weight:500; color:var(--heading); background:var(--white);
+    }
+
+    /* ══════════ PILLS ══════════ */
+    .pill-cloud { display:flex; flex-wrap:wrap; gap:8px; margin-top:18px; }
+    .pill { border:1.5px solid var(--border); border-radius:100px; padding:7px 16px; font-size:14px; font-weight:500; color:var(--heading); background:var(--white); }
+    .pill-lav  { background:var(--lavender); border-color:var(--lav-deep); color:var(--label); font-weight:600; }
+    .pill-dark { background:rgba(255,255,255,.1); border-color:rgba(255,255,255,.2); color:#fff; }
+
+    /* ══════════ STATUS BADGES ══════════ */
+    .status {
+      display:inline-flex; align-items:center; gap:5px;
+      font-size:11px; font-weight:700; padding:4px 10px; border-radius:100px;
+    }
+    .status-dot { width:6px; height:6px; border-radius:50%; flex-shrink:0; }
+    .s-done  { background:var(--green-bg);  color:var(--green);  border:1.5px solid var(--green-bdr); }
+    .s-done  .status-dot { background:var(--green); }
+    .s-wip   { background:var(--amber-bg);  color:var(--amber);  border:1.5px solid var(--amber-bdr); }
+    .s-wip   .status-dot { background:var(--amber); animation:pulse 1.5s ease-in-out infinite; }
+    .s-soon  { background:var(--gray-bg);   color:var(--muted);  border:1.5px solid var(--border); }
+    .s-soon  .status-dot { background:var(--muted); }
+    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(.85)} }
+
+    /* ══════════ STICKY CARDS ══════════ */
+    .sticky-row   { display:grid; gap:14px; margin-top:32px; }
+    .sticky-row-2 { grid-template-columns:1fr 1fr; }
+    .sticky-row-3 { grid-template-columns:1fr 1fr 1fr; }
+    .sticky { background:var(--yellow); border:1.5px solid var(--yel-bdr); border-radius:18px; padding:26px 24px; }
+    .sticky-ico  { font-size:24px; margin-bottom:12px; display:block; }
+    .sticky-title{ font-size:15px; font-weight:700; color:var(--heading); margin-bottom:8px; }
+    .sticky-body { font-size:14px; color:#5C5830; line-height:1.6; }
+    .sticky-list { list-style:none; margin-top:8px; display:flex; flex-direction:column; gap:5px; }
+    .sticky-list li { font-size:13.5px; color:#5C5830; }
+    .sticky-list li::before { content:"—  "; color:#A89F52; }
+
+    /* ══════════ AUDIT CARDS ══════════ */
+    .audit-row  { display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px; margin-top:32px; }
+    .audit-card { background:var(--white); border:1.5px solid var(--border); border-radius:18px; padding:26px 22px; }
+    .audit-card.is-ours { background:var(--lavender); border-color:var(--lav-deep); }
+    .badge { display:inline-block; padding:4px 13px; border-radius:100px; font-size:12px; font-weight:700; margin-bottom:16px; }
+    .b-teal   { background:#0D9488; color:#fff; }
+    .b-blue   { background:#3B82F6; color:#fff; }
+    .b-purple { background:#8B5CF6; color:#fff; }
+    .b-green  { background:var(--label); color:#fff; }
+    .audit-list { list-style:none; display:flex; flex-direction:column; gap:8px; }
+    .audit-list li { font-size:13px; color:var(--body); display:flex; align-items:flex-start; gap:8px; line-height:1.5; }
+    .audit-list li .ic { flex-shrink:0; margin-top:1px; }
+
+    /* ══════════ PULL QUOTE ══════════ */
+    .pull-q { font-size:clamp(18px,2.8vw,28px); font-weight:700; font-style:italic; color:var(--heading); border-left:3px solid var(--label); padding:8px 0 8px 28px; line-height:1.4; }
+    .pull-q-white { color:#fff; border-color:rgba(255,255,255,.4); }
+
+    /* ══════════ CALLOUT BOX ══════════ */
+    .callout { background:var(--lavender); border-radius:24px; padding:52px 48px; }
+    .callout-warm { background:var(--warm-bg); border:1.5px solid #B8D9B0; border-radius:24px; padding:52px 48px; }
+
+    /* ══════════ STACK CARDS ══════════ */
+    .stack-row  { display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px; margin-top:32px; }
+    .stack-card { background:var(--white); border:1.5px solid var(--border); border-radius:18px; padding:28px 24px; }
+    .stack-ico  { width:44px; height:44px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:20px; margin-bottom:14px; }
+    .stack-name { font-size:16px; font-weight:700; color:var(--heading); margin-bottom:6px; }
+    .stack-desc { font-size:13.5px; color:var(--body); line-height:1.6; }
+
+    /* ══════════ NUMBERED ROWS ══════════ */
+    .num-list { border:1.5px solid var(--border); border-radius:20px; overflow:hidden; margin-top:32px; }
+    .num-row  { display:grid; grid-template-columns:64px 1fr; border-bottom:1px solid var(--border); }
+    .num-row:last-child { border-bottom:none; }
+    .num-col  { background:var(--lavender); display:flex; align-items:center; justify-content:center; font-size:18px; font-weight:800; color:var(--label); border-right:1px solid var(--lav-deep); padding:28px 0; }
+    .num-body { padding:26px 28px; background:var(--white); }
+    .num-title{ font-size:16px; font-weight:700; color:var(--heading); margin-bottom:4px; }
+    .num-desc { font-size:14px; color:var(--body); line-height:1.6; }
+
+    /* ══════════ DARK SECTION ══════════ */
+    .dark-quote-box {
+      border:1px solid rgba(255,255,255,.12); border-radius:24px;
+      padding:52px 48px; margin-top:0;
+    }
+    .dark-stat { font-size:clamp(60px,9vw,96px); font-weight:900; color:#fff; letter-spacing:-4px; line-height:1; margin-bottom:12px; }
+    .dark-stat-sub { font-size:18px; color:rgba(255,255,255,.6); max-width:500px; line-height:1.6; }
+
+    /* ══════════ INSIGHT STRIP ══════════ */
+    .insight-strip {
+      background: var(--lavender);
+      border-left: 4px solid var(--label);
+      border-radius: 0 16px 16px 0;
+      padding: 24px 28px;
+      margin-top: 28px;
+    }
+    .insight-strip p { font-size: 16px; font-weight: 600; color: var(--heading); line-height: 1.6; }
+
+    /* ══════════ SENSOR CARDS ══════════ */
+    .sensor-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 32px; }
+    .sensor-card {
+      background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.12);
+      border-radius: 18px; padding: 26px 24px;
+    }
+    .sensor-ico { font-size: 22px; margin-bottom: 12px; display: block; }
+    .sensor-title { font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 8px; }
+    .sensor-body  { font-size: 13.5px; color: rgba(255,255,255,.6); line-height: 1.6; }
+
+    /* ══════════ OUTCOME BOX ══════════ */
+    .outcome-box {
+      background: var(--forest); border-radius: 24px; padding: 52px 48px;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 52px; align-items: center;
+    }
+    .outcome-stat { font-size: clamp(56px,9vw,96px); font-weight: 900; color: #fff; letter-spacing: -4px; line-height: 1; }
+    .outcome-unit { display: block; font-size: 16px; font-weight: 500; color: rgba(255,255,255,.5); letter-spacing: 0; margin-top: 6px; }
+    .outcome-items { display: flex; flex-direction: column; gap: 14px; }
+    .outcome-item { display: flex; align-items: center; gap: 12px; }
+    .outcome-dot  { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .outcome-text { font-size: 15px; color: rgba(255,255,255,.75); font-weight: 500; }
+
+    /* ══════════ CREDIT ══════════ */
+    .credit { display:flex; align-items:center; gap:12px; margin-top:36px; }
+    .credit-av { width:44px; height:44px; border-radius:50%; overflow:hidden; border:2px solid var(--lav-deep); }
+    .credit-av img { width:100%; height:100%; object-fit:cover; display:block; }
+    .credit-name { font-size:15px; font-weight:700; color:var(--heading); }
+    .credit-role { font-size:13px; color:var(--muted); }
+
+    /* ══════════ BIG QUOTE BLOCK ══════════ */
+    .big-quote { font-size: clamp(22px, 3.5vw, 38px); font-weight: 800; color: var(--heading); letter-spacing: -0.5px; line-height: 1.3; }
+    .big-quote em { font-style: italic; color: var(--label); }
+
+    /* ══════════ RESPONSIVE ══════════ */
+    @media (max-width:820px) {
+      .wrap,.wrap-lg { padding:0 20px; }
+      .audit-row,.stack-row,.sticky-row-2,.sticky-row-3,.sensor-row,.outcome-box { grid-template-columns:1fr; }
+      .outcome-box { gap:32px; }
+      .callout,.callout-warm,.dark-quote-box { padding:36px 28px; }
+      .rmm-phone-wrap.side { display: none; }
+      .rmm-hero-visual { min-height: 300px; padding: 40px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <span class="nav-brand">Relax My Mind</span>
+    <span class="nav-cs-pill">App Design · 2025</span>
+  </div>
+</nav>
+
+
+<!-- ░░ HERO IMAGE ░░ -->
+<img src="https://ik.imagekit.io/424h6me27c/MacBook%20Pro%2016_%20-%203.png" style="width:100%;display:block;" alt="">
+<div class="rmm-hero-visual" style="display:none;">
+  <div class="rmm-phones">
+
+    <!-- Phone Left — Onboarding -->
+    <div class="rmm-phone-wrap side">
+      <div class="rmm-phone-screen">
+        <div class="rmm-di"></div>
+        <div class="rms1">
+          <div class="rms1-logo">relax my mind</div>
+          <div class="rms1-icon">🌿</div>
+          <div class="rms1-title">What brings<br>you here today?</div>
+          <div class="rms1-sub">We'll personalise your experience around your emotional needs.</div>
+          <div class="rms1-opts">
+            <div class="rms1-opt sel"><div class="rms1-dot"></div> I feel stressed often</div>
+            <div class="rms1-opt"><div class="rms1-dot"></div> Hard to fall asleep</div>
+            <div class="rms1-opt"><div class="rms1-dot"></div> Overthinking & anxiety</div>
+            <div class="rms1-opt"><div class="rms1-dot"></div> Just want to unwind</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Phone Center — Main Screen -->
+    <div class="rmm-phone-wrap">
+      <div class="rmm-phone-screen">
+        <div class="rmm-di"></div>
+        <div class="rms2">
+          <div class="rms2-header">
+            <div class="rms2-greeting">Good evening, Priyanshu 🌙</div>
+            <div class="rms2-q">How are you<br>feeling right now?</div>
+          </div>
+          <div class="rms2-emotions">
+            <span class="rms2-em sel">😤 Stressed</span>
+            <span class="rms2-em">😰 Anxious</span>
+            <span class="rms2-em">😔 Low</span>
+            <span class="rms2-em">🤯 Overwhelmed</span>
+            <span class="rms2-em">😤 Irritated</span>
+            <span class="rms2-em">😶 Numb</span>
+          </div>
+          <div class="rms2-intensity">
+            <div class="rms2-int-lbl">How intense? (6/10)</div>
+            <div class="rms2-slider"></div>
+          </div>
+          <div class="rms2-btn">✦ Calm My Mind</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Phone Right — Technique -->
+    <div class="rmm-phone-wrap side">
+      <div class="rmm-phone-screen">
+        <div class="rmm-di"></div>
+        <div class="rms3">
+          <div class="rms3-top">
+            <div class="rms3-step">Step 1 of 3</div>
+            <div class="rms3-name">Change your environment</div>
+          </div>
+          <div class="rms3-body">
+            <div class="rms3-card">
+              <div class="rms3-card-title">🚶 Move to another room</div>
+              <div class="rms3-card-body">Your nervous system responds to physical space. A new environment resets your mental state faster than you think.</div>
+            </div>
+            <div class="rms3-card">
+              <div class="rms3-card-title">🌬️ 4–4–4 breathing</div>
+              <div class="rms3-card-body">Inhale for 4 counts, hold for 4, exhale for 4. Repeat until you feel a shift — even 1% calmer counts.</div>
+            </div>
+            <div class="rms3-next">→ Mark as done</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ░░ HERO TEXT ░░ -->
+<div class="wrap">
+  <div class="hero">
+    <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:28px;">
+      <div class="hero-eyebrow r" style="margin-bottom:0;">🌿 App Design · 2025</div>
+    </div>
+    <h1 class="h-hero r d1" style="font-size:clamp(30px,6.5vw,76px);">Relax My Mind</h1>
+    <p class="hero-sub r d2">Building an AI-powered calming app as a designer with no engineering background — proving that product thinking is the new superpower.</p>
+    <div class="hero-meta r d3">
+      <span class="tag">👤 Senior Product Designer</span>
+      <span class="tag">🤖 AI-assisted development</span>
+      <span class="tag">📱 iOS App</span>
+      <span class="tag">🧘 Mental Wellness</span>
+    </div>
+  </div>
+</div>
+<div class="divider"></div>
+
+
+<!-- ░░ WHY I BUILT THIS ░░ -->
+<div class="sec">
+  <div class="wrap">
+    <div class="lbl r">The Experiment</div>
+    <h2 class="h-xl r d1" style="margin-bottom:20px;">How far can a designer<br>go without touching code?</h2>
+    <p class="b-lg r d2" style="max-width:580px;">When AI coding tools started exploding, I noticed something interesting. Designers were suddenly shipping real products. Apps. Websites. Tools.</p>
+
+    <div class="insight-strip r d3">
+      <p>"I wanted to test one thing: <em style="color:var(--label);">how far can a designer go today without touching code?</em> So I decided to build a real product from scratch using AI."</p>
+    </div>
+
+    <p class="b-lg r d4" style="margin-top:36px;max-width:580px;">No Figma. No engineering background. Just product thinking, systems, and direction. This project became the proof of concept.</p>
+
+    <div class="pill-cloud r d4" style="margin-top:24px;">
+      <span class="pill">🧠 Product thinking</span>
+      <span class="pill">⚡ AI-assisted code</span>
+      <span class="pill">🗺️ Systems design</span>
+      <span class="pill">🚢 Solo builder</span>
+    </div>
+  </div>
+</div>
+<div class="divider"></div>
+
+
+<!-- ░░ THE PROBLEM ░░ -->
+<div class="sec-gray">
+  <div class="wrap">
+    <div class="lbl r">Finding The Problem</div>
+    <h2 class="h-xl r d1" style="margin-bottom:20px;">Distraction isn't<br>the same as calm.</h2>
+    <p class="b-lg r d2" style="max-width:580px;margin-bottom:32px;">I've always been interested in journaling, meditation, and calming techniques. But I kept noticing how people — including myself — actually deal with stress.</p>
+
+    <div class="sticky-row sticky-row-2 r d2">
+      <div class="sticky">
+        <span class="sticky-ico">📱</span>
+        <div class="sticky-title">The distraction trap</div>
+        <div class="sticky-body">Most people regulate stress by distracting themselves:</div>
+        <ul class="sticky-list">
+          <li>Instagram and endless scrolling</li>
+          <li>YouTube rabbit holes</li>
+          <li>Mindless content consumption</li>
+        </ul>
+        <div class="sticky-body" style="margin-top:10px;">Temporary relief. Not actual calmness.</div>
+      </div>
+      <div class="sticky">
+        <span class="sticky-ico">🧘</span>
+        <div class="sticky-title">Existing apps missed this</div>
+        <div class="sticky-body">Meditation apps felt repetitive and emotionally disconnected. They focused on content consumption:</div>
+        <ul class="sticky-list">
+          <li>Guided meditations</li>
+          <li>Ambient music</li>
+          <li>Passive breathing exercises</li>
+        </ul>
+        <div class="sticky-body" style="margin-top:10px;">Not active, physical interventions.</div>
+      </div>
+    </div>
+
+    <p class="b-lg r d3" style="margin-top:44px;max-width:580px;">Real calming often comes from small physical actions — not passive content.</p>
+    <div class="pill-cloud r d3">
+      <span class="pill pill-lav">Moving to another room</span>
+      <span class="pill pill-lav">Changing environments</span>
+      <span class="pill pill-lav">Physical grounding</span>
+      <span class="pill pill-lav">Breathing differently</span>
+    </div>
+    <p class="b-lg r d4" style="margin-top:28px;max-width:580px;">That became the opportunity behind Relax My Mind.</p>
+  </div>
+</div>
+<div class="divider"></div>
+
+
+<!-- ░░ WHAT ALREADY EXISTS ░░ -->
+<div class="sec">
+  <div class="wrap">
+    <div class="lbl r">Competitive Landscape</div>
+    <h2 class="h-xl r d1" style="margin-bottom:20px;">Each covered a slice.<br>None served the whole.</h2>
+    <p class="b-lg r d2" style="max-width:580px;margin-bottom:8px;">Existing apps optimise for content. I wanted to optimise for <em>state change</em>.</p>
+
+    <div class="audit-row r d2">
+      <div class="audit-card">
+        <span class="badge b-teal">Headspace &amp; Calm</span>
+        <ul class="audit-list">
+          <li><span class="ic">✅</span> Beautiful, polished experience</li>
+          <li><span class="ic">❌</span> Subscription paywalls for most content</li>
+          <li><span class="ic">❌</span> Passive — you watch, you don't do</li>
+          <li><span class="ic">❌</span> Not reactive to real-time emotion</li>
+        </ul>
+      </div>
+      <div class="audit-card">
+        <span class="badge b-blue">Breathwork Apps</span>
+        <ul class="audit-list">
+          <li><span class="ic">✅</span> Scientifically sound techniques</li>
+          <li><span class="ic">❌</span> Single-technique focus — repetitive</li>
+          <li><span class="ic">❌</span> No emotional context or personalisation</li>
+          <li><span class="ic">❌</span> Feels like a tool, not a companion</li>
+        </ul>
+      </div>
+      <div class="audit-card is-ours">
+        <span class="badge b-green">Relax My Mind</span>
+        <ul class="audit-list">
+          <li><span class="ic">✅</span> Reacts to your emotional state in real time</li>
+          <li><span class="ic">✅</span> Short physical interventions, not long sessions</li>
+          <li><span class="ic">✅</span> Sensor-aware — responds to your environment</li>
+          <li><span class="ic">✅</span> Feels like a responsive companion</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="divider"></div>
+
+
+<!-- ░░ THE VISION — lavender bg ░░ -->
+<div class="sec-lav">
+  <div class="wrap">
+    <div class="lbl r">The Vision</div>
+    <h2 class="h-xl r d1" style="margin-bottom:20px;">Not another meditation app.<br>A responsive calming companion.</h2>
+    <p class="b-lg r d2" style="max-width:580px;margin-bottom:36px;">An app that reacts to your emotional state in real time. The core interaction was simple.</p>
+
+    <div class="callout r d2">
+      <div style="font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--label);margin-bottom:20px;">The Core Interaction</div>
+      <h3 class="h-lg" style="margin-bottom:16px;font-size:clamp(20px,3vw,32px);">"Calm My Mind"</h3>
+      <p class="b-md" style="margin-bottom:28px;">The user selects what they're feeling and how intense the emotion is. Using onboarding data and emotional inputs, the app suggests a sequence of short calming techniques.</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;">
+        <div style="background:var(--white);border-radius:14px;padding:18px 16px;border:1.5px solid var(--lav-deep);">
+          <div style="font-size:20px;margin-bottom:8px;">🎭</div>
+          <div style="font-size:13px;font-weight:700;color:var(--heading);margin-bottom:4px;">Select emotion</div>
+          <div style="font-size:12px;color:var(--body);">What are you feeling right now?</div>
+        </div>
+        <div style="background:var(--white);border-radius:14px;padding:18px 16px;border:1.5px solid var(--lav-deep);">
+          <div style="font-size:20px;margin-bottom:8px;">📊</div>
+          <div style="font-size:13px;font-weight:700;color:var(--heading);margin-bottom:4px;">Rate intensity</div>
+          <div style="font-size:12px;color:var(--body);">How strong is it on a scale?</div>
+        </div>
+        <div style="background:var(--white);border-radius:14px;padding:18px 16px;border:1.5px solid var(--lav-deep);">
+          <div style="font-size:20px;margin-bottom:8px;">🌿</div>
+          <div style="font-size:13px;font-weight:700;color:var(--heading);margin-bottom:4px;">Get a sequence</div>
+          <div style="font-size:12px;color:var(--body);">Tiny, personalised interventions.</div>
+        </div>
+      </div>
+    </div>
+
+    <p class="b-lg r d3" style="margin-top:36px;max-width:560px;">Not long sessions. Tiny emotional interventions. The goal isn't to become calm in 20 minutes — it's to shift <em>1% in the right direction</em>.</p>
+  </div>
+</div>
+<div class="divider"></div>
+
+
+<!-- ░░ SENSOR EXPLORATION — DARK ░░ -->
+<div class="sec-dark">
+  <div class="wrap">
+    <div class="lbl lbl-white r">Sensor-Driven Calming</div>
+    <h2 class="h-xl h-white r d1" style="margin-bottom:20px;">Your phone already<br>understands your world.</h2>
+    <p class="b-lg b-white r d2" style="max-width:580px;margin-bottom:44px;">I became obsessed with the idea that phones already understand context. So why weren't calming apps using that? I started experimenting with what was possible.</p>
+
+    <div class="sensor-row r d2">
+      <div class="sensor-card">
+        <span class="sensor-ico">🎙️</span>
+        <div class="sensor-title">Microphone-aware environments</div>
+        <div class="sensor-body">If the app detects excessive noise, it can suggest the user move to a quieter place before beginning any technique. Context-first calming.</div>
+      </div>
+      <div class="sensor-card">
+        <span class="sensor-ico">📐</span>
+        <div class="sensor-title">Gyroscope-based interaction</div>
+        <div class="sensor-body">Balance and tilt interactions as grounding exercises. Physical engagement creates a mind-body connection that passive audio never can.</div>
+      </div>
+      <div class="sensor-card">
+        <span class="sensor-ico">🏃</span>
+        <div class="sensor-title">Movement detection</div>
+        <div class="sensor-body">Using motion data to understand if someone is pacing, restless, or still — and adapting the suggested technique accordingly.</div>
+      </div>
+      <div class="sensor-card">
+        <span class="sensor-ico">🌍</span>
+        <div class="sensor-title">Environment-aware suggestions</div>
+        <div class="sensor-body">Time of day, location context, and ambient noise levels all feed into what kind of calming intervention is most likely to work right now.</div>
+      </div>
+    </div>
+
+    <div class="dark-quote-box r d3" style="margin-top:44px;">
+      <blockquote class="pull-q pull-q-white" style="font-size:clamp(20px,3vw,30px);">"The product slowly started feeling less like a static app… and more like a responsive emotional assistant."</blockquote>
+    </div>
+  </div>
+</div>
+<div class="divider"></div>
+
+
+<!-- ░░ BUILT WITH AI — warm bg ░░ -->
+<div class="sec-warm">
+  <div class="wrap">
+    <div class="lbl r">The Stack</div>
+    <h2 class="h-xl r d1" style="margin-bottom:20px;">No code background.<br>Three tools. One real product.</h2>
+    <p class="b-lg r d2" style="max-width:560px;margin-bottom:8px;">As someone from a pure design background, this completely changed how I think about building products.</p>
+
+    <div class="stack-row r d2">
+      <div class="stack-card">
+        <div class="stack-ico" style="background:#FFF8E1;">💬</div>
+        <div class="stack-name">ChatGPT</div>
+        <div class="stack-desc">Ideation, product thinking, and structuring emotional flows. Used for understanding user psychology and framing the right problems before building.</div>
+      </div>
+      <div class="stack-card">
+        <div class="stack-ico" style="background:var(--lavender);">⚡</div>
+        <div class="stack-name">Claude Code + Codex</div>
+        <div class="stack-desc">Frontend development and feature building. Writing production-quality code directly from product intent — no intermediate translation needed.</div>
+      </div>
+      <div class="stack-card">
+        <div class="stack-ico" style="background:#E3F2FD;">🗄️</div>
+        <div class="stack-name">Supabase</div>
+        <div class="stack-desc">Authentication, backend logic, and user data — emotion logs, session history, onboarding preferences. The entire infrastructure layer.</div>
+      </div>
+    </div>
+
+    <div class="callout-warm r d3" style="margin-top:24px;">
+      <p class="b-lg" style="font-weight:700;color:var(--heading);margin-bottom:12px;">A shift in how I think about design</p>
+      <p class="b-md">I realised modern product design is becoming less about tools… and more about clarity of thinking. The constraint of "no engineering background" forced me to think in systems, not screens.</p>
+    </div>
+  </div>
+</div>
+<div class="divider"></div>
+
+
+<!-- ░░ VISUAL DIRECTION — gray bg ░░ -->
+<div class="sec-gray">
+  <div class="wrap">
+    <div class="lbl r">Visual Direction</div>
+    <h2 class="h-xl r d1" style="margin-bottom:20px;">The interface should<br>emotionally disappear.</h2>
+    <p class="b-lg r d2" style="max-width:560px;margin-bottom:36px;">The UI was intentionally minimal. I wanted the design to get out of the way so calm could take over.</p>
+
+    <div class="num-list r d2">
+      <div class="num-row">
+        <div class="num-col">🌿</div>
+        <div class="num-body">
+          <div class="num-title">Forest-inspired palette</div>
+          <div class="num-desc">Greens, muted earth tones, and soft natural gradients. Every color chosen to trigger a subconscious association with calm and nature.</div>
+        </div>
+      </div>
+      <div class="num-row">
+        <div class="num-col">✦</div>
+        <div class="num-body">
+          <div class="num-title">No illustrations, very few icons</div>
+          <div class="num-desc">Complex visuals compete for attention. Simple line icons and whitespace communicate "this is a safe, quiet place."</div>
+        </div>
+      </div>
+      <div class="num-row">
+        <div class="num-col">💧</div>
+        <div class="num-body">
+          <div class="num-title">Soft, fluid interactions</div>
+          <div class="num-desc">No sharp transitions. Everything breathes. Gentle easing curves and subtle motion reinforce the emotional tone before a single word is read.</div>
+        </div>
+      </div>
+      <div class="num-row">
+        <div class="num-col">🤫</div>
+        <div class="num-body">
+          <div class="num-title">Minimal copy, big breathing room</div>
+          <div class="num-desc">Every screen has generous whitespace. When you're stressed, visual noise makes it worse. The UI itself should feel like a slow exhale.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="divider"></div>
+
+
+<!-- ░░ KEY LEARNING — lavender bg ░░ -->
+<div class="sec-lav">
+  <div class="wrap">
+    <div class="lbl r">The Insight</div>
+    <h2 class="h-xl r d1" style="margin-bottom:36px;">The shift that changed<br>everything mid-build.</h2>
+
+    <div class="r d2" style="margin-bottom:44px;">
+      <div class="big-quote">"I wasn't designing screens.<br>I was designing <em>emotional transitions.</em>"</div>
+    </div>
+
+    <p class="b-lg r d3" style="max-width:560px;margin-bottom:28px;">Every interaction aimed to move the user from overwhelm to slight mental clarity. Even 1% calmer. That became the product philosophy — and it changed everything about how I made decisions.</p>
+
+    <div class="sticky-row sticky-row-3 r d3">
+      <div class="sticky">
+        <span class="sticky-ico">🎯</span>
+        <div class="sticky-title">Clarity of intent</div>
+        <div class="sticky-body">Every feature had to answer: "Does this help someone feel 1% calmer?" If not, it didn't ship.</div>
+      </div>
+      <div class="sticky">
+        <span class="sticky-ico">⚡</span>
+        <div class="sticky-title">Speed over perfection</div>
+        <div class="sticky-body">AI let me test assumptions in hours, not weeks. The learning came from building, not planning.</div>
+      </div>
+      <div class="sticky">
+        <span class="sticky-ico">🔄</span>
+        <div class="sticky-title">Systems thinking wins</div>
+        <div class="sticky-body">Knowing <em>what to build</em> mattered more than knowing <em>how</em>. Design background = product clarity.</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="divider"></div>
+
+
+<!-- ░░ OUTCOME ░░ -->
+<div class="sec">
+  <div class="wrap">
+    <div class="lbl r">Outcome</div>
+    <h2 class="h-xl r d1" style="margin-bottom:20px;">Beyond the app.<br>A new way of thinking.</h2>
+    <p class="b-lg r d2" style="max-width:560px;margin-bottom:36px;">I tested the app with friends and colleagues. The early response was positive. But the real outcome was something bigger.</p>
+
+    <div class="outcome-box r d2">
+      <div>
+        <div style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:16px;">Early testers</div>
+        <div class="outcome-stat">12+<span class="outcome-unit">friends &amp; colleagues tested</span></div>
+      </div>
+      <div class="outcome-items">
+        <div style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:8px;">What's next</div>
+        <div class="outcome-item"><div class="outcome-dot" style="background:var(--green);"></div><span class="outcome-text">App design &amp; core flow complete</span></div>
+        <div class="outcome-item"><div class="outcome-dot" style="background:var(--amber);animation:pulse 1.5s ease-in-out infinite;"></div><span class="outcome-text">Exploring sensor-based interactions</span></div>
+        <div class="outcome-item"><div class="outcome-dot" style="background:rgba(255,255,255,.25);"></div><span class="outcome-text">Preparing for App Store submission</span></div>
+        <div class="outcome-item"><div class="outcome-dot" style="background:rgba(255,255,255,.25);"></div><span class="outcome-text">Long-term retention &amp; emotional effectiveness study</span></div>
+      </div>
+    </div>
+
+    <div class="callout r d3" style="margin-top:24px;">
+      <p class="b-lg" style="font-weight:700;color:var(--heading);margin-bottom:12px;">The bigger proof</p>
+      <p class="b-md">Designers today can move far beyond interfaces and become full product builders. AI hasn't replaced product thinking — it's amplified it. The designers who understand <em>what</em> to build will be the most valuable people in any room.</p>
+    </div>
+
+    <div class="credit r d3" style="margin-top:40px;">
+      <div class="credit-av"><img src="https://ik.imagekit.io/424h6me27c/1720635179303.jpeg" alt="Priyanshu"></div>
+      <div>
+        <div class="credit-name">Priyanshu Barnwal</div>
+        <div class="credit-role">Senior Product Designer · Zomato · 6 years experience</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div style="height:80px;"></div>
+
+<script>
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('in');
+        obs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.r').forEach(el => obs.observe(el));
+</script>
+</body>
+</html>
