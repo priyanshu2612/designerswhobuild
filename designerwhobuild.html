@@ -777,7 +777,7 @@
   .hmiss-card { width: 310px; }
 
   /* ── Builds of the day ─────────────────────────── */
-  .botd-heading-img { display: block; width: 100%; height: auto; }
+  .botd-heading-img { display: block; width: 100%; height: auto; margin-top: 32px; }
   .botd-scroll {
     display: flex;
     gap: 12px;
@@ -792,7 +792,11 @@
   .botd-card {
     width: 80vw;
     scroll-snap-align: center;
+    transform: scale(0.89);
+    transform-origin: center center;
+    transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
   }
+  .botd-card.botd-hero { transform: scale(1); }
   .hmiss-video {
     position: absolute;
     inset: 0;
@@ -2621,7 +2625,7 @@
 
     <!-- Card 1 — VoiceBlob -->
     <div class="botd-card" onclick="openPostDetail('voiceblob')">
-      <img class="hmiss-video" src="https://ik.imagekit.io/424h6me27c/1593694785946.jpeg" alt="">
+      <video class="hmiss-video" src="https://ik.imagekit.io/424h6me27c/linkedin-video.mp4" loop muted playsinline></video>
       <div class="hmiss-blur-1"></div>
       <div class="hmiss-blur-2"></div>
       <div class="hmiss-blur-3"></div>
@@ -3822,6 +3826,30 @@ Download now for free : pasteryapp.xyz</div>
   }, { threshold: 0.4 });
 
   document.querySelectorAll('video.hmiss-video').forEach(v => hmissObserver.observe(v));
+
+  // ── Builds of the day hero card ──────────────────
+  function _updateBotdHero() {
+    const s = document.querySelector('.botd-scroll');
+    if (!s) return;
+    const cx = s.scrollLeft + s.clientWidth / 2;
+    let hero = null, minDist = Infinity;
+    const cards = s.querySelectorAll('.botd-card');
+    cards.forEach(c => {
+      const dist = Math.abs(c.offsetLeft + c.offsetWidth / 2 - cx);
+      if (dist < minDist) { minDist = dist; hero = c; }
+    });
+    cards.forEach(c => {
+      const isHero = c === hero;
+      c.classList.toggle('botd-hero', isHero);
+      const v = c.querySelector('video.hmiss-video');
+      if (v) { isHero ? v.play().catch(() => {}) : v.pause(); }
+    });
+  }
+  const _botdScroll = document.querySelector('.botd-scroll');
+  if (_botdScroll) {
+    _botdScroll.addEventListener('scroll', _updateBotdHero, { passive: true });
+    _updateBotdHero();
+  }
 
   function togglePostVideo(wrap) {
     const video = wrap.querySelector('.post-video');
