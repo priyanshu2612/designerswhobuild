@@ -595,7 +595,7 @@
   .trending-scroll {
     overflow-x: auto;
     scrollbar-width: none;
-    padding: 0 16px 16px;
+    padding: 0 16px;
   }
   .trending-scroll::-webkit-scrollbar { display: none; }
   .trending-grid {
@@ -785,7 +785,7 @@
     scroll-snap-type: x mandatory;
     scrollbar-width: none;
     -webkit-overflow-scrolling: touch;
-    padding: 16px 10% 28px;
+    padding: 16px 10% 0;
     scroll-padding-inline: 10%;
   }
   .botd-scroll::-webkit-scrollbar { display: none; }
@@ -971,6 +971,66 @@
     display: flex;
     gap: 8px;
     width: max-content;
+  }
+
+  /* ── Vibe Cards ───────────────────────────── */
+  .vibe-scroll {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    padding: 0 16px 4px;
+  }
+  .vibe-scroll::-webkit-scrollbar { display: none; }
+  .vibe-card {
+    width: 160px;
+    height: 190px;
+    border-radius: 20px;
+    flex-shrink: 0;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 18px 12px 22px;
+    box-sizing: border-box;
+  }
+  .vibe-imgs {
+    position: relative;
+    width: 130px;
+    height: 86px;
+    flex-shrink: 0;
+    margin-bottom: 12px;
+  }
+  .vibe-img {
+    position: absolute;
+    border-radius: 14px;
+    object-fit: cover;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.14);
+    border: 2px solid #fff;
+    box-sizing: border-box;
+  }
+  /* back — smallest, -15deg; centers all at y=43 */
+  .vibe-img:nth-child(1) { width: 58px; height: 58px; transform: rotate(-15deg); left: 12px; top: 14px; z-index: 1; }
+  /* middle — medium, 0deg */
+  .vibe-img:nth-child(2) { width: 70px; height: 70px; transform: rotate(0deg);   left: 34px; top: 8px;  z-index: 2; }
+  /* front — largest, +15deg */
+  .vibe-img:nth-child(3) { width: 72px; height: 72px; transform: rotate(15deg);  left: 54px; top: 7px;  z-index: 3; }
+  .vibe-title {
+    margin-top: auto;
+    font-size: 18px;
+    font-weight: 600;
+    color: #10192D;
+    font-family: 'Outfit', sans-serif;
+    text-align: center;
+    line-height: 1.2;
+    margin-bottom: 4px;
+  }
+  .vibe-count {
+    font-size: 16px;
+    font-weight: 400;
+    color: #596378;
+    font-family: 'Outfit', sans-serif;
+    text-align: center;
   }
   .tag-pill {
     display: inline-flex;
@@ -1555,7 +1615,7 @@
     font-family: 'Outfit', sans-serif; transition: background 0.15s, color 0.15s;
   }
   .helpful-tab.active { background: #F2F4F7; color: #10192D; font-weight: 600; }
-  .community-tab-row { display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none; padding: 0 10px 14px; margin-top: -8px; }
+  .community-tab-row { display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none; padding: 0 10px 14px; margin-top: 0; }
   .community-tab-row::-webkit-scrollbar { display: none; }
   .community-tab {
     font-size: 14px; font-weight: 500; color: #596378;
@@ -1829,7 +1889,7 @@
   .pd-status-row { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
   .pd-title { font-size: 22px; font-weight: 800; color: #10192D; line-height: 1.25; margin-bottom: 10px; font-family: 'Outfit', sans-serif; }
   .pd-desc { font-size: 15px; color: #454C5F; line-height: 1.55; margin-bottom: 20px; }
-  .pd-author-row { display: flex; align-items: center; gap: 12px; padding: 16px 0; border-top: 1px solid #F2F4F7; border-bottom: 1px solid #F2F4F7; margin-bottom: 20px; cursor: pointer; }
+  .pd-author-row { display: flex; align-items: center; gap: 12px; padding: 16px 16px; margin-bottom: 0; cursor: pointer; }
   .pd-author-avatar { width: 44px; height: 44px; border-radius: 50%; overflow: hidden; flex-shrink: 0; background: #EEF2FF; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 800; color: #3169ED; font-family: 'Outfit', sans-serif; }
   .pd-author-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
   .pd-author-name { font-size: 15px; font-weight: 700; color: #10192D; font-family: 'Outfit', sans-serif; }
@@ -1838,14 +1898,14 @@
   .pd-live-btn { width: 100%; height: 50px; border-radius: 14px; background: #3169ED; color: #fff; font-family: 'Outfit', sans-serif; font-size: 16px; font-weight: 700; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
   .pd-live-btn:active { opacity: 0.85; }
   /* ── Journey section ─────────────────────────── */
-  .pd-journey { padding: 0 16px 32px; }
+  .pd-journey { padding: 20px 16px 32px; }
   .pd-journey-label { font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #8492A6; margin-bottom: 24px; }
   .pd-step { display: flex; gap: 16px; }
   .pd-step-left { display: flex; flex-direction: column; align-items: center; width: 28px; flex-shrink: 0; }
   .pd-step-num { font-size: 22px; font-weight: 800; color: #10192D; line-height: 1; font-family: 'Outfit', sans-serif; }
   .pd-step-line { flex: 1; width: 1.5px; background: #E4E7EC; margin-top: 8px; min-height: 24px; }
   .pd-step:last-child .pd-step-line { display: none; }
-  .pd-step-right { flex: 1; padding-bottom: 32px; padding-top: 2px; }
+  .pd-step-right { flex: 1; min-width: 0; padding-bottom: 32px; padding-top: 2px; }
   .pd-step-q { font-size: 16px; font-weight: 700; color: #10192D; line-height: 1.3; margin-bottom: 8px; font-family: 'Outfit', sans-serif; }
   .pd-step-a { font-size: 14px; color: #596378; line-height: 1.6; }
   .pd-step-carousel { display: flex; gap: 10px; overflow-x: auto; scrollbar-width: none; margin-top: 14px; padding-bottom: 4px; }
@@ -2700,10 +2760,347 @@
 
   </div>
 
+  <div class="divider" style="margin-bottom:0;"></div>
+
+  <!-- Helpful builds for you -->
+  <div class="helpful-section">
+    <img class="botd-heading-img" src="https://ik.imagekit.io/424h6me27c/zs%20a%20sz%20.png" alt="Builds that simplify your life" style="margin-top:16px;margin-bottom:24px;">
+    <div class="helpful-tab-row">
+      <button class="helpful-tab active" onclick="setHelpfulTab('utility',this)">Utility</button>
+      <button class="helpful-tab" onclick="setHelpfulTab('fun',this)">Fun</button>
+      <button class="helpful-tab" onclick="setHelpfulTab('productivity',this)">Productivity</button>
+      <button class="helpful-tab" onclick="setHelpfulTab('self-care',this)">Self-care</button>
+    </div>
+    <div class="helpful-cards" id="helpfulCards"></div>
+  </div>
+
+  <div class="divider" style="margin-bottom:0;"></div>
+
+  <!-- Hard to miss builds -->
+  <img class="botd-heading-img" src="https://ik.imagekit.io/424h6me27c/Frame%202147207760.png" alt="Our community at its best" style="margin-top:16px;margin-bottom:24px;">
+
+  <div class="community-tab-row">
+    <button class="community-tab active" onclick="setCommunityTab('all',this)">All</button>
+    <button class="community-tab" onclick="setCommunityTab('mobile',this)">Mobile apps</button>
+    <button class="community-tab" onclick="setCommunityTab('macos',this)">macOS</button>
+    <button class="community-tab" onclick="setCommunityTab('interactive',this)">Interactive</button>
+    <button class="community-tab" onclick="setCommunityTab('web',this)">Web</button>
+  </div>
+
+  <div class="hmiss-scroll">
+    <div class="hmiss-row">
+
+      <!-- Card 1 — Polaroid (video) -->
+      <div class="hmiss-card" onclick="openPostDetail('polaroid')" style="cursor:pointer;">
+        <video class="hmiss-video" src="https://ik.imagekit.io/424h6me27c/linkedin-video-3.mp4" loop muted playsinline></video>
+        <div class="hmiss-blur-1"></div>
+        <div class="hmiss-blur-2"></div>
+        <div class="hmiss-blur-3"></div>
+        <div class="hmiss-blur-4"></div>
+        <div class="hmiss-overlay">
+          <div class="hmiss-meta-label">
+            <span>iOS app · 2d ago</span>
+            <span class="hmiss-meta-fire">🔥 +12</span>
+          </div>
+          <div class="hmiss-title">Polaroid. Was trying out a fun interaction in my portfolio. You can click and download a Polaroid style selfie</div>
+          <div class="hmiss-author-row" onclick="event.stopPropagation();viewProfile('11111111-0000-0000-0000-000000000007')">
+            <div class="hmiss-author-avatar">
+              <img src="https://ik.imagekit.io/424h6me27c/1745770693685.jpeg" alt="">
+            </div>
+            <div class="hmiss-author-info">
+              <div class="hmiss-author-name">Gowtham Oleti</div>
+              <div class="hmiss-author-role">Product Designer · CRED</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 2 — Property tours (video) -->
+      <div class="hmiss-card" onclick="openPostDetail('propertytours')" style="cursor:pointer;">
+        <video class="hmiss-video" src="https://ik.imagekit.io/424h6me27c/linkedin-video.mp4" loop muted playsinline></video>
+        <div class="hmiss-blur-1"></div>
+        <div class="hmiss-blur-2"></div>
+        <div class="hmiss-blur-3"></div>
+        <div class="hmiss-blur-4"></div>
+        <div class="hmiss-overlay">
+          <div class="hmiss-meta-label">
+            <span>macOS · 3d ago</span>
+            <span class="hmiss-meta-fire">🔥 +8</span>
+          </div>
+          <div class="hmiss-title">Record impressive property tours with just your mobile</div>
+          <div class="hmiss-author-row" onclick="event.stopPropagation();viewProfile('11111111-0000-0000-0000-000000000007')">
+            <div class="hmiss-author-avatar">
+              <img src="https://ik.imagekit.io/424h6me27c/1745770693685.jpeg" alt="">
+            </div>
+            <div class="hmiss-author-info">
+              <div class="hmiss-author-name">Gowtham Oleti</div>
+              <div class="hmiss-author-role">Product Designer · CRED</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 3 — iOS app (static bg) -->
+      <div class="hmiss-card" onclick="openPostDetail('iosapp30')" style="background: linear-gradient(135deg,#2D1B4E 0%,#1a1030 100%);cursor:pointer;">
+        <div class="hmiss-overlay" style="background:linear-gradient(to top,rgba(0,0,0,0.88) 0%,rgba(0,0,0,0.55) 40%,rgba(0,0,0,0.1) 100%);">
+          <div class="hmiss-meta-label">
+            <span>Web · 5d ago</span>
+            <span class="hmiss-meta-fire">🔥 +21</span>
+          </div>
+          <div class="hmiss-title">Build a full iOS app in 30 days from scratch</div>
+          <div class="hmiss-author-row" onclick="event.stopPropagation();viewProfile('11111111-0000-0000-0000-000000000003')">
+            <div class="hmiss-author-avatar">
+              <img src="https://ik.imagekit.io/424h6me27c/1758728645137.jpeg" alt="">
+            </div>
+            <div class="hmiss-author-info">
+              <div class="hmiss-author-name">Arjun Sethi</div>
+              <div class="hmiss-author-role">Interaction Designer · CRED</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="divider" style="margin-bottom:0;"></div>
+
+  <!-- Browse by vibe -->
+  <img class="botd-heading-img" src="https://ik.imagekit.io/424h6me27c/szc.%20sz%20z.png" alt="Browse by vibe" style="margin-top:16px;margin-bottom:24px;">
+
+  <div class="vibe-scroll">
+
+    <!-- Freshly baked -->
+    <div class="vibe-card" style="background:#EDF0FF;">
+      <div class="vibe-imgs">
+        <img class="vibe-img" src="https://ik.imagekit.io/424h6me27c/1593694785946.jpeg" alt="">
+        <img class="vibe-img" src="https://ik.imagekit.io/424h6me27c/1773811274487.jpeg" alt="">
+        <img class="vibe-img" src="https://ik.imagekit.io/424h6me27c/1769139467912.jpeg" alt="">
+      </div>
+      <div class="vibe-title">Freshly baked</div>
+      <div class="vibe-count">12 builds</div>
+    </div>
+
+    <!-- Surprise me -->
+    <div class="vibe-card" style="background:#FFF4E6;">
+      <div class="vibe-imgs">
+        <img class="vibe-img" src="https://ik.imagekit.io/424h6me27c/1773811274527.jpeg" alt="">
+        <img class="vibe-img" src="https://ik.imagekit.io/424h6me27c/1757355199034.jpeg" alt="">
+        <img class="vibe-img" src="https://ik.imagekit.io/424h6me27c/1745770693685.jpeg" alt="">
+      </div>
+      <div class="vibe-title">Surprise me</div>
+      <div class="vibe-count">28 builds</div>
+    </div>
+
+    <!-- Weird builds only -->
+    <div class="vibe-card" style="background:#E8F7EF;">
+      <div class="vibe-imgs">
+        <img class="vibe-img" src="https://ik.imagekit.io/424h6me27c/1758728645137.jpeg" alt="">
+        <img class="vibe-img" src="https://ik.imagekit.io/424h6me27c/1669709292471.jpeg" alt="">
+        <img class="vibe-img" src="https://ik.imagekit.io/424h6me27c/1746609724722.jpeg" alt="">
+      </div>
+      <div class="vibe-title">Weird only</div>
+      <div class="vibe-count">9 builds</div>
+    </div>
+
+  </div>
+
+  <div class="divider"></div>
+  <div style="background:#F8F9FC;margin:-24px 0;padding:24px 0;">
+  <!-- Top contributors -->
+  <div class="contributors-section">
+    <div class="section-heading">
+      <span class="h-gradient">Top contributors</span>
+      <span class="h-black">this week</span>
+      <span class="view-all-link" onclick="switchTab('contributors')">View all</span>
+    </div>
+  </div>
+  <div class="contributors-scroll">
+    <div class="contributors-row">
+
+      <div class="contributors-flex-row">
+        <div class="contributor-card" onclick="viewProfile('11111111-0000-0000-0000-000000000001')" style="cursor:pointer;">
+          <div class="contrib-top">
+            <div class="contrib-avatar-wrap">
+              <span class="rank-badge" style="color:#FF8140">#1</span>
+              <div class="contrib-avatar"><img src="https://ik.imagekit.io/424h6me27c/1720635179303.jpeg" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;" alt=""></div>
+            </div>
+            <div class="contrib-info">
+              <div class="contrib-name">Priyanshu Barnwal</div>
+              <div class="contrib-role">Product Designer · Zomato</div>
+            </div>
+          </div>
+          <div class="contrib-stats-box">
+            <div class="contrib-stat-col">
+              <div class="contrib-stat-num">12 <span class="contrib-stat-unit">projects</span></div>
+              <div class="contrib-stat-sub">till date</div>
+            </div>
+            <div class="contrib-stat-divider"></div>
+            <div class="contrib-stat-col">
+              <div class="contrib-stat-num">07 <span class="contrib-stat-unit">live projects</span></div>
+              <div class="contrib-stat-sub">this week</div>
+            </div>
+          </div>
+          <div class="contrib-tags">
+            <span class="ctag">4 Apps</span>
+            <span class="ctag">1 Games</span>
+            <span class="ctag">1 Interactions</span>
+          </div>
+        </div>
+
+        <div class="contributor-card" onclick="viewProfile('11111111-0000-0000-0000-000000000003')" style="cursor:pointer;">
+          <div class="contrib-top">
+            <div class="contrib-avatar-wrap">
+              <span class="rank-badge" style="color:#596378">#3</span>
+              <div class="contrib-avatar"><img src="https://ik.imagekit.io/424h6me27c/1758728645137.jpeg" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;" alt=""></div>
+            </div>
+            <div class="contrib-info">
+              <div class="contrib-name">Arjun Sethi</div>
+              <div class="contrib-role">Interaction Designer · CRED</div>
+            </div>
+          </div>
+          <div class="contrib-stats-box">
+            <div class="contrib-stat-col">
+              <div class="contrib-stat-num">15 <span class="contrib-stat-unit">projects</span></div>
+              <div class="contrib-stat-sub">till date</div>
+            </div>
+            <div class="contrib-stat-divider"></div>
+            <div class="contrib-stat-col">
+              <div class="contrib-stat-num">05 <span class="contrib-stat-unit">live projects</span></div>
+              <div class="contrib-stat-sub">this week</div>
+            </div>
+          </div>
+          <div class="contrib-tags">
+            <span class="ctag">5 Apps</span>
+            <span class="ctag">3 Interactions</span>
+          </div>
+        </div>
+
+        <div class="contributor-card" onclick="viewProfile('11111111-0000-0000-0000-000000000005')" style="cursor:pointer;">
+          <div class="contrib-top">
+            <div class="contrib-avatar-wrap">
+              <span class="rank-badge" style="color:#293142">#5</span>
+              <div class="contrib-avatar"><img src="https://ik.imagekit.io/424h6me27c/1746609724722.jpeg" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;" alt=""></div>
+            </div>
+            <div class="contrib-info">
+              <div class="contrib-name">Rohan Verma</div>
+              <div class="contrib-role">Product Designer · Swiggy</div>
+            </div>
+          </div>
+          <div class="contrib-stats-box">
+            <div class="contrib-stat-col">
+              <div class="contrib-stat-num">11 <span class="contrib-stat-unit">projects</span></div>
+              <div class="contrib-stat-sub">till date</div>
+            </div>
+            <div class="contrib-stat-divider"></div>
+            <div class="contrib-stat-col">
+              <div class="contrib-stat-num">06 <span class="contrib-stat-unit">live projects</span></div>
+              <div class="contrib-stat-sub">this week</div>
+            </div>
+          </div>
+          <div class="contrib-tags">
+            <span class="ctag">4 Apps</span>
+            <span class="ctag">2 Interactions</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="contributors-flex-row">
+        <div class="contributor-card" onclick="viewProfile('11111111-0000-0000-0000-000000000002')" style="cursor:pointer;">
+          <div class="contrib-top">
+            <div class="contrib-avatar-wrap">
+              <span class="rank-badge" style="color:#EFB351">#2</span>
+              <div class="contrib-avatar"><img src="https://ik.imagekit.io/424h6me27c/1774526753952.jpeg" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;" alt=""></div>
+            </div>
+            <div class="contrib-info">
+              <div class="contrib-name">Priya Menon</div>
+              <div class="contrib-role">UX Designer · Razorpay</div>
+            </div>
+          </div>
+          <div class="contrib-stats-box">
+            <div class="contrib-stat-col">
+              <div class="contrib-stat-num">09 <span class="contrib-stat-unit">projects</span></div>
+              <div class="contrib-stat-sub">till date</div>
+            </div>
+            <div class="contrib-stat-divider"></div>
+            <div class="contrib-stat-col">
+              <div class="contrib-stat-num">04 <span class="contrib-stat-unit">live projects</span></div>
+              <div class="contrib-stat-sub">this week</div>
+            </div>
+          </div>
+          <div class="contrib-tags">
+            <span class="ctag">3 Apps</span>
+            <span class="ctag">2 Web</span>
+            <span class="ctag">1 macOS</span>
+          </div>
+        </div>
+
+        <div class="contributor-card" onclick="viewProfile('11111111-0000-0000-0000-000000000004')" style="cursor:pointer;">
+          <div class="contrib-top">
+            <div class="contrib-avatar-wrap">
+              <span class="rank-badge" style="color:#293142">#4</span>
+              <div class="contrib-avatar"><img src="https://ik.imagekit.io/424h6me27c/1669709292471.jpeg" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;" alt=""></div>
+            </div>
+            <div class="contrib-info">
+              <div class="contrib-name">Neha Kapoor</div>
+              <div class="contrib-role">Visual Designer · Flipkart</div>
+            </div>
+          </div>
+          <div class="contrib-stats-box">
+            <div class="contrib-stat-col">
+              <div class="contrib-stat-num">08 <span class="contrib-stat-unit">projects</span></div>
+              <div class="contrib-stat-sub">till date</div>
+            </div>
+            <div class="contrib-stat-divider"></div>
+            <div class="contrib-stat-col">
+              <div class="contrib-stat-num">03 <span class="contrib-stat-unit">live projects</span></div>
+              <div class="contrib-stat-sub">this week</div>
+            </div>
+          </div>
+          <div class="contrib-tags">
+            <span class="ctag">2 Apps</span>
+            <span class="ctag">2 Web</span>
+            <span class="ctag">1 Games</span>
+          </div>
+        </div>
+
+        <div class="contributor-card" onclick="viewProfile('11111111-0000-0000-0000-000000000006')" style="cursor:pointer;">
+          <div class="contrib-top">
+            <div class="contrib-avatar-wrap">
+              <span class="rank-badge" style="color:#293142">#6</span>
+              <div class="contrib-avatar"><img src="https://ik.imagekit.io/424h6me27c/1745770693685.jpeg" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;" alt=""></div>
+            </div>
+            <div class="contrib-info">
+              <div class="contrib-name">Sana Mirza</div>
+              <div class="contrib-role">UI Designer · Meesho</div>
+            </div>
+          </div>
+          <div class="contrib-stats-box">
+            <div class="contrib-stat-col">
+              <div class="contrib-stat-num">06 <span class="contrib-stat-unit">projects</span></div>
+              <div class="contrib-stat-sub">till date</div>
+            </div>
+            <div class="contrib-stat-divider"></div>
+            <div class="contrib-stat-col">
+              <div class="contrib-stat-num">02 <span class="contrib-stat-unit">live projects</span></div>
+              <div class="contrib-stat-sub">this week</div>
+            </div>
+          </div>
+          <div class="contrib-tags">
+            <span class="ctag">3 Apps</span>
+            <span class="ctag">1 macOS</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  </div><!-- end contributors bg -->
+
   <div class="divider"></div>
 
   <!-- Trending this week -->
-  <div class="section" style="padding-top:24px">
+  <div class="section">
     <div class="section-heading">
       <span class="h-black">Trending</span>
       <span class="h-black">this week</span>
@@ -2941,327 +3338,6 @@
       </div>
 
     </div>
-  </div>
-
-  <div class="divider"></div>
-
-  <!-- Hard to miss builds -->
-  <div class="section">
-    <div class="section-heading">
-      <span class="h-black">Our community at it's best</span>
-    </div>
-  </div>
-
-  <div class="community-tab-row">
-    <button class="community-tab active" onclick="setCommunityTab('all',this)">All</button>
-    <button class="community-tab" onclick="setCommunityTab('mobile',this)">Mobile apps</button>
-    <button class="community-tab" onclick="setCommunityTab('macos',this)">macOS</button>
-    <button class="community-tab" onclick="setCommunityTab('interactive',this)">Interactive</button>
-    <button class="community-tab" onclick="setCommunityTab('web',this)">Web</button>
-  </div>
-
-  <div class="hmiss-scroll">
-    <div class="hmiss-row">
-
-      <!-- Card 1 — Polaroid (video) -->
-      <div class="hmiss-card" onclick="openPostDetail('polaroid')" style="cursor:pointer;">
-        <video class="hmiss-video" src="https://ik.imagekit.io/424h6me27c/linkedin-video-3.mp4" loop muted playsinline></video>
-        <div class="hmiss-blur-1"></div>
-        <div class="hmiss-blur-2"></div>
-        <div class="hmiss-blur-3"></div>
-        <div class="hmiss-blur-4"></div>
-        <div class="hmiss-overlay">
-          <div class="hmiss-meta-label">
-            <span>iOS app · 2d ago</span>
-            <span class="hmiss-meta-fire">🔥 +12</span>
-          </div>
-          <div class="hmiss-title">Polaroid. Was trying out a fun interaction in my portfolio. You can click and download a Polaroid style selfie</div>
-          <div class="hmiss-author-row" onclick="event.stopPropagation();viewProfile('11111111-0000-0000-0000-000000000007')">
-            <div class="hmiss-author-avatar">
-              <img src="https://ik.imagekit.io/424h6me27c/1745770693685.jpeg" alt="">
-            </div>
-            <div class="hmiss-author-info">
-              <div class="hmiss-author-name">Gowtham Oleti</div>
-              <div class="hmiss-author-role">Product Designer · CRED</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Card 2 — Property tours (video) -->
-      <div class="hmiss-card" onclick="openPostDetail('propertytours')" style="cursor:pointer;">
-        <video class="hmiss-video" src="https://ik.imagekit.io/424h6me27c/linkedin-video.mp4" loop muted playsinline></video>
-        <div class="hmiss-blur-1"></div>
-        <div class="hmiss-blur-2"></div>
-        <div class="hmiss-blur-3"></div>
-        <div class="hmiss-blur-4"></div>
-        <div class="hmiss-overlay">
-          <div class="hmiss-meta-label">
-            <span>macOS · 3d ago</span>
-            <span class="hmiss-meta-fire">🔥 +8</span>
-          </div>
-          <div class="hmiss-title">Record impressive property tours with just your mobile</div>
-          <div class="hmiss-author-row" onclick="event.stopPropagation();viewProfile('11111111-0000-0000-0000-000000000007')">
-            <div class="hmiss-author-avatar">
-              <img src="https://ik.imagekit.io/424h6me27c/1745770693685.jpeg" alt="">
-            </div>
-            <div class="hmiss-author-info">
-              <div class="hmiss-author-name">Gowtham Oleti</div>
-              <div class="hmiss-author-role">Product Designer · CRED</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Card 3 — iOS app (static bg) -->
-      <div class="hmiss-card" onclick="openPostDetail('iosapp30')" style="background: linear-gradient(135deg,#2D1B4E 0%,#1a1030 100%);cursor:pointer;">
-        <div class="hmiss-overlay" style="background:linear-gradient(to top,rgba(0,0,0,0.88) 0%,rgba(0,0,0,0.55) 40%,rgba(0,0,0,0.1) 100%);">
-          <div class="hmiss-meta-label">
-            <span>Web · 5d ago</span>
-            <span class="hmiss-meta-fire">🔥 +21</span>
-          </div>
-          <div class="hmiss-title">Build a full iOS app in 30 days from scratch</div>
-          <div class="hmiss-author-row" onclick="event.stopPropagation();viewProfile('11111111-0000-0000-0000-000000000003')">
-            <div class="hmiss-author-avatar">
-              <img src="https://ik.imagekit.io/424h6me27c/1758728645137.jpeg" alt="">
-            </div>
-            <div class="hmiss-author-info">
-              <div class="hmiss-author-name">Arjun Sethi</div>
-              <div class="hmiss-author-role">Interaction Designer · CRED</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-  <div class="divider"></div>
-
-  <!-- Also look into this -->
-  <div class="section">
-    <div class="section-heading">
-      <span class="h-black">Browse by vibe</span>
-    </div>
-  </div>
-
-  <div class="tags-scroll">
-    <div class="tags-row">
-      <span class="tag-pill tag-pink">Freshly baked <span class="tag-pill-count">(12)</span></span>
-      <span class="tag-pill tag-cyan">Surprise me <span class="tag-pill-count">(28)</span></span>
-      <span class="tag-pill tag-orange">Weird builds only <span class="tag-pill-count">(9)</span></span>
-    </div>
-  </div>
-
-  <div class="divider"></div>
-  <div style="background:#F8F9FC;margin:-24px 0;padding:24px 0;">
-  <!-- Top contributors -->
-  <div class="contributors-section">
-    <div class="section-heading">
-      <span class="h-gradient">Top contributors</span>
-      <span class="h-black">this week</span>
-      <span class="view-all-link" onclick="switchTab('contributors')">View all</span>
-    </div>
-  </div>
-  <div class="contributors-scroll">
-    <div class="contributors-row">
-
-      <div class="contributors-flex-row">
-        <div class="contributor-card" onclick="viewProfile('11111111-0000-0000-0000-000000000001')" style="cursor:pointer;">
-          <div class="contrib-top">
-            <div class="contrib-avatar-wrap">
-              <span class="rank-badge" style="color:#FF8140">#1</span>
-              <div class="contrib-avatar"><img src="https://ik.imagekit.io/424h6me27c/1720635179303.jpeg" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;" alt=""></div>
-            </div>
-            <div class="contrib-info">
-              <div class="contrib-name">Priyanshu Barnwal</div>
-              <div class="contrib-role">Product Designer · Zomato</div>
-            </div>
-          </div>
-          <div class="contrib-stats-box">
-            <div class="contrib-stat-col">
-              <div class="contrib-stat-num">12 <span class="contrib-stat-unit">projects</span></div>
-              <div class="contrib-stat-sub">till date</div>
-            </div>
-            <div class="contrib-stat-divider"></div>
-            <div class="contrib-stat-col">
-              <div class="contrib-stat-num">07 <span class="contrib-stat-unit">live projects</span></div>
-              <div class="contrib-stat-sub">this week</div>
-            </div>
-          </div>
-          <div class="contrib-tags">
-            <span class="ctag">4 Apps</span>
-            <span class="ctag">1 Games</span>
-            <span class="ctag">1 Interactions</span>
-          </div>
-        </div>
-
-        <div class="contributor-card" onclick="viewProfile('11111111-0000-0000-0000-000000000003')" style="cursor:pointer;">
-          <div class="contrib-top">
-            <div class="contrib-avatar-wrap">
-              <span class="rank-badge" style="color:#596378">#3</span>
-              <div class="contrib-avatar"><img src="https://ik.imagekit.io/424h6me27c/1758728645137.jpeg" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;" alt=""></div>
-            </div>
-            <div class="contrib-info">
-              <div class="contrib-name">Arjun Sethi</div>
-              <div class="contrib-role">Interaction Designer · CRED</div>
-            </div>
-          </div>
-          <div class="contrib-stats-box">
-            <div class="contrib-stat-col">
-              <div class="contrib-stat-num">15 <span class="contrib-stat-unit">projects</span></div>
-              <div class="contrib-stat-sub">till date</div>
-            </div>
-            <div class="contrib-stat-divider"></div>
-            <div class="contrib-stat-col">
-              <div class="contrib-stat-num">05 <span class="contrib-stat-unit">live projects</span></div>
-              <div class="contrib-stat-sub">this week</div>
-            </div>
-          </div>
-          <div class="contrib-tags">
-            <span class="ctag">5 Apps</span>
-            <span class="ctag">3 Interactions</span>
-          </div>
-        </div>
-
-        <div class="contributor-card" onclick="viewProfile('11111111-0000-0000-0000-000000000005')" style="cursor:pointer;">
-          <div class="contrib-top">
-            <div class="contrib-avatar-wrap">
-              <span class="rank-badge" style="color:#293142">#5</span>
-              <div class="contrib-avatar"><img src="https://ik.imagekit.io/424h6me27c/1746609724722.jpeg" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;" alt=""></div>
-            </div>
-            <div class="contrib-info">
-              <div class="contrib-name">Rohan Verma</div>
-              <div class="contrib-role">Product Designer · Swiggy</div>
-            </div>
-          </div>
-          <div class="contrib-stats-box">
-            <div class="contrib-stat-col">
-              <div class="contrib-stat-num">11 <span class="contrib-stat-unit">projects</span></div>
-              <div class="contrib-stat-sub">till date</div>
-            </div>
-            <div class="contrib-stat-divider"></div>
-            <div class="contrib-stat-col">
-              <div class="contrib-stat-num">06 <span class="contrib-stat-unit">live projects</span></div>
-              <div class="contrib-stat-sub">this week</div>
-            </div>
-          </div>
-          <div class="contrib-tags">
-            <span class="ctag">4 Apps</span>
-            <span class="ctag">2 Interactions</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="contributors-flex-row">
-        <div class="contributor-card" onclick="viewProfile('11111111-0000-0000-0000-000000000002')" style="cursor:pointer;">
-          <div class="contrib-top">
-            <div class="contrib-avatar-wrap">
-              <span class="rank-badge" style="color:#EFB351">#2</span>
-              <div class="contrib-avatar"><img src="https://ik.imagekit.io/424h6me27c/1774526753952.jpeg" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;" alt=""></div>
-            </div>
-            <div class="contrib-info">
-              <div class="contrib-name">Priya Menon</div>
-              <div class="contrib-role">UX Designer · Razorpay</div>
-            </div>
-          </div>
-          <div class="contrib-stats-box">
-            <div class="contrib-stat-col">
-              <div class="contrib-stat-num">09 <span class="contrib-stat-unit">projects</span></div>
-              <div class="contrib-stat-sub">till date</div>
-            </div>
-            <div class="contrib-stat-divider"></div>
-            <div class="contrib-stat-col">
-              <div class="contrib-stat-num">04 <span class="contrib-stat-unit">live projects</span></div>
-              <div class="contrib-stat-sub">this week</div>
-            </div>
-          </div>
-          <div class="contrib-tags">
-            <span class="ctag">3 Apps</span>
-            <span class="ctag">2 Web</span>
-            <span class="ctag">1 macOS</span>
-          </div>
-        </div>
-
-        <div class="contributor-card" onclick="viewProfile('11111111-0000-0000-0000-000000000004')" style="cursor:pointer;">
-          <div class="contrib-top">
-            <div class="contrib-avatar-wrap">
-              <span class="rank-badge" style="color:#293142">#4</span>
-              <div class="contrib-avatar"><img src="https://ik.imagekit.io/424h6me27c/1669709292471.jpeg" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;" alt=""></div>
-            </div>
-            <div class="contrib-info">
-              <div class="contrib-name">Neha Kapoor</div>
-              <div class="contrib-role">Visual Designer · Flipkart</div>
-            </div>
-          </div>
-          <div class="contrib-stats-box">
-            <div class="contrib-stat-col">
-              <div class="contrib-stat-num">08 <span class="contrib-stat-unit">projects</span></div>
-              <div class="contrib-stat-sub">till date</div>
-            </div>
-            <div class="contrib-stat-divider"></div>
-            <div class="contrib-stat-col">
-              <div class="contrib-stat-num">03 <span class="contrib-stat-unit">live projects</span></div>
-              <div class="contrib-stat-sub">this week</div>
-            </div>
-          </div>
-          <div class="contrib-tags">
-            <span class="ctag">2 Apps</span>
-            <span class="ctag">2 Web</span>
-            <span class="ctag">1 Games</span>
-          </div>
-        </div>
-
-        <div class="contributor-card" onclick="viewProfile('11111111-0000-0000-0000-000000000006')" style="cursor:pointer;">
-          <div class="contrib-top">
-            <div class="contrib-avatar-wrap">
-              <span class="rank-badge" style="color:#293142">#6</span>
-              <div class="contrib-avatar"><img src="https://ik.imagekit.io/424h6me27c/1745770693685.jpeg" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;" alt=""></div>
-            </div>
-            <div class="contrib-info">
-              <div class="contrib-name">Sana Mirza</div>
-              <div class="contrib-role">UI Designer · Meesho</div>
-            </div>
-          </div>
-          <div class="contrib-stats-box">
-            <div class="contrib-stat-col">
-              <div class="contrib-stat-num">06 <span class="contrib-stat-unit">projects</span></div>
-              <div class="contrib-stat-sub">till date</div>
-            </div>
-            <div class="contrib-stat-divider"></div>
-            <div class="contrib-stat-col">
-              <div class="contrib-stat-num">02 <span class="contrib-stat-unit">live projects</span></div>
-              <div class="contrib-stat-sub">this week</div>
-            </div>
-          </div>
-          <div class="contrib-tags">
-            <span class="ctag">3 Apps</span>
-            <span class="ctag">1 macOS</span>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-  </div><!-- end contributors bg -->
-
-  <div class="divider"></div>
-
-  <!-- Helpful builds for you -->
-  <div class="helpful-section">
-    <div class="section">
-      <div class="section-heading">
-        <span class="h-black">Builds that simplify your life</span>
-        <span class="view-all-link" onclick="switchTab('trending')">View all</span>
-      </div>
-    </div>
-    <div class="helpful-tab-row">
-      <button class="helpful-tab active" onclick="setHelpfulTab('utility',this)">Utility</button>
-      <button class="helpful-tab" onclick="setHelpfulTab('fun',this)">Fun</button>
-      <button class="helpful-tab" onclick="setHelpfulTab('productivity',this)">Productivity</button>
-      <button class="helpful-tab" onclick="setHelpfulTab('self-care',this)">Self-care</button>
-    </div>
-    <div class="helpful-cards" id="helpfulCards"></div>
   </div>
 
   <img src="https://ik.imagekit.io/424h6me27c/Frame%202147207754.png" style="width:100%;display:block;margin-top:32px;" alt="">
@@ -5063,7 +5139,8 @@ Download now for free : pasteryapp.xyz</div>
     const ccBadge = rxn.comments > 0
       ? `<span class="reaction-count-badge" data-count="${rxn.comments}">+${rxn.comments}</span>` : '';
     const reactionsHtml = `
-      <div class="post-reactions" style="padding:10px 16px 0;">
+      <div style="height:1px;background:#F2F4F7;margin:0 16px;"></div>
+      <div class="post-reactions" style="padding:10px 16px 16px;border-top:none;">
         <div class="reaction-item" onclick="toggleReaction(this)">
           <div class="reaction-emoji-wrap">🙏<span class="reaction-count-badge" data-count="${rxn.tm}">+${rxn.tm}</span></div>
           <div class="reaction-label">Teach me</div>
@@ -5118,15 +5195,17 @@ Download now for free : pasteryapp.xyz</div>
         <div class="pd-title">${data.title}</div>
         <div class="pd-desc">${data.desc}</div>
         <div class="pd-cta-row">${liveBtn}</div>
-        <div class="pd-author-row" ${profileClick}>
-          <div class="pd-author-avatar">${avatarHtml}</div>
-          <div>
-            <div class="pd-author-name">${data.author.name}</div>
-            <div class="pd-author-role">${data.author.role}${data.author.company ? ' · ' + data.author.company : ''}</div>
-          </div>
-        </div>
       </div>
       ${reactionsHtml}
+      <div style="height:1px;background:#F2F4F7;margin:0 16px;"></div>
+      <div class="pd-author-row" ${profileClick}>
+        <div class="pd-author-avatar">${avatarHtml}</div>
+        <div>
+          <div class="pd-author-name">${data.author.name}</div>
+          <div class="pd-author-role">${data.author.role}${data.author.company ? ' · ' + data.author.company : ''}</div>
+        </div>
+      </div>
+      <div style="height:1px;background:#F2F4F7;margin:0 16px;"></div>
       ${journeyHtml}`;
   }
 
