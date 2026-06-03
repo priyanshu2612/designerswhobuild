@@ -804,26 +804,26 @@
   .hmiss-blur-1 {
     backdrop-filter: blur(2px);
     -webkit-backdrop-filter: blur(2px);
-    -webkit-mask-image: linear-gradient(to top, black 0%, black 20%, transparent 45%);
-    mask-image: linear-gradient(to top, black 0%, black 20%, transparent 45%);
+    -webkit-mask-image: linear-gradient(to top, black 0%, black 24%, transparent 52%);
+    mask-image: linear-gradient(to top, black 0%, black 24%, transparent 52%);
   }
   .hmiss-blur-2 {
     backdrop-filter: blur(6px);
     -webkit-backdrop-filter: blur(6px);
-    -webkit-mask-image: linear-gradient(to top, black 0%, black 14%, transparent 32%);
-    mask-image: linear-gradient(to top, black 0%, black 14%, transparent 32%);
+    -webkit-mask-image: linear-gradient(to top, black 0%, black 18%, transparent 39%);
+    mask-image: linear-gradient(to top, black 0%, black 18%, transparent 39%);
   }
   .hmiss-blur-3 {
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
-    -webkit-mask-image: linear-gradient(to top, black 0%, black 8%, transparent 22%);
-    mask-image: linear-gradient(to top, black 0%, black 8%, transparent 22%);
+    -webkit-mask-image: linear-gradient(to top, black 0%, black 12%, transparent 29%);
+    mask-image: linear-gradient(to top, black 0%, black 12%, transparent 29%);
   }
   .hmiss-blur-4 {
     backdrop-filter: blur(24px);
     -webkit-backdrop-filter: blur(24px);
-    -webkit-mask-image: linear-gradient(to top, black 0%, black 4%, transparent 14%);
-    mask-image: linear-gradient(to top, black 0%, black 4%, transparent 14%);
+    -webkit-mask-image: linear-gradient(to top, black 0%, black 7%, transparent 20%);
+    mask-image: linear-gradient(to top, black 0%, black 7%, transparent 20%);
   }
   /* Dark gradient on top of blur — deepens the bottom */
   .hmiss-overlay {
@@ -848,7 +848,7 @@
     align-items: center;
     justify-content: space-between;
     font-size: 10px;
-    font-weight: 700;
+    font-weight: 600;
     color: rgba(255,255,255,0.65);
     letter-spacing: 0.7px;
     text-transform: uppercase;
@@ -857,7 +857,7 @@
   }
   .hmiss-meta-fire {
     font-size: 11px;
-    font-weight: 700;
+    font-weight: 600;
     color: rgba(255,255,255,0.9);
     letter-spacing: 0;
     text-transform: none;
@@ -4778,6 +4778,7 @@ Download now for free : pasteryapp.xyz</div>
       status: 'live', category: 'iOS app',
       img: 'https://ik.imagekit.io/424h6me27c/1769139467912.jpeg',
       liveUrl: '#',
+      rxn: { tm: 24, tb: 18, tu: 31, comments: 7 },
       author: { name: 'Arjun', role: 'Product Designer', company: 'Swiggy', avatar: 'https://ik.imagekit.io/424h6me27c/1758728645137.jpeg', id: '11111111-0000-0000-0000-000000000003' },
       journey: [
         {
@@ -4810,6 +4811,7 @@ Download now for free : pasteryapp.xyz</div>
     pasteboard: {
       key: 'pasteboard', title: 'PasteBoard Pro', desc: 'Smart clipboard manager for iOS. Everything you copy lives here — text, links, images. Sync across all your devices.',
       status: 'wip', category: 'iOS app', img: 'https://ik.imagekit.io/424h6me27c/1773811274544.jpeg', liveUrl: null,
+      rxn: { tm: 18, tb: 11, tu: 22, comments: 4 },
       author: { name: 'Sagar', role: 'Designer', company: 'CRED', avatar: 'https://ik.imagekit.io/424h6me27c/1593694785946.jpeg', id: null }
     },
     focusflow: {
@@ -4830,6 +4832,7 @@ Download now for free : pasteryapp.xyz</div>
     polaroid: {
       key: 'polaroid', title: 'Polaroid', desc: 'Was trying out a fun interaction in my portfolio. You can click and download a Polaroid style selfie from your browser.',
       status: 'live', category: 'iOS app', img: 'https://ik.imagekit.io/424h6me27c/1773811274487.jpeg', liveUrl: '#',
+      rxn: { tm: 12, tb: 9, tu: 27, comments: 5 },
       author: { name: 'Gowtham Oleti', role: 'Product Designer', company: 'CRED', avatar: 'https://ik.imagekit.io/424h6me27c/1745770693685.jpeg', id: '11111111-0000-0000-0000-000000000007' }
     },
     propertytours: {
@@ -4890,6 +4893,7 @@ Download now for free : pasteryapp.xyz</div>
     voiceblob: {
       key: 'voiceblob', title: 'Voice Blob', desc: 'Voice-reactive blob particles built in SwiftUI. Speak and watch the blob pulse, stretch, and morph in real time. A living visualizer for your voice.',
       status: 'live', category: 'iOS app', img: 'https://ik.imagekit.io/424h6me27c/1593694785946.jpeg', liveUrl: '#',
+      rxn: { tm: 33, tb: 21, tu: 44, comments: 12 },
       author: { name: 'Sagar', role: 'Lead Designer', company: 'Urban Company', avatar: 'https://ik.imagekit.io/424h6me27c/1593694785946.jpeg', id: null }
     }
   };
@@ -4924,6 +4928,31 @@ Download now for free : pasteryapp.xyz</div>
       ? `<button class="pd-live-btn" onclick="window.open('${data.liveUrl}','_blank')">Visit live site <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="display:inline-block;vertical-align:middle"><path d="M2.5 11.5L11.5 2.5M11.5 2.5H5.5M11.5 2.5V8.5" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>`
       : `<button class="pd-live-btn" style="opacity:.45;cursor:not-allowed;">Coming soon</button>`;
 
+    // Reactions row
+    const rxn = data.rxn || { tm: 0, tb: 0, tu: 0, comments: 0 };
+    const ccBadge = rxn.comments > 0
+      ? `<span class="reaction-count-badge" data-count="${rxn.comments}">+${rxn.comments}</span>` : '';
+    const reactionsHtml = `
+      <div class="post-reactions" style="padding:10px 16px 0;">
+        <div class="reaction-item" onclick="toggleReaction(this)">
+          <div class="reaction-emoji-wrap">🙏<span class="reaction-count-badge" data-count="${rxn.tm}">+${rxn.tm}</span></div>
+          <div class="reaction-label">Teach me</div>
+        </div>
+        <div class="reaction-item" onclick="toggleReaction(this)">
+          <div class="reaction-emoji-wrap">🤑<span class="reaction-count-badge" data-count="${rxn.tb}">+${rxn.tb}</span></div>
+          <div class="reaction-label">I'd buy this</div>
+        </div>
+        <div class="reaction-item" onclick="toggleReaction(this)">
+          <div class="reaction-emoji-wrap">🔥<span class="reaction-count-badge" data-count="${rxn.tu}">+${rxn.tu}</span></div>
+          <div class="reaction-label">I'd use this</div>
+        </div>
+        <div class="post-react-vdivider"></div>
+        <div class="comment-reaction">
+          <div class="reaction-emoji-wrap" style="font-size:0"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M4 4h14a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H7l-4 3V5a1 1 0 0 1 1-1z" stroke="#293142" stroke-width="1.4" stroke-linejoin="round"/></svg>${ccBadge}</div>
+          <div class="reaction-label">Comment</div>
+        </div>
+      </div>`;
+
     // Journey section (only if data.journey exists)
     let journeyHtml = '';
     if (data.journey && data.journey.length) {
@@ -4945,7 +4974,7 @@ Download now for free : pasteryapp.xyz</div>
       }).join('');
       journeyHtml = `
         <div class="pd-journey">
-          <div class="pd-journey-label">How it was built</div>
+          <div class="pd-journey-label">The Journey</div>
           ${stepsHtml}
         </div>`;
     }
@@ -4967,6 +4996,7 @@ Download now for free : pasteryapp.xyz</div>
           </div>
         </div>
       </div>
+      ${reactionsHtml}
       ${journeyHtml}`;
   }
 
