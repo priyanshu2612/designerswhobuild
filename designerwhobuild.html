@@ -765,8 +765,7 @@
     width: max-content;
   }
   /* ── Full-bleed community card ─────────────── */
-  .hmiss-card {
-    width: 310px;
+  .hmiss-card, .botd-card {
     aspect-ratio: 3 / 4;
     border-radius: 20px;
     position: relative;
@@ -774,6 +773,25 @@
     flex-shrink: 0;
     cursor: pointer;
     background: #1D2433;
+  }
+  .hmiss-card { width: 310px; }
+
+  /* ── Builds of the day ─────────────────────────── */
+  .botd-heading-img { display: block; width: 100%; height: auto; }
+  .botd-scroll {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    padding: 16px 10% 28px;
+    scroll-padding-inline: 10%;
+  }
+  .botd-scroll::-webkit-scrollbar { display: none; }
+  .botd-card {
+    width: 80vw;
+    scroll-snap-align: center;
   }
   .hmiss-video {
     position: absolute;
@@ -2596,6 +2614,90 @@
     </div>
   </div>
 
+  <!-- Builds of the day -->
+  <img class="botd-heading-img" src="https://ik.imagekit.io/424h6me27c/Frame%202147207759.png" alt="Builds of the day — Must checkout">
+
+  <div class="botd-scroll">
+
+    <!-- Card 1 — VoiceBlob -->
+    <div class="botd-card" onclick="openPostDetail('voiceblob')">
+      <img class="hmiss-video" src="https://ik.imagekit.io/424h6me27c/1593694785946.jpeg" alt="">
+      <div class="hmiss-blur-1"></div>
+      <div class="hmiss-blur-2"></div>
+      <div class="hmiss-blur-3"></div>
+      <div class="hmiss-blur-4"></div>
+      <div class="hmiss-overlay">
+        <div class="hmiss-meta-label">
+          <span>iOS app · 10h ago</span>
+          <span class="hmiss-meta-fire">🔥 +33</span>
+        </div>
+        <div class="hmiss-title">Voice interactive blob particles using SwiftUI</div>
+        <div class="hmiss-author-row" onclick="event.stopPropagation();viewProfile('11111111-0000-0000-0000-000000000006')">
+          <div class="hmiss-author-avatar">
+            <img src="https://ik.imagekit.io/424h6me27c/1593694785946.jpeg" alt="">
+          </div>
+          <div class="hmiss-author-info">
+            <div class="hmiss-author-name">Sagar Bhardwaj</div>
+            <div class="hmiss-author-role">Lead Designer · Urban Company</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 2 — ScreenFlow -->
+    <div class="botd-card" onclick="openPostDetail('screenflow')">
+      <img class="hmiss-video" src="https://ik.imagekit.io/424h6me27c/1769139467912.jpeg" alt="">
+      <div class="hmiss-blur-1"></div>
+      <div class="hmiss-blur-2"></div>
+      <div class="hmiss-blur-3"></div>
+      <div class="hmiss-blur-4"></div>
+      <div class="hmiss-overlay">
+        <div class="hmiss-meta-label">
+          <span>iOS app · 2d ago</span>
+          <span class="hmiss-meta-fire">🔥 +24</span>
+        </div>
+        <div class="hmiss-title">Record your screen with one tap. No clunky settings, no export hell.</div>
+        <div class="hmiss-author-row" onclick="event.stopPropagation();viewProfile('11111111-0000-0000-0000-000000000003')">
+          <div class="hmiss-author-avatar">
+            <img src="https://ik.imagekit.io/424h6me27c/1758728645137.jpeg" alt="">
+          </div>
+          <div class="hmiss-author-info">
+            <div class="hmiss-author-name">Arjun Sethi</div>
+            <div class="hmiss-author-role">Product Designer · Swiggy</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 3 — Polaroid -->
+    <div class="botd-card" onclick="openPostDetail('polaroid')">
+      <video class="hmiss-video" src="https://ik.imagekit.io/424h6me27c/linkedin-video-3.mp4" loop muted playsinline></video>
+      <div class="hmiss-blur-1"></div>
+      <div class="hmiss-blur-2"></div>
+      <div class="hmiss-blur-3"></div>
+      <div class="hmiss-blur-4"></div>
+      <div class="hmiss-overlay">
+        <div class="hmiss-meta-label">
+          <span>iOS app · 2d ago</span>
+          <span class="hmiss-meta-fire">🔥 +12</span>
+        </div>
+        <div class="hmiss-title">Polaroid. Was trying out a fun interaction in my portfolio</div>
+        <div class="hmiss-author-row" onclick="event.stopPropagation();viewProfile('11111111-0000-0000-0000-000000000007')">
+          <div class="hmiss-author-avatar">
+            <img src="https://ik.imagekit.io/424h6me27c/1745770693685.jpeg" alt="">
+          </div>
+          <div class="hmiss-author-info">
+            <div class="hmiss-author-name">Gowtham Oleti</div>
+            <div class="hmiss-author-role">Product Designer · CRED</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="divider"></div>
+
   <!-- Trending this week -->
   <div class="section" style="padding-top:24px">
     <div class="section-heading">
@@ -3719,7 +3821,7 @@ Download now for free : pasteryapp.xyz</div>
     });
   }, { threshold: 0.4 });
 
-  document.querySelectorAll('.hmiss-video').forEach(v => hmissObserver.observe(v));
+  document.querySelectorAll('video.hmiss-video').forEach(v => hmissObserver.observe(v));
 
   function togglePostVideo(wrap) {
     const video = wrap.querySelector('.post-video');
