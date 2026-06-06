@@ -1208,14 +1208,22 @@
     font-size: 18px;
     font-weight: 600;
     color: #10192D;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
     margin-top: 20px;
     line-height: 1.2;
     text-align: center;
   }
   .contrib-role {
+    font-size: 14px;
+    font-weight: 400;
+    color: #717684;
+    margin-top: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.3;
+    text-align: center;
+  }
+  .contrib-exp {
     font-size: 14px;
     font-weight: 400;
     color: #717684;
@@ -1816,8 +1824,90 @@
   .inner-page-tab.active { background: #F2F4F7; color: #10192D; font-weight: 600; }
   .inner-page-cards { padding: 0 16px; display: flex; flex-direction: column; gap: 12px; }
   .inner-page-cards .project-card { width: 100%; }
-  .contrib-page-cards { padding: 0 16px; display: flex; flex-direction: column; gap: 12px; }
-  .contrib-page-cards .contributor-card { width: 100%; }
+  .contrib-page-cards {
+    padding: 16px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .contrib-page-cards .contributor-card {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+  }
+  .cp-joined-tag {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(255,255,255,0.9);
+    border-radius: 0 0 6px 6px;
+    padding: 5px 14px;
+    font-size: 11px;
+    font-weight: 500;
+    color: #596378;
+    white-space: nowrap;
+    font-family: 'Outfit', sans-serif;
+    letter-spacing: 0.2px;
+  }
+  .contrib-page-cards .cp-has-joined-tag {
+    padding-top: 40px;
+  }
+  /* Top 10 — full-width horizontal card */
+  .contrib-page-cards .cp-top10-card {
+    grid-column: span 2;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 36px;
+    padding: 16px 16px 10px;
+    min-height: 124px;
+  }
+  .cp-top10-card .contrib-av-wrap {
+    margin: 0;
+    flex-shrink: 0;
+    padding-left: 12px;
+  }
+  .cp-top10-info {
+    flex: 1;
+    min-width: 0;
+  }
+  .cp-top10-card .contrib-av-wrap {
+    width: 72px;
+  }
+  .cp-top10-card .contrib-avatar {
+    width: 72px;
+    height: 96px;
+  }
+  .cp-top10-card .contrib-sticker {
+    right: -20px;
+    width: 42px;
+    height: 42px;
+  }
+  .cp-top10-card .contrib-sticker > img {
+    width: 42px;
+    height: 42px;
+  }
+  .cp-top10-card .sticker-num {
+    font-size: 11px;
+  }
+  .cp-top10-card .sticker-lbl {
+    font-size: 7px;
+  }
+  .cp-top10-card .contrib-name {
+    text-align: left;
+    margin-top: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .cp-top10-card .contrib-role,
+  .cp-top10-card .contrib-exp {
+    text-align: left;
+  }
+  .cp-top10-card .contrib-tags {
+    justify-content: flex-start;
+    margin-top: 8px;
+  }
 
   /* ── Auth Modal ───────────────────────────────── */
   #authModal {
@@ -3094,6 +3184,7 @@
         </div>
         <div class="contrib-name">Priyanshu Barnwal</div>
         <div class="contrib-role">Product Designer · Zomato</div>
+        <div class="contrib-exp">4 yrs exp</div>
         <div class="contrib-tags">
           <span class="ctag">4 Apps</span>
           <span class="ctag">1 Games</span>
@@ -3112,6 +3203,7 @@
         </div>
         <div class="contrib-name">Priya Menon</div>
         <div class="contrib-role">UX Designer · Razorpay</div>
+        <div class="contrib-exp">3 yrs exp</div>
         <div class="contrib-tags">
           <span class="ctag">3 Apps</span>
           <span class="ctag">2 Web</span>
@@ -3130,6 +3222,7 @@
         </div>
         <div class="contrib-name">Arjun Sethi</div>
         <div class="contrib-role">Interaction Designer · CRED</div>
+        <div class="contrib-exp">5 yrs exp</div>
         <div class="contrib-tags">
           <span class="ctag">5 Apps</span>
           <span class="ctag">3 Interact.</span>
@@ -3148,6 +3241,7 @@
         </div>
         <div class="contrib-name">Neha Kapoor</div>
         <div class="contrib-role">Visual Designer · Flipkart</div>
+        <div class="contrib-exp">6 yrs exp</div>
         <div class="contrib-tags">
           <span class="ctag">2 Apps</span>
           <span class="ctag">2 Web</span>
@@ -3166,6 +3260,7 @@
         </div>
         <div class="contrib-name">Rohan Verma</div>
         <div class="contrib-role">Product Designer · Swiggy</div>
+        <div class="contrib-exp">3 yrs exp</div>
         <div class="contrib-tags">
           <span class="ctag">4 Apps</span>
           <span class="ctag">2 Interact.</span>
@@ -3184,6 +3279,7 @@
         </div>
         <div class="contrib-name">Sana Mirza</div>
         <div class="contrib-role">UI Designer · Meesho</div>
+        <div class="contrib-exp">2 yrs exp</div>
         <div class="contrib-tags">
           <span class="ctag">3 Apps</span>
           <span class="ctag">1 macOS</span>
@@ -3438,7 +3534,7 @@
     </div>
   </div>
 
-  <img src="https://ik.imagekit.io/424h6me27c/Frame%202147207754.png" style="width:100%;display:block;margin-top:32px;" alt="">
+  <img src="https://ik.imagekit.io/424h6me27c/compressedImage%20(2).jpeg" style="width:100%;display:block;margin-top:32px;" alt="">
 
   <!-- New from the Community -->
   <div class="nebuild-section">
@@ -4663,78 +4759,66 @@ Download now for free : pasteryapp.xyz</div>
       cards = [...source].sort((a,b) => a.joinedDays - b.joinedDays);
     }
 
-    container.innerHTML = cards.map(c => {
-      if (_contribTab === 'top10') {
-        // Full card: rank + stats + tags
-        return `<div class="contributor-card" onclick="viewProfile('${c.id}')" style="cursor:pointer;">
-          <div class="contrib-top">
-            <div class="contrib-avatar-wrap">
-              <span class="rank-badge" style="color:${c.rankColor}">#${c.rank}</span>
-              <div class="contrib-avatar"><img src="${c.avatar}" onerror="_onAvatarErr(this)" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;" alt=""></div>
-            </div>
-            <div class="contrib-info">
-              <div class="contrib-name">${c.name}</div>
-              <div class="contrib-role">${c.role}</div>
-            </div>
-          </div>
-          <div class="contrib-stats-box">
-            <div class="contrib-stat-col">
-              <div class="contrib-stat-num">${c.total} <span class="contrib-stat-unit">projects</span></div>
-              <div class="contrib-stat-sub">till date</div>
-            </div>
-            <div class="contrib-stat-divider"></div>
-            <div class="contrib-stat-col">
-              <div class="contrib-stat-num">${c.live} <span class="contrib-stat-unit live">live projects</span></div>
-              <div class="contrib-stat-sub">this week</div>
-            </div>
-          </div>
-          ${c.tags.length ? `<div class="contrib-tags">${c.tags.map(t=>`<span class="ctag">${t}</span>`).join('')}</div>` : ''}
-        </div>`;
+    const bgPalette = ['#F0E9E0','#F5E7EE','#E8EDF7','#EBF0E8','#E8F2ED','#EFE8F5','#F5EDE3','#E8EBF5'];
+    const isTop10 = _contribTab === 'top10';
+    const isNew   = _contribTab === 'new';
 
-      } else if (_contribTab === 'new') {
-        // Just joined: no rank, no stats, no tags — only avatar + name/role + meta lines
-        return `<div class="contributor-card" onclick="viewProfile('${c.id}')" style="cursor:pointer;">
-          <div class="contrib-top">
-            <div class="contrib-avatar-wrap">
-              <div class="contrib-avatar"><img src="${c.avatar}" onerror="_onAvatarErr(this)" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;" alt=""></div>
-            </div>
-            <div class="contrib-info">
-              <div class="contrib-name">${c.name}</div>
-              <div class="contrib-role">${c.role}</div>
-            </div>
-          </div>
-          ${metaLines(c)}
-        </div>`;
+    container.innerHTML = cards.map((c, i) => {
+      const bg = bgPalette[i % bgPalette.length];
 
-      } else {
-        // Community tab: no rank. Has posts → stats + tags + meta lines. No posts → meta lines only.
-        const statsHtml = c.hasPosts ? `
-          <div class="contrib-stats-box">
-            <div class="contrib-stat-col">
-              <div class="contrib-stat-num">${c.total} <span class="contrib-stat-unit">projects</span></div>
-              <div class="contrib-stat-sub">till date</div>
-            </div>
-            <div class="contrib-stat-divider"></div>
-            <div class="contrib-stat-col">
-              <div class="contrib-stat-num">${c.live} <span class="contrib-stat-unit live">live projects</span></div>
-              <div class="contrib-stat-sub">this week</div>
-            </div>
+      const joinedLabel = c.joinedDays === 0 ? 'Joined today'
+        : c.joinedDays === 1 ? 'Joined yesterday'
+        : `Joined ${c.joined.toLowerCase()}`;
+
+      const joinedTag = isNew
+        ? `<div class="cp-joined-tag">${joinedLabel}</div>` : '';
+
+      const rankBadge = isTop10
+        ? `<span class="rank-badge" style="color:${c.rankColor}">#${c.rank}</span>` : '';
+
+      const sticker = c.hasPosts ? `<div class="contrib-sticker">
+        <img src="https://ik.imagekit.io/424h6me27c/Frame%202147207780.png" alt="">
+        <div class="sticker-count"><span class="sticker-num">${c.total}</span><span class="sticker-lbl">BUILDS</span></div>
+      </div>` : '';
+
+      const expHtml = c.exp
+        ? `<div class="contrib-exp">${c.exp} yr${c.exp !== 1 ? 's' : ''} exp</div>` : '';
+
+      const tagsHtml = c.tags.length
+        ? `<div class="contrib-tags">${c.tags.map(t=>`<span class="ctag">${t}</span>`).join('')}</div>` : '';
+
+      const nameParts = c.name.trim().split(' ');
+      const nameHtml = nameParts.length > 1
+        ? `${nameParts[0]}<br>${nameParts.slice(1).join(' ')}` : c.name;
+
+      if (isTop10) {
+        return `<div class="contributor-card cp-top10-card" onclick="viewProfile('${c.id}')" style="cursor:pointer;background:${bg};">
+          <div class="contrib-av-wrap">
+            ${rankBadge}
+            <img class="contrib-avatar" src="${c.avatar}" onerror="_onAvatarErr(this)" alt="">
+            ${sticker}
           </div>
-          ${c.tags.length ? `<div class="contrib-tags">${c.tags.map(t=>`<span class="ctag">${t}</span>`).join('')}</div>` : ''}` : '';
-        return `<div class="contributor-card" onclick="viewProfile('${c.id}')" style="cursor:pointer;">
-          <div class="contrib-top">
-            <div class="contrib-avatar-wrap">
-              <div class="contrib-avatar"><img src="${c.avatar}" onerror="_onAvatarErr(this)" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;" alt=""></div>
-            </div>
-            <div class="contrib-info">
-              <div class="contrib-name">${c.name}</div>
-              <div class="contrib-role">${c.role}</div>
-            </div>
+          <div class="cp-top10-info">
+            <div class="contrib-name">${c.name}</div>
+            <div class="contrib-role">${c.role}</div>
+            ${expHtml}
+            ${tagsHtml}
           </div>
-          ${metaLines(c)}
-          ${statsHtml}
         </div>`;
       }
+
+      return `<div class="contributor-card${isNew ? ' cp-has-joined-tag' : ''}" onclick="viewProfile('${c.id}')" style="cursor:pointer;background:${bg};">
+        ${joinedTag}
+        <div class="contrib-av-wrap">
+          ${rankBadge}
+          <img class="contrib-avatar" src="${c.avatar}" onerror="_onAvatarErr(this)" alt="">
+          ${sticker}
+        </div>
+        <div class="contrib-name">${nameHtml}</div>
+        <div class="contrib-role">${c.role}</div>
+        ${expHtml}
+        ${tagsHtml}
+      </div>`;
     }).join('');
   }
 
