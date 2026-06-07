@@ -2150,7 +2150,7 @@
   .pv-avatar img { width:100%; height:100%; object-fit:cover; display:block; }
   .pv-avatar-init { width:96px; height:96px; border-radius:50%; background:#EEF2FF; display:flex; align-items:center; justify-content:center; font-size:34px; font-weight:800; color:#3169ED; }
   /* Profile tab — make sticky nav white (removes grey rectangle at top) */
-  body[data-tab="profile"] .sticky-nav { background: #fff; }
+  body[data-tab="profile"] .sticky-nav { background: transparent; }
   .pv-social-row { display:flex; align-items:center; gap:8px; padding-bottom:4px; }
   .pv-social-btn { width:44px; height:44px; border-radius:50%; border:none; background:none; display:flex; align-items:center; justify-content:center; cursor:pointer; text-decoration:none; flex-shrink:0; overflow:hidden; padding:0; }
   .pv-follow-btn { background:#3169ED; color:#fff; border:none; border-radius:20px; height:36px; padding:0 20px; font-family:'Outfit',sans-serif; font-size:14px; font-weight:600; cursor:pointer; }
@@ -2168,7 +2168,7 @@
   .pv-stat-vdivider { width:1px; background:#EDEFF2; align-self:stretch; }
   .pv-section { padding:16px 16px 0; }
   .pv-section-title { font-size:20px; font-weight:700; color:#10192D; margin-bottom:14px; }
-  .pv-section-divider { height:8px; background:#EDF1F2; margin-top:16px; }
+  .pv-section-divider { height:8px; background:#EDF1F2; margin-top:20px; }
   .pv-felt-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
   .pv-felt-item { display:flex; align-items:center; gap:8px; background:#F8F9FC; border-radius:10px; padding:10px 12px; }
   .pv-felt-badge { font-size:14px; font-weight:700; color:#10192D; white-space:nowrap; }
@@ -2176,7 +2176,13 @@
   .pv-tech-row { display:flex; gap:10px; flex-wrap:wrap; }
   .pv-tech-chip { display:flex; align-items:center; gap:6px; background:#F8F9FC; border-radius:20px; padding:6px 12px; }
   .pv-tech-name { font-size:13px; font-weight:500; color:#10192D; }
-  .pv-posts-hd { font-size:20px; font-weight:700; color:#10192D; padding:16px 16px 10px; }
+  .pv-posts-hd { font-size:20px; font-weight:700; color:#10192D; padding:20px 16px 10px; }
+  /* ── Profile extra sections (dev tools / AI tools) ── */
+  .pv-xsection { margin:0 16px; border-radius:16px; padding:16px; }
+  .pv-xsection-hd { margin-bottom:14px; }
+  .pv-xsection-title { font-size:15px; font-weight:700; color:#10192D; line-height:1.2; }
+  .pv-xsection-sub { font-size:13px; color:#717684; margin-top:3px; }
+  .pv-tool-pill { display:inline-flex; align-items:center; gap:7px; background:#fff; border-radius:8px; padding:8px 14px; font-size:13px; font-weight:500; color:#454C5F; white-space:nowrap; }
   .profile-empty { padding:40px 16px; text-align:center; color:#8492A6; font-size:14px; font-family:'Outfit',sans-serif; }
   .profile-back-row { padding: 14px 16px 0; }
   .profile-back-btn {
@@ -2184,6 +2190,50 @@
     cursor: pointer; font-family: 'Outfit',sans-serif; padding: 0;
     display: flex; align-items: center; gap: 4px;
   }
+
+  /* ── Priyanshu hero profile header ── */
+  .pv-hero-header {
+    background: #3169ED; padding: 98px 20px 35px;
+    position: relative; margin-top: -78px; height: 138px; box-sizing: border-box;
+  }
+  .pv-hero-header::before {
+    content: ''; position: absolute; inset: 0;
+    background-image: radial-gradient(circle, rgba(255,255,255,0.18) 1.5px, transparent 1.5px);
+    background-size: 22px 22px; pointer-events: none;
+  }
+  .pv-hero-white { background: #fff; border-radius: 20px 20px 0 0; padding: 0 16px 0; position: relative; z-index: 1; }
+  .pv-hero-identity-row { display: flex; align-items: flex-start; gap: 28px; margin-top: -20px; padding-bottom: 0; }
+  .pv-hero-avatar-wrap { position: relative; display: inline-block; flex-shrink: 0; transform: translateY(-10px); }
+  .pv-hero-av { width: 90px; height: 112px; border-radius: 56px; border: 3px solid #fff; overflow: hidden; background: #c5d3f5; box-shadow: 0 2px 12px rgba(0,0,0,0.15); }
+  .pv-hero-av img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .pv-hero-av-init { display: flex; align-items: center; justify-content: center; font-size: 40px; font-weight: 800; color: #3169ED; }
+  .pv-hero-name { font-size: 20px; font-weight: 600; color: #10192D; letter-spacing: -0.2px; }
+  .pv-hero-role { font-size: 13px; font-weight: 500; color: #717684; margin-top: 3px; }
+  .pv-hero-exp { font-size: 14px; color: #8492A6; margin-top: 2px; }
+  .pv-build-stats { display: flex; gap: 10px; margin-top: 16px; }
+  .pv-build-stats.scrollable { overflow-x: auto; scrollbar-width: none; }
+  .pv-build-stats.scrollable::-webkit-scrollbar { display: none; }
+  .pv-build-stat-card {
+    background: #F5F6F8; border-radius: 16px;
+    padding: 14px 12px 12px 14px;
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .pv-build-stats:not(.scrollable) .pv-build-stat-card { flex: 1; min-width: 0; }
+  .pv-build-stats.scrollable .pv-build-stat-card { flex: 0 0 auto; min-width: 110px; }
+  .pv-bs-num { font-size: 22px; font-weight: 800; color: #10192D; line-height: 1; }
+  .pv-bs-bottom { display: flex; align-items: flex-start; justify-content: space-between; gap: 4px; margin-top: 6px; }
+  .pv-bs-label { font-size: 11px; font-weight: 500; color: #717684; line-height: 1.3; white-space: nowrap; }
+  .pv-bs-icon { width: 24px; height: 24px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+  .pv-bs-top { display: flex; align-items: center; justify-content: space-between; gap: 4px; }
+  .pv-shipped-hd { font-size: 16px; font-weight: 700; color: #10192D; margin: 28px 0 10px; display: flex; align-items: center; gap: 8px; }
+  .pv-hd-tag-live { font-size: 12px; font-weight: 700; color: #2E7D32; background: #E8F5E9; border-radius: 6px; padding: 3px 8px; }
+  .pv-hd-tag-wip { font-size: 12px; font-weight: 700; color: #A07800; background: #FFF8E1; border-radius: 6px; padding: 3px 8px; }
+  .pv-dna-hd { font-size: 16px; font-weight: 700; color: #10192D; margin: 24px 0 10px; }
+  .pv-pill-scroll { overflow-x: auto; scrollbar-width: none; margin: 0 -16px; padding: 0 16px; }
+  .pv-pill-scroll::-webkit-scrollbar { display: none; }
+  .pv-pill-rows { display: flex; flex-direction: column; gap: 8px; width: max-content; }
+  .pv-pill-row { display: flex; gap: 8px; }
+  .pv-dna-pill { font-size: 13px; font-weight: 500; color: #454C5F; background: #F5F6F8; border-radius: 8px; padding: 8px 14px; white-space: nowrap; }
 
   /* ── Tools bottomsheet ───────────────────────── */
   /* ── Notification Sheet ─────────────────────── */
@@ -2843,7 +2893,7 @@
     <div class="header-top-row">
       <svg id="navHamburger" width="22" height="16" viewBox="0 0 22 16" fill="none" style="flex-shrink:0;cursor:pointer;" onclick="openNavMenu()"><rect y="0" width="22" height="2.5" rx="1.25" fill="#10192D"/><rect y="6.5" width="22" height="2.5" rx="1.25" fill="#10192D"/><rect y="13" width="22" height="2.5" rx="1.25" fill="#10192D"/></svg>
       <button id="navBackBtn" onclick="goBackProfile()" style="display:none;background:none;border:none;cursor:pointer;flex-shrink:0;display:none;align-items:center;gap:6px;font-family:'Outfit',sans-serif;font-size:14px;font-weight:600;color:#3169ED;padding:0;">
-        <svg width="18" height="14" viewBox="0 0 18 14" fill="none"><path d="M7 1L1 7L7 13M1 7H17" stroke="#3169ED" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <svg width="18" height="14" viewBox="0 0 18 14" fill="none"><path d="M7 1L1 7L7 13M1 7H17" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </button>
       <span class="site-name" style="flex:1;text-align:center;font-size:15px;font-weight:600;">designerswhobuild.com</span>
       <button id="notifBellBtn" onclick="openNotifSheet()" style="display:none;position:relative;background:none;border:none;cursor:pointer;padding:4px;flex-shrink:0;" title="Notifications">
@@ -5115,30 +5165,200 @@ Download now for free : pasteryapp.xyz</div>
 
     const backBtn = '';
 
-    container.innerHTML = `
-      ${backBtn}
-      <div class="pv-avatar-row">
-        ${avatarHtml}
-      </div>
-      <div class="pv-info-row">
-        <div class="pv-info-col">
-          <div class="pv-name">${profile.name || ''}</div>
-          ${roleStr ? `<div class="pv-role">${roleStr}</div>` : ''}
-          ${expStr  ? `<div class="pv-exp">${expStr}</div>`  : ''}
+    // ── Hardcoded extra sections for Priyanshu's profile ──
+    const isPriyanshu = profile.id === '11111111-0000-0000-0000-000000000001';
+    const pill = (icon, label) =>
+      `<div class="pv-tool-pill">${icon}<span>${label}</span></div>`;
+    const imgIcon = (src) =>
+      `<img src="${src}" style="width:20px;height:20px;object-fit:contain;flex-shrink:0;" alt="">`;
+    const spanIcon = (bg, color, char) =>
+      `<span style="width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center;background:${bg};border-radius:5px;color:${color};font-size:13px;font-weight:800;flex-shrink:0;">${char}</span>`;
+
+    const pillRows = (pills) => `
+      <div class="pv-pill-scroll">
+        <div class="pv-pill-rows">
+          <div class="pv-pill-row">${pills.slice(0, Math.ceil(pills.length/2)).join('')}</div>
+          <div class="pv-pill-row">${pills.slice(Math.ceil(pills.length/2)).join('')}</div>
         </div>
-        <div class="pv-social-row">
-          ${igBtn}
-          ${liBtn}
-          ${actionBtn}
+      </div>`;
+
+    const devToolsSection = isPriyanshu ? `
+      <div class="pv-xsection" style="background:#EDF4FF;margin-top:28px;">
+        <div class="pv-xsection-hd">
+          <div class="pv-xsection-title">Developer native tools</div>
+          <div class="pv-xsection-sub">I'm comfortable</div>
         </div>
-      </div>
-      ${profile.bio ? `<div class="pv-bio">${profile.bio}</div>` : ''}
-      ${statsCard}
-      ${feltSection}
-      ${techSection}
-      <div class="pv-section-divider"></div>
-      <div class="pv-posts-hd">Projects</div>
-      ${postCards}`;
+        ${pillRows([
+          pill(imgIcon('https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg'), 'Html/CSS'),
+          pill(imgIcon('https://cdn.jsdelivr.net/gh/devicons/devicon/icons/xcode/xcode-original.svg'), 'Xcode'),
+          pill(imgIcon('https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg'), 'Github'),
+          pill(imgIcon('https://cdn.jsdelivr.net/gh/devicons/devicon/icons/swift/swift-original.svg'), 'Swift'),
+          pill(imgIcon('https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg'), 'CSS'),
+          pill(imgIcon('https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg'), 'JavaScript'),
+        ])}
+      </div>` : '';
+
+    const aiToolsSection = isPriyanshu ? `
+      <div class="pv-xsection" style="background:#EDF4FF;margin-top:20px;">
+        <div class="pv-xsection-hd">
+          <div class="pv-xsection-title">Top AI tools</div>
+        </div>
+        ${pillRows([
+          pill(imgIcon('https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg'), 'ChatGPT'),
+          pill(spanIcon('#D4570A','#fff','✳'), 'Claude Code'),
+          pill(imgIcon('https://avatars.githubusercontent.com/u/124584537'), 'Cursor'),
+          pill(imgIcon('https://cdn.jsdelivr.net/gh/devicons/devicon/icons/figma/figma-original.svg'), 'Figma AI'),
+          pill(imgIcon('https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg'), 'Gemini'),
+          pill(spanIcon('#1A73E8','#fff','G'), 'Google AI'),
+        ])}
+      </div>` : '';
+
+    if (isPriyanshu) {
+      // ── Priyanshu hero layout ──
+      // Get active tab icons from homepage tabs
+      const tabImgs = document.querySelectorAll('.tabs .tab img');
+      const iconAllProjects   = tabImgs[0] ? tabImgs[0].src : '';
+      const iconMobileApps    = tabImgs[1] ? (tabImgs[1].dataset.activeSrc || tabImgs[1].src) : '';
+      const iconInteractive   = tabImgs[3] ? (tabImgs[3].dataset.activeSrc || tabImgs[3].src) : '';
+      const tabIcon = (src) => `<img src="${src}" style="width:28px;height:28px;object-fit:contain;display:block;" alt="">`;
+
+      const buildStats = [
+        { count: 12, label: 'Total builds', icon: tabIcon(iconAllProjects)  },
+        { count: 4,  label: 'Mobile Apps',  icon: tabIcon(iconMobileApps)   },
+        { count: 4,  label: 'Games',        icon: tabIcon(iconInteractive)  },
+      ];
+
+      const dnaLabels = ['AI', 'Product Growth', 'Prompt engineer', 'Front end Dev', 'Backend', 'Design systems', 'App publishing', 'iOS app'];
+      const dnaMid = Math.ceil(dnaLabels.length / 2);
+      const dnaRow1 = dnaLabels.slice(0, dnaMid);
+      const dnaRow2 = dnaLabels.slice(dnaMid);
+      const dnaPillsHtml = `
+        <div class="pv-pill-scroll">
+          <div class="pv-pill-rows">
+            <div class="pv-pill-row">${dnaRow1.map(l => `<div class="pv-dna-pill">${l}</div>`).join('')}</div>
+            <div class="pv-pill-row">${dnaRow2.map(l => `<div class="pv-dna-pill">${l}</div>`).join('')}</div>
+          </div>
+        </div>`;
+
+      const buildingNowHtml = `
+        <div class="pv-shipped-hd">Building now <span class="pv-hd-tag-wip">WIP</span></div>
+        <div style="margin-bottom:20px;">
+          <div class="project-card" style="width:100%;box-sizing:border-box;margin-bottom:10px;">
+            <div class="card-top-row">
+              <div class="card-thumb-wrap">
+                <img src="https://ik.imagekit.io/424h6me27c/images.png" style="width:64px;height:64px;border-radius:14px;object-fit:cover;display:block;" alt="">
+              </div>
+              <div class="card-info">
+                <div class="card-name-row">
+                  <span class="card-app-name">Design System Builder</span>
+                </div>
+                <div class="card-desc" style="-webkit-line-clamp:3;display:-webkit-box;-webkit-box-orient:vertical;overflow:hidden;">A tool to help designers and developers build and maintain consistent design systems across products.</div>
+                <div class="card-meta-row">
+                  <span class="card-platform">Web app · In progress</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>`;
+
+      const livePosts = posts.filter(p => p.status === 'live');
+      const shippedHtml = livePosts.length ? `
+        <div class="pv-shipped-hd">Already shipped <span class="pv-hd-tag-live">LIVE</span></div>
+        <div style="margin-bottom:20px;">
+          ${livePosts.map(p => `
+            <div class="project-card" style="width:100%;box-sizing:border-box;margin-bottom:10px;">
+              <div class="card-top-row">
+                <div class="card-thumb-wrap">
+                  <img src="${p.thumbnail_url || ''}" style="width:64px;height:64px;border-radius:14px;object-fit:cover;display:block;" alt="" onerror="_onAvatarErr(this)">
+                </div>
+                <div class="card-info">
+                  <div class="card-name-row">
+                    <span class="card-app-name">${p.title || ''}</span>
+                  </div>
+                  <div class="card-desc" style="-webkit-line-clamp:3;display:-webkit-box;-webkit-box-orient:vertical;overflow:hidden;">${p.description || ''}</div>
+                  <div class="card-meta-row">
+                    <span class="card-platform">${p.category || ''}${p.created_at ? ' · ' + getTimeAgo(p.created_at) : ''}</span>
+                  </div>
+                </div>
+              </div>
+            </div>`).join('')}
+        </div>` : '';
+
+      const heroAvatarHtml = profile.avatar_url
+        ? `<div class="pv-hero-av"><img src="${profile.avatar_url}" alt="" onerror="_onAvatarErr(this)"></div>`
+        : `<div class="pv-hero-av pv-hero-av-init">${(profile.name||'?')[0].toUpperCase()}</div>`;
+
+      const statScrollable = buildStats.length > 3;
+      const actionBtns = [
+        profile.instagram_url ? igBtn : '',
+        profile.linkedin_url  ? liBtn : '',
+        actionBtn
+      ].filter(Boolean).join('');
+
+      container.innerHTML = `
+        <div class="pv-hero-header"></div>
+        <div class="pv-hero-white">
+          <div class="pv-hero-identity-row">
+            <div class="pv-hero-avatar-wrap">
+              ${heroAvatarHtml}
+              <div class="contrib-sticker" style="right:-16px;top:-10px;">
+                <img src="https://ik.imagekit.io/424h6me27c/Frame%202147207780.png" alt="" style="width:54px;height:54px;display:block;">
+                <div class="sticker-count"><span class="sticker-num">12</span><span class="sticker-lbl">BUILDS</span></div>
+              </div>
+            </div>
+            <div style="flex:1;min-width:0;padding-top:20px;">
+              <div class="pv-hero-name">${profile.name || ''}</div>
+              ${roleStr ? `<div class="pv-hero-role">${roleStr}</div>` : ''}
+              ${expStr  ? `<div class="pv-hero-exp">${expStr}</div>`  : ''}
+            </div>
+            ${actionBtns ? `<div style="display:flex;align-items:center;gap:4px;padding-top:20px;flex-shrink:0;">${actionBtns}</div>` : ''}
+          </div>
+          <div class="pv-build-stats${statScrollable ? ' scrollable' : ''}">
+            ${buildStats.map(s => `
+              <div class="pv-build-stat-card">
+                <div class="pv-bs-top">
+                  <div class="pv-bs-num">${s.count}</div>
+                  <div class="pv-bs-icon">${s.icon}</div>
+                </div>
+                <div class="pv-bs-label">${s.label}</div>
+              </div>`).join('')}
+          </div>
+          ${buildingNowHtml}
+          ${shippedHtml}
+          <div class="pv-dna-hd">Builder DNA</div>
+          ${dnaPillsHtml}
+        </div>
+        ${devToolsSection}
+        ${aiToolsSection}
+        <div class="pv-section-divider"></div>
+        <div class="pv-posts-hd">Recent build posts</div>
+        ${postCards}`;
+    } else {
+      container.innerHTML = `
+        ${backBtn}
+        <div class="pv-avatar-row">
+          ${avatarHtml}
+        </div>
+        <div class="pv-info-row">
+          <div class="pv-info-col">
+            <div class="pv-name">${profile.name || ''}</div>
+            ${roleStr ? `<div class="pv-role">${roleStr}</div>` : ''}
+            ${expStr  ? `<div class="pv-exp">${expStr}</div>`  : ''}
+          </div>
+          <div class="pv-social-row">
+            ${igBtn}
+            ${liBtn}
+            ${actionBtn}
+          </div>
+        </div>
+        ${profile.bio ? `<div class="pv-bio">${profile.bio}</div>` : ''}
+        ${statsCard}
+        ${feltSection}
+        ${techSection}
+        <div class="pv-section-divider"></div>
+        <div class="pv-posts-hd">Recent build posts</div>
+        ${postCards}`;
+    }
   }
 
   // ── Tools Sheet ──────────────────────────────────
