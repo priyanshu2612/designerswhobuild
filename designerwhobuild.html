@@ -255,6 +255,22 @@
       <svg width="12" height="8" viewBox="0 0 12 8" fill="none" style="display:inline-block;vertical-align:middle;margin-left:2px"><path d="M1 1L6 6.5L11 1" stroke="#454C5F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </div>` : '';
 
+    // Extended tag block
+    const builtInPill = p.built_in_days ? `<div class="pv-dna-pill" style="white-space:nowrap;flex-shrink:0;">⏱ Built in ${p.built_in_days} day${p.built_in_days > 1 ? 's' : ''}</div>` : '';
+    const roles = Array.isArray(p.roles) ? p.roles : [];
+    const postCats = Array.isArray(p.post_categories) ? p.post_categories : [];
+    if (p.id && roles.length) _postRolesCache[p.id] = roles;
+    if (p.id && postCats.length) _postCatsCache[p.id] = postCats;
+    const rolesPill = roles.length ? `<div class="pv-dna-pill" style="cursor:pointer;white-space:nowrap;flex-shrink:0;" onclick="openPostRolesSheet('${p.id}')"><span style="color:#8492A6;font-weight:500;">Roles:</span> ${roles[0]}${roles.length > 1 ? ` <span style="color:#8492A6;">(+${roles.length - 1})</span>` : ''} <svg width="10" height="7" viewBox="0 0 12 8" fill="none" style="display:inline-block;vertical-align:middle;margin-left:2px"><path d="M1 1L6 6.5L11 1" stroke="#454C5F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>` : '';
+    const catsPill = postCats.length ? `<div class="pv-dna-pill" style="cursor:pointer;white-space:nowrap;flex-shrink:0;" onclick="openPostCategoriesSheet('${p.id}')"><span style="color:#8492A6;font-weight:500;">Category:</span> ${postCats[0]}${postCats.length > 1 ? ` <span style="color:#8492A6;">(+${postCats.length - 1})</span>` : ''} <svg width="10" height="7" viewBox="0 0 12 8" fill="none" style="display:inline-block;vertical-align:middle;margin-left:2px"><path d="M1 1L6 6.5L11 1" stroke="#454C5F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>` : '';
+    const row2 = (rolesPill || catsPill) ? `<div style="display:flex;gap:8px;align-items:center;">${rolesPill}${catsPill}</div>` : '';
+    const tagBlock = `<div style="overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding-bottom:12px;">
+  <div style="display:flex;flex-direction:column;gap:8px;width:max-content;padding:0 16px;">
+    <div style="display:flex;gap:8px;align-items:center;">${statusTag}${p.category?`<span class="post-tag post-tag-type" style="white-space:nowrap;flex-shrink:0;">${p.category}</span>`:''}${builtInPill}${toolsHtml}</div>
+    ${row2}
+  </div>
+</div>`;
+
     // Media
     const mu = p.media_urls || [];
     let media = '';
@@ -311,14 +327,14 @@
         <div class="post-meta">
           <div class="post-name">${pr.name||''}</div>
           <div class="post-role">${pr.role||''}${pr.company?' · '+pr.company:''}${pr.experience_years?' · '+pr.experience_years+'yr exp':''}</div>
-          <div class="post-subtext">${p.category?p.category+' · ':''}${timeAgo}${p.source?' · '+p.source:''}</div>
+          <div class="post-subtext">${timeAgo}${p.source?' · '+p.source:''}</div>
         </div>
       </div>
       <div class="post-content">
         <div class="post-title-row"><span class="post-title">${p.title}</span></div>
         ${p.description?`<div class="post-desc">${p.description.replace(/\n/g,'<br>')}</div>`:''}
       </div>
-      <div class="post-tech">${statusTag}${p.category?`<span class="post-tag post-tag-type">${p.category}</span>`:''}${toolsHtml}</div>
+      ${tagBlock}
       ${media}
       <div class="post-reactions">
         <div class="reaction-item" onclick="toggleReaction(this)"><div class="reaction-emoji-wrap">🙏<span class="reaction-count-badge" data-count="${tm}">+${tm}</span></div><div class="reaction-label">Teach me</div></div>
@@ -1985,6 +2001,26 @@
   .setup-input:focus { border-color: #3169ED; }
   .setup-input:disabled { background: #F5F5F7; color: #999; cursor: not-allowed; }
   .setup-input.opt { border-style: dashed; }
+  /* Multi-select pill UI */
+  .ms-wrap { position: relative; }
+  .ms-selected-pills { display: flex; flex-wrap: wrap; gap: 6px; min-height: 44px; padding: 8px 10px; border: 1.5px solid #EDEFF2; border-radius: 12px; background: #fff; cursor: pointer; align-items: center; }
+  .ms-selected-pills:focus-within { border-color: #3169ED; }
+  .ms-pill { display: inline-flex; align-items: center; gap: 4px; background: #EEF3FD; color: #3169ED; font-size: 12px; font-weight: 600; border-radius: 20px; padding: 3px 10px 3px 10px; }
+  .ms-pill-x { cursor: pointer; font-size: 14px; line-height: 1; margin-left: 2px; opacity: 0.6; }
+  .ms-pill-x:hover { opacity: 1; }
+  .ms-placeholder { font-size: 14px; color: #aaa; font-family: 'Outfit',sans-serif; }
+  .ms-dropdown { position: absolute; top: 100%; left: 0; right: 0; z-index: 200; background: #fff; border: 1.5px solid #EDEFF2; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.12); max-height: 220px; overflow-y: auto; display: none; }
+  .ms-dropdown.open { display: block; }
+  .ms-option { padding: 10px 14px; font-size: 14px; font-family: 'Outfit',sans-serif; cursor: pointer; display: flex; align-items: center; gap: 8px; }
+  .ms-option:hover { background: #F5F6F8; }
+  .ms-option.selected { background: #EEF3FD; color: #3169ED; font-weight: 600; }
+  .ms-check { width: 16px; height: 16px; border-radius: 4px; border: 1.5px solid #EDEFF2; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+  .ms-option.selected .ms-check { background: #3169ED; border-color: #3169ED; color: #fff; font-size: 10px; }
+  /* Step indicator */
+  .setup-steps { display: flex; align-items: center; gap: 8px; margin-bottom: 0; }
+  .setup-step-dot { width: 8px; height: 8px; border-radius: 50%; background: #EDEFF2; transition: background 0.2s; }
+  .setup-step-dot.active { background: #3169ED; width: 24px; border-radius: 4px; }
+  .setup-step-label { font-size: 12px; color: #8492A6; font-family: 'Outfit',sans-serif; }
   textarea.setup-input { min-height: 72px; resize: none; line-height: 1.5; }
   select.setup-input { appearance: none; -webkit-appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238492A6' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; padding-right: 36px; cursor: pointer; }
   .avatar-upload-wrap { display: flex; flex-direction: column; align-items: center; margin: 18px 0 6px; gap: 10px; }
@@ -2151,6 +2187,8 @@
   .pv-avatar-init { width:96px; height:96px; border-radius:50%; background:#EEF2FF; display:flex; align-items:center; justify-content:center; font-size:34px; font-weight:800; color:#3169ED; }
   /* Profile tab — make sticky nav white (removes grey rectangle at top) */
   body[data-tab="profile"] .sticky-nav { background: transparent; }
+  body[data-tab="vision"] .bottom-nav,
+  body[data-tab="joinus"] .bottom-nav { display: none; }
   .pv-social-row { display:flex; align-items:center; gap:8px; padding-bottom:4px; }
   .pv-social-btn { width:44px; height:44px; border-radius:50%; border:none; background:none; display:flex; align-items:center; justify-content:center; cursor:pointer; text-decoration:none; flex-shrink:0; overflow:hidden; padding:0; }
   .pv-follow-btn { background:#3169ED; color:#fff; border:none; border-radius:20px; height:36px; padding:0 20px; font-family:'Outfit',sans-serif; font-size:14px; font-weight:600; cursor:pointer; }
@@ -2617,15 +2655,16 @@
       <div class="nav-menu-spacer"></div>
     </div>
     <nav class="nav-menu-items">
-      <a class="nav-menu-item" href="#" onclick="closeNavMenu()">Read our vision</a>
+      <a class="nav-menu-item" href="#" onclick="closeNavMenu();openVisionPage()">Read our vision</a>
       <div class="nav-menu-divider"></div>
-      <a class="nav-menu-item" href="#" onclick="closeNavMenu()">Community members</a>
+      <a class="nav-menu-item" href="#" onclick="closeNavMenu();switchTab('community')">Community members</a>
       <div class="nav-menu-divider"></div>
-      <a class="nav-menu-item" href="#" onclick="closeNavMenu()">See all projects</a>
+      <a class="nav-menu-item" href="#" onclick="closeNavMenu();switchTab('feed')">See all projects</a>
       <div class="nav-menu-divider"></div>
       <a class="nav-menu-item" href="#" onclick="closeNavMenu(); openFeedbackSheet()">Share feedback</a>
       <div class="nav-menu-divider"></div>
-      <a class="nav-menu-item accent" href="#" onclick="closeNavMenu()">Join us!</a>
+      <a class="nav-menu-item accent" href="#" onclick="closeNavMenu();openJoinUsPage()">Join us!</a>
+      <div style="flex:1;"></div>
       <div class="nav-menu-divider"></div>
       <a class="nav-menu-item" href="admin.html" style="color:#999;font-size:13px;">Admin login</a>
     </nav>
@@ -2640,8 +2679,8 @@
         <button class="auth-close-btn" onclick="closeAuthModal()">&#x2715;</button>
       </div>
       <p class="auth-sheet-sub" id="authSubtext">Discover &amp; share builds by designers.</p>
-      <!-- Mode tabs -->
-      <div class="auth-mode-tabs">
+      <!-- Mode tabs hidden -->
+      <div class="auth-mode-tabs" style="display:none;">
         <button class="auth-mode-tab active" id="authTabSignin" onclick="setAuthMode('signin')">Sign in</button>
         <button class="auth-mode-tab" id="authTabSignup" onclick="setAuthMode('signup')">Create account</button>
       </div>
@@ -2695,6 +2734,36 @@
       </div>
       <div class="notif-list" id="notifList">
         <div class="notif-empty">Loading…</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Category Sheet -->
+  <div id="categorySheet" onclick="if(event.target===this)closeCategorySheet()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:900;align-items:flex-end;">
+    <div class="tools-sheet-inner">
+      <div class="tools-sheet-head">
+        <span class="tools-sheet-title">Categories</span>
+        <button class="auth-close-btn" onclick="closeCategorySheet()">&#x2715;</button>
+      </div>
+      <div class="tools-sheet-list">
+        <div class="tools-sheet-item"><div class="tools-sheet-icon" style="font-size:20px;background:#EEF3FD;">📈</div><span class="tools-sheet-name">Productivity</span></div>
+        <div class="tools-sheet-item"><div class="tools-sheet-icon" style="font-size:20px;background:#EEF3FD;">🔧</div><span class="tools-sheet-name">Utilities</span></div>
+        <div class="tools-sheet-item"><div class="tools-sheet-icon" style="font-size:20px;background:#EEF3FD;">🌱</div><span class="tools-sheet-name">Self-improvement</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Roles Sheet -->
+  <div id="rolesSheet" onclick="if(event.target===this)closeRolesSheet()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:900;align-items:flex-end;">
+    <div class="tools-sheet-inner">
+      <div class="tools-sheet-head">
+        <span class="tools-sheet-title">Roles handled</span>
+        <button class="auth-close-btn" onclick="closeRolesSheet()">&#x2715;</button>
+      </div>
+      <div class="tools-sheet-list">
+        <div class="tools-sheet-item"><div class="tools-sheet-icon" style="font-size:20px;background:#EEF3FD;">🎨</div><span class="tools-sheet-name">Product Design</span></div>
+        <div class="tools-sheet-item"><div class="tools-sheet-icon" style="font-size:20px;background:#EEF3FD;">💻</div><span class="tools-sheet-name">iOS Development (Swift)</span></div>
+        <div class="tools-sheet-item"><div class="tools-sheet-icon" style="font-size:20px;background:#EEF3FD;">🚀</div><span class="tools-sheet-name">App Store Publishing</span></div>
       </div>
     </div>
   </div>
@@ -2783,51 +2852,88 @@
     <div class="setup-sheet">
       <div class="auth-sheet-head">
         <span class="auth-sheet-title">Complete your profile 👋</span>
+        <div class="setup-steps" style="margin-bottom:0;">
+          <div class="setup-step-dot active" id="setupDot1"></div>
+          <div class="setup-step-dot" id="setupDot2"></div>
+        </div>
       </div>
-      <p class="auth-sheet-sub">Tell the community who you are.</p>
       <div class="auth-msg" id="setupMsg"></div>
-      <!-- Avatar at top -->
-      <div class="avatar-upload-wrap">
-        <div class="avatar-upload-circle" id="setupAvatarCircle" onclick="document.getElementById('setupAvatarFile').click()">
-          <div class="avatar-cam-icon">
-            <svg width="22" height="20" viewBox="0 0 22 20" fill="none"><path d="M8 2h6l1.5 2H20a1 1 0 011 1v12a1 1 0 01-1 1H2a1 1 0 01-1-1V5a1 1 0 011-1h4.5L8 2z" stroke="#7A9EF5" stroke-width="1.6" stroke-linejoin="round"/><circle cx="11" cy="11" r="3.2" stroke="#7A9EF5" stroke-width="1.6"/></svg>
-            <span style="font-size:10px;color:#7A9EF5;font-family:Outfit,sans-serif;">Your photo</span>
+
+      <!-- Step 1 -->
+      <div id="setupStep1">
+        <div class="avatar-upload-wrap">
+          <div class="avatar-upload-circle" id="setupAvatarCircle" onclick="document.getElementById('setupAvatarFile').click()">
+            <div class="avatar-cam-icon">
+              <svg width="22" height="20" viewBox="0 0 22 20" fill="none"><path d="M8 2h6l1.5 2H20a1 1 0 011 1v12a1 1 0 01-1 1H2a1 1 0 01-1-1V5a1 1 0 011-1h4.5L8 2z" stroke="#7A9EF5" stroke-width="1.6" stroke-linejoin="round"/><circle cx="11" cy="11" r="3.2" stroke="#7A9EF5" stroke-width="1.6"/></svg>
+              <span style="font-size:10px;color:#7A9EF5;font-family:Outfit,sans-serif;">Your photo</span>
+            </div>
+          </div>
+          <div>
+            <div class="avatar-upload-label-text" onclick="document.getElementById('setupAvatarFile').click()">Upload from gallery</div>
+            <div class="avatar-upload-sub" style="text-align:center">JPG or PNG · max 5MB</div>
           </div>
         </div>
-        <div>
-          <div class="avatar-upload-label-text" onclick="document.getElementById('setupAvatarFile').click()">Upload from gallery</div>
-          <div class="avatar-upload-sub" style="text-align:center">JPG or PNG · max 5MB</div>
-        </div>
+        <input type="file" id="setupAvatarFile" accept="image/*" style="display:none" onchange="handleAvatarUpload(this,'setup')">
+        <label class="setup-label">Your name</label>
+        <input class="setup-input" id="setup-name" disabled>
+        <label class="setup-label">Designation <span class="setup-req">*</span></label>
+        <select class="setup-input" id="setup-role">
+          <option value="">Select your role…</option>
+          <option>Product Designer</option>
+          <option>UI/UX Designer</option>
+          <option>Graphic Designer</option>
+          <option>Visual Designer</option>
+          <option>Interaction Designer</option>
+          <option>Design Lead</option>
+          <option>Design Manager</option>
+          <option>Product Manager</option>
+          <option>Frontend Engineer</option>
+          <option>Full Stack Engineer</option>
+          <option>Engineering Manager</option>
+          <option>Design Engineer</option>
+          <option>Founder / Designer</option>
+          <option>Freelancer</option>
+          <option>Student</option>
+          <option>Motion Designer</option>
+          <option>Brand Designer</option>
+          <option>UX Researcher</option>
+          <option>Content Designer</option>
+          <option>Design Strategist</option>
+        </select>
+        <label class="setup-label">Company <span class="setup-req">*</span></label>
+        <input class="setup-input" id="setup-company" placeholder="Where do you work?">
+        <label class="setup-label">Years of work experience <span class="setup-req">*</span></label>
+        <input class="setup-input" id="setup-exp" type="number" min="0" max="50" placeholder="e.g. 3">
+        <label class="setup-label">Short bio</label>
+        <textarea class="setup-input opt" id="setup-bio" placeholder="Tell us a little about yourself…"></textarea>
+        <button class="auth-submit" onclick="_setupGoStep2()" style="margin-top:18px">Next →</button>
       </div>
-      <input type="file" id="setupAvatarFile" accept="image/*" style="display:none" onchange="handleAvatarUpload(this,'setup')">
-      <label class="setup-label">Your name</label>
-      <input class="setup-input" id="setup-name" disabled>
-      <label class="setup-label">Designation <span class="setup-req">*</span></label>
-      <select class="setup-input" id="setup-role">
-        <option value="">Select your role…</option>
-        <option>Product Designer</option>
-        <option>UI/UX Designer</option>
-        <option>Graphic Designer</option>
-        <option>Visual Designer</option>
-        <option>Interaction Designer</option>
-        <option>Design Lead</option>
-        <option>Design Manager</option>
-        <option>Product Manager</option>
-        <option>Frontend Engineer</option>
-        <option>Full Stack Engineer</option>
-        <option>Engineering</option>
-        <option>Design Engineer</option>
-        <option>Founder / Designer</option>
-        <option>Freelancer</option>
-        <option>Student</option>
-      </select>
-      <label class="setup-label">Company <span class="setup-req">*</span></label>
-      <input class="setup-input" id="setup-company" placeholder="Where do you work?">
-      <label class="setup-label">Years of work experience <span class="setup-req">*</span></label>
-      <input class="setup-input" id="setup-exp" type="number" min="0" max="50" placeholder="e.g. 3">
-      <label class="setup-label">Short bio <span class="setup-hint">(optional)</span></label>
-      <textarea class="setup-input opt" id="setup-bio" placeholder="Tell us a little about yourself…"></textarea>
-      <button class="auth-submit" id="setupSubmitBtn" onclick="saveProfileSetup()" style="margin-top:18px">Save &amp; continue →</button>
+
+      <!-- Step 2 -->
+      <div id="setupStep2" style="display:none;">
+        <label class="setup-label">Skills beyond design</label>
+        <div class="ms-wrap" id="ms-skills-wrap">
+          <div class="ms-selected-pills" id="ms-skills-pills" onclick="_msToggle('skills')">
+            <span class="ms-placeholder" id="ms-skills-ph">e.g. Frontend, AI, Growth…</span>
+          </div>
+          <div class="ms-dropdown" id="ms-skills-dd"></div>
+        </div>
+        <label class="setup-label" style="margin-top:18px;">Dev tools I'm comfortable with</label>
+        <div class="ms-wrap" id="ms-devtools-wrap">
+          <div class="ms-selected-pills" id="ms-devtools-pills" onclick="_msToggle('devtools')">
+            <span class="ms-placeholder" id="ms-devtools-ph">e.g. Xcode, VS Code, GitHub…</span>
+          </div>
+          <div class="ms-dropdown" id="ms-devtools-dd"></div>
+        </div>
+        <label class="setup-label" style="margin-top:18px;">My top AI tools</label>
+        <div class="ms-wrap" id="ms-aitools-wrap">
+          <div class="ms-selected-pills" id="ms-aitools-pills" onclick="_msToggle('aitools')">
+            <span class="ms-placeholder" id="ms-aitools-ph">e.g. ChatGPT, Cursor, Claude…</span>
+          </div>
+          <div class="ms-dropdown" id="ms-aitools-dd"></div>
+        </div>
+        <button class="auth-submit" id="setupSubmitBtn" onclick="saveProfileSetup()" style="margin-top:24px;">Save &amp; continue →</button>
+      </div>
     </div>
   </div>
 
@@ -2876,14 +2982,35 @@
       </select>
       <label class="setup-label">Company</label>
       <input class="setup-input" id="edit-company" placeholder="Where do you work?">
-      <label class="setup-label">Years of work experience <span class="setup-hint">(optional)</span></label>
+      <label class="setup-label">Years of work experience</label>
       <input class="setup-input opt" id="edit-exp" type="number" min="0" max="50" placeholder="e.g. 3">
-      <label class="setup-label">Bio <span class="setup-hint">(optional)</span></label>
+      <label class="setup-label">Bio</label>
       <textarea class="setup-input opt" id="edit-bio" placeholder="Tell us a little about yourself…"></textarea>
-      <label class="setup-label">Instagram URL <span class="setup-hint">(optional)</span></label>
+      <label class="setup-label">Instagram URL</label>
       <input class="setup-input opt" id="edit-instagram" type="url" placeholder="https://instagram.com/yourhandle">
-      <label class="setup-label">LinkedIn URL <span class="setup-hint">(optional)</span></label>
+      <label class="setup-label">LinkedIn URL</label>
       <input class="setup-input opt" id="edit-linkedin" type="url" placeholder="https://linkedin.com/in/yourname">
+      <label class="setup-label">Skills beyond design</label>
+      <div class="ms-wrap" id="ms-edit-skills-wrap">
+        <div class="ms-selected-pills" id="ms-edit-skills-pills" onclick="_msToggle('edit-skills')">
+          <span class="ms-placeholder" id="ms-edit-skills-ph">e.g. Frontend, AI, Growth…</span>
+        </div>
+        <div class="ms-dropdown" id="ms-edit-skills-dd"></div>
+      </div>
+      <label class="setup-label" style="margin-top:18px;">Dev tools I'm comfortable with</label>
+      <div class="ms-wrap" id="ms-edit-devtools-wrap">
+        <div class="ms-selected-pills" id="ms-edit-devtools-pills" onclick="_msToggle('edit-devtools')">
+          <span class="ms-placeholder" id="ms-edit-devtools-ph">e.g. Xcode, VS Code, GitHub…</span>
+        </div>
+        <div class="ms-dropdown" id="ms-edit-devtools-dd"></div>
+      </div>
+      <label class="setup-label" style="margin-top:18px;">My top AI tools</label>
+      <div class="ms-wrap" id="ms-edit-aitools-wrap">
+        <div class="ms-selected-pills" id="ms-edit-aitools-pills" onclick="_msToggle('edit-aitools')">
+          <span class="ms-placeholder" id="ms-edit-aitools-ph">e.g. ChatGPT, Cursor, Claude…</span>
+        </div>
+        <div class="ms-dropdown" id="ms-edit-aitools-dd"></div>
+      </div>
       <button class="auth-submit" id="editSubmitBtn" onclick="saveProfileEdit()" style="margin-top:18px">Save changes</button>
     </div>
   </div>
@@ -3080,7 +3207,7 @@
   <div class="vibe-scroll">
 
     <!-- Freshly baked -->
-    <div class="vibe-card" style="background:#EDF0FF;">
+    <div class="vibe-card" style="background:#EDF0FF;cursor:pointer;" onclick="openVibePage('Freshly baked')">
       <div class="vibe-imgs">
         <img class="vibe-img" src="https://ik.imagekit.io/424h6me27c/1593694785946.jpeg" alt="">
         <img class="vibe-img" src="https://ik.imagekit.io/424h6me27c/1773811274487.jpeg" alt="">
@@ -3091,7 +3218,7 @@
     </div>
 
     <!-- Surprise me -->
-    <div class="vibe-card" style="background:#FFF4E6;">
+    <div class="vibe-card" style="background:#FFF4E6;cursor:pointer;" onclick="openVibePage('Surprise me')">
       <div class="vibe-imgs">
         <img class="vibe-img" src="https://ik.imagekit.io/424h6me27c/1773811274527.jpeg" alt="">
         <img class="vibe-img" src="https://ik.imagekit.io/424h6me27c/1757355199034.jpeg" alt="">
@@ -3102,7 +3229,7 @@
     </div>
 
     <!-- Weird builds only -->
-    <div class="vibe-card" style="background:#E8F7EF;">
+    <div class="vibe-card" style="background:#E8F7EF;cursor:pointer;" onclick="openVibePage('Weird only')">
       <div class="vibe-imgs">
         <img class="vibe-img" src="https://ik.imagekit.io/424h6me27c/1758728645137.jpeg" alt="">
         <img class="vibe-img" src="https://ik.imagekit.io/424h6me27c/1669709292471.jpeg" alt="">
@@ -3584,7 +3711,7 @@
     </div>
   </div>
 
-  <img src="https://ik.imagekit.io/424h6me27c/compressedImage%20(2).jpeg" style="width:100%;display:block;margin-top:32px;" alt="">
+  <img src="https://ik.imagekit.io/424h6me27c/_s%20sd%20sd.png" style="width:100%;display:block;margin-top:32px;cursor:pointer;" alt="" onclick="openAuthModal()">
 
   <!-- New from the Community -->
   <div class="nebuild-section">
@@ -3604,7 +3731,7 @@
         <div class="post-meta">
           <div class="post-name">Gowtham Oleti</div>
           <div class="post-role">Product Designer · CRED · 4yr exp</div>
-          <div class="post-subtext">iOS app · 2d ago · LinkedIn</div>
+          <div class="post-subtext">2d ago</div>
         </div>
       </div>
       <div class="post-content">
@@ -3616,16 +3743,25 @@
           <span class="read-more-btn" data-expanded="false" onclick="toggleDesc(this)">read more</span>
         </div>
       </div>
-      <div class="post-tech">
-        <span class="post-tag post-tag-live">Live</span>
-        <span class="post-tag post-tag-type">iOS app</span>
-        <div class="post-tech-pill" style="cursor:pointer;" onclick="openToolsSheet('aaaaaaaa-0000-0000-0000-000000000001')">
-          <div class="post-tech-icons">
-            <div class="post-tech-dot"><img src="https://ik.imagekit.io/424h6me27c/chatgpt-logo-chat-gpt-icon-on-white-background-free-vector.jpg" alt=""></div>
-            <div class="post-tech-dot"><img src="https://ik.imagekit.io/424h6me27c/codex-color.png" alt=""></div>
-            <div class="post-tech-dot"><img src="https://ik.imagekit.io/424h6me27c/images.png" alt=""></div>
+      <div style="overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;margin:0 0 0 0;padding-bottom:12px;">
+        <div style="display:flex;flex-direction:column;gap:8px;width:max-content;padding:0 16px;">
+          <div style="display:flex;gap:8px;align-items:center;">
+            <span class="post-tag post-tag-live" style="white-space:nowrap;flex-shrink:0;">Live</span>
+            <span class="post-tag post-tag-type" style="white-space:nowrap;flex-shrink:0;">iOS app</span>
+            <div class="pv-dna-pill" style="white-space:nowrap;flex-shrink:0;">⏱ Built in 2 days</div>
+            <div class="post-tech-pill" style="cursor:pointer;flex-shrink:0;" onclick="openToolsSheet('aaaaaaaa-0000-0000-0000-000000000001')">
+              <div class="post-tech-icons">
+                <div class="post-tech-dot"><img src="https://ik.imagekit.io/424h6me27c/chatgpt-logo-chat-gpt-icon-on-white-background-free-vector.jpg" alt=""></div>
+                <div class="post-tech-dot"><img src="https://ik.imagekit.io/424h6me27c/codex-color.png" alt=""></div>
+                <div class="post-tech-dot"><img src="https://ik.imagekit.io/424h6me27c/images.png" alt=""></div>
+              </div>
+              5 tools used <svg width="12" height="8" viewBox="0 0 12 8" fill="none" style="display:inline-block;vertical-align:middle;margin-left:2px"><path d="M1 1L6 6.5L11 1" stroke="#454C5F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
           </div>
-          5 tools used <svg width="12" height="8" viewBox="0 0 12 8" fill="none" style="display:inline-block;vertical-align:middle;margin-left:2px"><path d="M1 1L6 6.5L11 1" stroke="#454C5F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <div class="pv-dna-pill" style="cursor:pointer;white-space:nowrap;flex-shrink:0;" onclick="openRolesSheet()"><span style="color:#8492A6;font-weight:500;">Roles:</span> Vibe coder <span style="color:#8492A6;">(+3)</span> <svg width="10" height="7" viewBox="0 0 12 8" fill="none" style="display:inline-block;vertical-align:middle;margin-left:2px"><path d="M1 1L6 6.5L11 1" stroke="#454C5F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <div class="pv-dna-pill" style="cursor:pointer;white-space:nowrap;flex-shrink:0;" onclick="openCategorySheet()"><span style="color:#8492A6;font-weight:500;">Category:</span> Productivity <span style="color:#8492A6;">(+3)</span> <svg width="10" height="7" viewBox="0 0 12 8" fill="none" style="display:inline-block;vertical-align:middle;margin-left:2px"><path d="M1 1L6 6.5L11 1" stroke="#454C5F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          </div>
         </div>
       </div>
       <div class="post-media-single">
@@ -3914,6 +4050,92 @@ Download now for free : pasteryapp.xyz</div>
     <div class="bottom-pad"></div>
   </div>
 
+  <!-- Vibe Browse page -->
+  <div id="view-vibe" class="tab-view hidden">
+    <div class="inner-page-header" style="display:flex;align-items:center;gap:12px;">
+      <div class="inner-page-title" id="vibePageTitle">Freshly baked</div>
+    </div>
+    <div class="inner-page-tabs" id="vibeSubtabs"></div>
+    <div class="preview-toggle-bar">
+      <span class="preview-toggle-label">Preview product images</span>
+      <div class="preview-toggle-switch" id="vibePreviewToggle" onclick="toggleVibePreview(this)">
+        <div class="preview-toggle-knob"></div>
+      </div>
+    </div>
+    <div class="inner-page-cards" id="vibeCards"></div>
+    <div class="bottom-pad"></div>
+  </div>
+
+  <!-- Our Vision page -->
+  <div id="view-vision" class="tab-view hidden" style="padding:0 0 60px;">
+    <div style="background:#3169ED;padding:60px 24px 40px;position:relative;overflow:hidden;">
+      <div style="position:absolute;inset:0;background-image:radial-gradient(circle,rgba(255,255,255,0.15) 1.5px,transparent 1.5px);background-size:22px 22px;pointer-events:none;"></div>
+      <div style="position:relative;z-index:1;">
+        <div style="font-size:12px;font-weight:700;letter-spacing:1.5px;color:rgba(255,255,255,0.7);text-transform:uppercase;margin-bottom:14px;">Our Vision</div>
+        <h1 style="font-size:28px;font-weight:800;color:#fff;line-height:1.25;letter-spacing:-0.5px;margin:0;">A permanent home<br>for builders.</h1>
+      </div>
+    </div>
+    <div style="padding:32px 24px;display:flex;flex-direction:column;gap:24px;">
+      <p style="font-size:16px;line-height:1.7;color:#10192D;margin:0;font-weight:400;">The world is entering a new era of creation. Designers are no longer limited to designing screens. With AI, no-code tools, and accessible technology, anyone with an idea can now build, launch, and ship real products.</p>
+      <p style="font-size:16px;line-height:1.7;color:#454C5F;margin:0;">Yet most of these creations are scattered across social media posts, buried by algorithms, and forgotten over time.</p>
+      <div style="width:40px;height:3px;background:#3169ED;border-radius:2px;"></div>
+      <p style="font-size:16px;line-height:1.7;color:#10192D;margin:0;"><strong>Designers Who Build</strong> exists to give builders a permanent home for their work. A place where products, experiments, launches, lessons, and journeys can live beyond a single post.</p>
+      <p style="font-size:16px;line-height:1.7;color:#454C5F;margin:0;">We believe what you build says far more about you than where you work, and that shipping products deserves recognition of its own.</p>
+      <div style="width:40px;height:3px;background:#3169ED;border-radius:2px;"></div>
+      <p style="font-size:16px;line-height:1.7;color:#10192D;margin:0;">Our vision is to create a community of designer-builders — a place where builders inspire one another, learn from each other's journeys, and build reputations around execution.</p>
+      <p style="font-size:18px;line-height:1.6;color:#3169ED;margin:0;font-weight:700;">We want to celebrate those who don't just design ideas, but bring them to life.</p>
+    </div>
+  </div>
+
+  <!-- Join Us page -->
+  <div id="view-joinus" class="tab-view hidden" style="padding:0 0 80px;">
+    <!-- Hero header -->
+    <div style="background:linear-gradient(135deg,#10192D 0%,#1e2d52 60%,#3169ED 100%);padding:56px 24px 44px;position:relative;overflow:hidden;">
+      <div style="position:absolute;inset:0;background-image:radial-gradient(circle,rgba(255,255,255,0.12) 1.5px,transparent 1.5px);background-size:22px 22px;pointer-events:none;"></div>
+      <div style="position:relative;z-index:1;">
+        <div style="display:inline-block;background:rgba(255,255,255,0.12);border-radius:20px;padding:4px 12px;font-size:11px;font-weight:700;color:rgba(255,255,255,0.8);letter-spacing:1px;text-transform:uppercase;margin-bottom:18px;">We're building something big</div>
+        <h1 style="font-size:26px;font-weight:800;color:#fff;line-height:1.3;letter-spacing:-0.4px;margin:0 0 14px;">Bringing a vision to<br>life takes a team.</h1>
+        <p style="font-size:15px;color:rgba(255,255,255,0.75);line-height:1.65;margin:0 0 10px;">I'd be more than happy to build this with people who care about the same things — design, craft, and shipping real products.</p>
+        <p style="font-size:14px;color:rgba(255,255,255,0.5);line-height:1.5;margin:0;">Whether you're a designer, developer, marketer, or just someone with great ideas — there's a place for you here.</p>
+      </div>
+    </div>
+
+    <!-- Form -->
+    <div style="padding:28px 20px 0;">
+      <div class="auth-msg" id="joinMsg" style="display:none;"></div>
+
+      <!-- Auto-filled basics -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;">
+        <div>
+          <label class="setup-label" style="margin-top:0;">Name</label>
+          <input class="setup-input" id="join-name" placeholder="Your name">
+        </div>
+        <div>
+          <label class="setup-label" style="margin-top:0;">Phone</label>
+          <input class="setup-input" id="join-phone" type="tel" placeholder="+91 …">
+        </div>
+      </div>
+      <label class="setup-label">Email / Gmail</label>
+      <input class="setup-input" id="join-email" type="email" placeholder="you@gmail.com">
+      <label class="setup-label">LinkedIn profile URL</label>
+      <input class="setup-input" id="join-linkedin" type="url" placeholder="linkedin.com/in/yourname">
+
+      <!-- Divider -->
+      <div style="height:1px;background:#EDEFF2;margin:24px 0;"></div>
+
+      <label class="setup-label">Why do you want to join?</label>
+      <textarea class="setup-input" id="join-why" style="min-height:90px;resize:none;" placeholder="What drew you here? What excites you about this community?"></textarea>
+
+      <label class="setup-label">How can you contribute?</label>
+      <textarea class="setup-input" id="join-contribute" style="min-height:90px;resize:none;" placeholder="Design, code, growth, content, partnerships… tell us your superpower."></textarea>
+
+      <label class="setup-label">Ideas or suggestions to make it better</label>
+      <textarea class="setup-input" id="join-ideas" style="min-height:90px;resize:none;" placeholder="What would you build or change? We're all ears."></textarea>
+
+      <button class="auth-submit" id="joinSubmitBtn" onclick="submitJoinUs()" style="margin-top:24px;">Send it →</button>
+    </div>
+  </div>
+
   <!-- Post detail view -->
   <div id="view-postdetail" class="tab-view hidden">
     <div id="postDetailContent" class="pd-scroll"></div>
@@ -3924,93 +4146,131 @@ Download now for free : pasteryapp.xyz</div>
     <div class="post-create-sheet">
       <div class="post-create-header">
         <span class="post-create-title">Share a build</span>
+        <div class="setup-steps" style="margin-bottom:0;">
+          <div class="setup-step-dot active" id="pcDot1"></div>
+          <div class="setup-step-dot" id="pcDot2"></div>
+        </div>
         <button class="auth-close-btn" onclick="closePostCreate()">&#x2715;</button>
       </div>
 
-      <!-- ① Status -->
-      <label class="pc-label">Status <span class="pc-req">*</span></label>
-      <div class="post-status-row">
-        <button class="status-pill" id="status-live" onclick="selectPostStatus('live')">&#x1F7E2; Live</button>
-        <button class="status-pill" id="status-wip"  onclick="selectPostStatus('wip')">&#x1F528; WIP</button>
-      </div>
-
-      <!-- ② Title -->
-      <label class="pc-label">Project title <span class="pc-req">*</span></label>
-      <input class="pc-input" id="pc-title" placeholder="e.g. ScreenFlow · MotionKit">
-
-      <div class="pc-section-divider"></div>
-
-      <!-- ③ Main media (required) -->
-      <label class="pc-label">Main photo or video <span class="pc-req">*</span></label>
-      <div class="pc-media-type-row">
-        <button class="pc-media-type-btn pc-mtype-active" id="pcMTypePhoto" onclick="setMediaType('photo',this)">&#x1F4F7; Photo</button>
-        <button class="pc-media-type-btn"                 id="pcMTypeVideo" onclick="setMediaType('video',this)">&#x1F3AC; Video</button>
-      </div>
-
-      <!-- Photo upload -->
-      <div id="pcPhotoZone">
-        <div class="pc-upload-zone" id="pcMainUploadZone" onclick="document.getElementById('pcMainFileInput').click()">
-          <div class="pc-upload-zone-icon">&#x1F5BC;&#xFE0F;</div>
-          <div class="pc-upload-zone-text">Tap to upload a photo</div>
-          <div class="pc-upload-zone-sub">PNG · JPG · WebP &nbsp;·&nbsp; max 5 MB</div>
+      <!-- Step 1 -->
+      <div id="pcStep1">
+        <!-- Status -->
+        <label class="pc-label">Status <span class="pc-req">*</span></label>
+        <div class="post-status-row">
+          <button class="status-pill" id="status-live" onclick="selectPostStatus('live')">&#x1F7E2; Live</button>
+          <button class="status-pill" id="status-wip"  onclick="selectPostStatus('wip')">&#x1F528; WIP</button>
         </div>
-        <input type="file" id="pcMainFileInput" accept="image/*" style="display:none" onchange="previewMainPhoto(this)">
-      </div>
 
-      <!-- Video URL (hidden by default) -->
-      <div id="pcVideoZone" style="display:none">
-        <input class="pc-input" id="pc-videourl" placeholder="https://youtube.com/watch?v=… or Vimeo / Loom" type="url">
-        <div class="pc-hint-text" style="margin-top:-6px">Paste a link to your video — YouTube, Vimeo, Loom, etc.</div>
-      </div>
+        <!-- Title -->
+        <label class="pc-label">Project title <span class="pc-req">*</span></label>
+        <input class="pc-input" id="pc-title" placeholder="e.g. ScreenFlow · MotionKit">
 
-      <div class="pc-section-divider"></div>
+        <div class="pc-section-divider"></div>
 
-      <!-- ④ App icon (optional) -->
-      <label class="pc-label">App icon <span class="pc-opt">(optional)</span></label>
-      <div class="pc-icon-row">
-        <div class="pc-icon-zone" id="pcIconZone" onclick="document.getElementById('pcIconFileInput').click()">
-          <span style="font-size:24px;color:#C0CCDA">+</span>
+        <!-- Main media -->
+        <label class="pc-label">Main photo or video <span class="pc-req">*</span></label>
+        <div class="pc-media-type-row">
+          <button class="pc-media-type-btn pc-mtype-active" id="pcMTypePhoto" onclick="setMediaType('photo',this)">&#x1F4F7; Photo</button>
+          <button class="pc-media-type-btn"                 id="pcMTypeVideo" onclick="setMediaType('video',this)">&#x1F3AC; Video</button>
         </div>
-        <div class="pc-icon-hint">If not added, a default icon will be used</div>
+
+        <div id="pcPhotoZone">
+          <div class="pc-upload-zone" id="pcMainUploadZone" onclick="document.getElementById('pcMainFileInput').click()">
+            <div class="pc-upload-zone-icon">&#x1F5BC;&#xFE0F;</div>
+            <div class="pc-upload-zone-text">Tap to upload a photo</div>
+            <div class="pc-upload-zone-sub">PNG · JPG · WebP &nbsp;·&nbsp; max 5 MB</div>
+          </div>
+          <input type="file" id="pcMainFileInput" accept="image/*" style="display:none" onchange="previewMainPhoto(this)">
+        </div>
+
+        <div id="pcVideoZone" style="display:none">
+          <input class="pc-input" id="pc-videourl" placeholder="https://youtube.com/watch?v=…" type="url">
+        </div>
+
+        <div class="pc-section-divider"></div>
+
+        <!-- App icon -->
+        <label class="pc-label">App icon</label>
+        <div class="pc-icon-row">
+          <div class="pc-icon-zone" id="pcIconZone" onclick="document.getElementById('pcIconFileInput').click()">
+            <span style="font-size:24px;color:#C0CCDA">+</span>
+          </div>
+          <div class="pc-icon-hint">If not added, a default icon will be used</div>
+        </div>
+        <input type="file" id="pcIconFileInput" accept="image/*" style="display:none" onchange="previewIcon(this)">
+
+        <div class="pc-section-divider"></div>
+
+        <!-- Description -->
+        <label class="pc-label">Description</label>
+        <textarea class="pc-input" id="pc-desc" placeholder="What does it do? What makes it interesting?"></textarea>
+
+        <div class="auth-msg" id="pcMsg"></div>
+        <button class="pc-submit-btn" onclick="_pcGoStep2()" style="margin-top:16px;">Next &#x2192;</button>
       </div>
-      <input type="file" id="pcIconFileInput" accept="image/*" style="display:none" onchange="previewIcon(this)">
 
-      <div class="pc-section-divider"></div>
+      <!-- Step 2 -->
+      <div id="pcStep2" style="display:none;">
+        <!-- Additional photos -->
+        <label class="pc-label">Additional photos</label>
+        <div class="pc-hint-text" style="margin-top:-6px">Used for in-app preview of the build</div>
+        <div class="pc-gallery-zone" id="pcGalleryZone">
+          <div class="pc-gallery-add" onclick="document.getElementById('pcGalleryInput').click()">+</div>
+        </div>
+        <input type="file" id="pcGalleryInput" accept="image/*" multiple style="display:none" onchange="previewGallery(this)">
 
-      <!-- ⑤ Additional photos (optional) -->
-      <label class="pc-label">Additional photos <span class="pc-opt">(optional)</span></label>
-      <div class="pc-hint-text" style="margin-top:-6px">Used for in-app preview of the build</div>
-      <div class="pc-gallery-zone" id="pcGalleryZone">
-        <div class="pc-gallery-add" onclick="document.getElementById('pcGalleryInput').click()">+</div>
+        <div class="pc-section-divider"></div>
+
+        <!-- Type of build -->
+        <label class="pc-label">Type of build</label>
+        <div class="pc-cat-row" id="pc-cats">
+          <button class="cat-pill" onclick="selectPostCat(this,'iOS app')">iOS app</button>
+          <button class="cat-pill" onclick="selectPostCat(this,'Android app')">Android app</button>
+          <button class="cat-pill" onclick="selectPostCat(this,'Web app')">Web app</button>
+          <button class="cat-pill" onclick="selectPostCat(this,'macOS')">macOS</button>
+          <button class="cat-pill" onclick="selectPostCat(this,'Interaction')">Interaction</button>
+          <button class="cat-pill" onclick="selectPostCat(this,'Tool')">Tool</button>
+          <button class="cat-pill" onclick="selectPostCat(this,'Game')">Game</button>
+          <button class="cat-pill" onclick="selectPostCat(this,'Chrome Extension')">Chrome Extension</button>
+        </div>
+
+        <div class="pc-section-divider"></div>
+
+        <!-- Built in X days -->
+        <label class="pc-label">Built in how many days?</label>
+        <input class="pc-input" id="pc-builtin" type="number" min="1" placeholder="e.g. 2">
+
+        <div class="pc-section-divider"></div>
+
+        <!-- Roles multi-select -->
+        <label class="pc-label">Roles you handled</label>
+        <div class="ms-wrap" id="ms-pc-roles-wrap">
+          <div class="ms-selected-pills" id="ms-pc-roles-pills" onclick="_msToggle('pc-roles')">
+            <span class="ms-placeholder" id="ms-pc-roles-ph">e.g. Designer, iOS Dev…</span>
+          </div>
+          <div class="ms-dropdown" id="ms-pc-roles-dd"></div>
+        </div>
+
+        <div class="pc-section-divider"></div>
+
+        <!-- Post categories multi-select -->
+        <label class="pc-label">Post categories</label>
+        <div class="ms-wrap" id="ms-pc-cats-wrap">
+          <div class="ms-selected-pills" id="ms-pc-cats-pills" onclick="_msToggle('pc-cats-ms')">
+            <span class="ms-placeholder" id="ms-pc-cats-ph">e.g. Productivity, Wellness…</span>
+          </div>
+          <div class="ms-dropdown" id="ms-pc-cats-dd"></div>
+        </div>
+
+        <div class="pc-section-divider"></div>
+
+        <!-- Live URL -->
+        <label class="pc-label">Live URL</label>
+        <input class="pc-input" id="pc-liveurl" placeholder="https://yourapp.com" type="url">
+
+        <button class="pc-submit-btn" id="pcSubmitBtn" onclick="submitPost()" style="margin-top:16px;">Post it &#x2192;</button>
       </div>
-      <input type="file" id="pcGalleryInput" accept="image/*" multiple style="display:none" onchange="previewGallery(this)">
-
-      <div class="pc-section-divider"></div>
-
-      <!-- ⑥ Category -->
-      <label class="pc-label">Category <span class="pc-opt">(optional)</span></label>
-      <div class="pc-cat-row" id="pc-cats">
-        <button class="cat-pill" onclick="selectPostCat(this,'App')">App</button>
-        <button class="cat-pill" onclick="selectPostCat(this,'Web')">Web</button>
-        <button class="cat-pill" onclick="selectPostCat(this,'macOS')">macOS</button>
-        <button class="cat-pill" onclick="selectPostCat(this,'Interaction')">Interaction</button>
-        <button class="cat-pill" onclick="selectPostCat(this,'Tool')">Tool</button>
-        <button class="cat-pill" onclick="selectPostCat(this,'Game')">Game</button>
-      </div>
-
-      <!-- ⑦ Description -->
-      <label class="pc-label">Description <span class="pc-opt">(optional)</span></label>
-      <textarea class="pc-input" id="pc-desc" placeholder="What does it do? What makes it interesting?"></textarea>
-
-      <!-- ⑧ Links -->
-      <label class="pc-label">Live URL <span class="pc-opt">(optional)</span></label>
-      <input class="pc-input" id="pc-liveurl" placeholder="https://yourapp.com" type="url">
-
-      <label class="pc-label">Journey / Build log URL <span class="pc-opt">(optional)</span></label>
-      <input class="pc-input" id="pc-journeyurl" placeholder="https://twitter.com/yourthread" type="url">
-
-      <div class="auth-msg" id="pcMsg"></div>
-      <button class="pc-submit-btn" id="pcSubmitBtn" onclick="submitPost()">Post it &#x2192;</button>
     </div>
   </div>
 
@@ -4215,6 +4475,71 @@ Download now for free : pasteryapp.xyz</div>
     document.body.style.overflow = '';
   }
 
+  function openJoinUsPage() {
+    const currentTab = document.body.getAttribute('data-tab') || 'home';
+    if (currentTab !== 'joinus') _prevTab = currentTab;
+    document.querySelectorAll('.tab-view').forEach(v => v.classList.add('hidden'));
+    document.getElementById('view-joinus').classList.remove('hidden');
+    document.body.setAttribute('data-tab', 'joinus');
+    _showNavBack();
+    // Auto-fill from profile if logged in
+    if (currentProfile) {
+      const n = document.getElementById('join-name');
+      const e = document.getElementById('join-email');
+      const l = document.getElementById('join-linkedin');
+      if (n && !n.value) n.value = currentProfile.name || '';
+      if (e && !e.value) e.value = currentUser?.email || '';
+      if (l && !l.value) l.value = currentProfile.linkedin_url || '';
+    }
+    document.getElementById('joinMsg').style.display = 'none';
+  }
+
+  async function submitJoinUs() {
+    const btn = document.getElementById('joinSubmitBtn');
+    const msg = document.getElementById('joinMsg');
+    const name      = document.getElementById('join-name').value.trim();
+    const email     = document.getElementById('join-email').value.trim();
+    const phone     = document.getElementById('join-phone').value.trim();
+    const linkedin  = document.getElementById('join-linkedin').value.trim();
+    const why       = document.getElementById('join-why').value.trim();
+    const contribute= document.getElementById('join-contribute').value.trim();
+    const ideas     = document.getElementById('join-ideas').value.trim();
+    if (!name || !email || !why) {
+      msg.textContent = 'Please fill in your name, email, and why you want to join.';
+      msg.className = 'auth-msg error'; msg.style.display = 'block'; return;
+    }
+    btn.textContent = 'Sending…'; btn.disabled = true;
+    const payload = {
+      name, email, phone: phone || null,
+      linkedin_url: linkedin || null,
+      why_join: why, how_contribute: contribute || null,
+      ideas: ideas || null,
+      profile_id: currentProfile?.id || null,
+    };
+    const { error } = await sb.from('join_requests').insert(payload);
+    btn.textContent = 'Send it →'; btn.disabled = false;
+    if (error) {
+      msg.textContent = 'Something went wrong: ' + error.message;
+      msg.className = 'auth-msg error'; msg.style.display = 'block';
+    } else {
+      msg.textContent = '🙌 Got it! I\'ll be in touch soon.';
+      msg.className = 'auth-msg success'; msg.style.display = 'block';
+      ['join-phone','join-why','join-contribute','join-ideas'].forEach(id => {
+        document.getElementById(id).value = '';
+      });
+      btn.textContent = 'Submitted ✓'; btn.disabled = true;
+    }
+  }
+
+  function openVisionPage() {
+    const currentTab = document.body.getAttribute('data-tab') || 'home';
+    if (currentTab !== 'vision') _prevTab = currentTab;
+    document.querySelectorAll('.tab-view').forEach(v => v.classList.add('hidden'));
+    document.getElementById('view-vision').classList.remove('hidden');
+    document.body.setAttribute('data-tab', 'vision');
+    _showNavBack();
+  }
+
   // ── Helpful builds for you ──────────────────────
   const helpfulData = {
     utility: [
@@ -4410,7 +4735,7 @@ Download now for free : pasteryapp.xyz</div>
     _pcStatus = ''; _pcCat = ''; _pcMediaType = 'photo';
     _mainPhotoFile = null; _iconFile = null; _galleryFiles = [];
 
-    ['pc-title','pc-desc','pc-liveurl','pc-journeyurl','pc-videourl'].forEach(id => {
+    ['pc-title','pc-desc','pc-liveurl','pc-videourl'].forEach(id => {
       const el = document.getElementById(id); if (el) el.value = '';
     });
     document.getElementById('pcMsg').style.display = 'none';
@@ -4428,6 +4753,16 @@ Download now for free : pasteryapp.xyz</div>
       <div class="pc-upload-zone-text">Tap to upload a photo</div>
       <div class="pc-upload-zone-sub">PNG · JPG · WebP &nbsp;·&nbsp; max 5 MB</div>`;
     document.getElementById('pcIconZone').innerHTML = `<span style="font-size:24px;color:#C0CCDA">+</span>`;
+    document.getElementById('pcStep1').style.display = 'block';
+    document.getElementById('pcStep2').style.display = 'none';
+    document.getElementById('pcDot1').classList.add('active');
+    document.getElementById('pcDot2').classList.remove('active');
+    const biEl = document.getElementById('pc-builtin');
+    if (biEl) biEl.value = '';
+    const liEl = document.getElementById('pc-liveurl');
+    if (liEl) liEl.value = '';
+    _msState['pc-roles'] = new Set();
+    _msState['pc-cats-ms'] = new Set();
     renderGalleryPreviews();
     document.getElementById('postCreateModal').classList.add('open');
   }
@@ -4451,6 +4786,24 @@ Download now for free : pasteryapp.xyz</div>
   function showPcMsg(text, type) {
     const el = document.getElementById('pcMsg');
     el.textContent = text; el.className = 'auth-msg ' + type; el.style.display = 'block';
+  }
+
+  function _pcGoStep2() {
+    const title = document.getElementById('pc-title').value.trim();
+    if (!title) { showPcMsg('Project title is required.', 'error'); return; }
+    if (!_pcStatus) { showPcMsg('Please select a status — Live or WIP.', 'error'); return; }
+    if (_pcMediaType === 'photo' && !_mainPhotoFile) { showPcMsg('A main photo is required.', 'error'); return; }
+    if (_pcMediaType === 'video' && !document.getElementById('pc-videourl').value.trim()) { showPcMsg('Please paste a video URL.', 'error'); return; }
+    document.getElementById('pcMsg').style.display = 'none';
+    document.getElementById('pcStep1').style.display = 'none';
+    document.getElementById('pcStep2').style.display = 'block';
+    document.getElementById('pcDot1').classList.remove('active');
+    document.getElementById('pcDot2').classList.add('active');
+    renderGalleryPreviews();
+    _msState['pc-roles'] = new Set();
+    _msState['pc-cats-ms'] = new Set();
+    _msInit('pc-roles', _PC_ROLES, 'ms-pc-roles-wrap', 'ms-pc-roles-pills', 'ms-pc-roles-dd', 'ms-pc-roles-ph');
+    _msInit('pc-cats-ms', _PC_CATS, 'ms-pc-cats-wrap', 'ms-pc-cats-pills', 'ms-pc-cats-dd', 'ms-pc-cats-ph');
   }
 
   async function submitPost() {
@@ -4512,14 +4865,16 @@ Download now for free : pasteryapp.xyz</div>
         profile_id:      currentProfile.id,
         title,
         status:          _pcStatus,
-        description:     document.getElementById('pc-desc').value.trim()       || null,
-        category:        _pcCat                                                  || null,
-        live_url:        document.getElementById('pc-liveurl').value.trim()     || null,
-        journey_url:     document.getElementById('pc-journeyurl').value.trim()  || null,
+        description:     document.getElementById('pc-desc').value.trim()    || null,
+        category:        _pcCat                                               || null,
+        live_url:        document.getElementById('pc-liveurl').value.trim() || null,
         media_urls:      mediaUrls.length ? mediaUrls : null,
         media_layout:    mediaLayout,
         media_video_url: mediaVideoUrl,
         thumbnail_url:   thumbnailUrl,
+        built_in_days:   parseInt(document.getElementById('pc-builtin').value) || null,
+        roles:           _msGetArray('pc-roles').length ? _msGetArray('pc-roles') : null,
+        post_categories: _msGetArray('pc-cats-ms').length ? _msGetArray('pc-cats-ms') : null,
       };
 
       const { error } = await sb.from('posts').insert(payload);
@@ -4674,6 +5029,101 @@ Download now for free : pasteryapp.xyz</div>
           <div class="card-thumb-wrap">
             <span class="rank-badge" style="color:${c.rankColor}">#${c.rank}</span>
             <img src="${c.img || _categoryIcon(c.meta)}" style="width:64px;height:64px;border-radius:14px;object-fit:cover;display:block;${!c.img?'border:1px solid #E0E5EF;':''}" alt="">
+          </div>
+          <div class="card-info">
+            <div class="card-name-row"><span class="card-app-name">${c.name}</span>${badge}</div>
+            <div class="card-desc">${c.desc}</div>
+            <div class="card-meta-row">
+              <span class="card-platform">${c.meta}</span>
+              <span class="card-time">🔥 <span class="hot-count">${c.hot}</span></span>
+            </div>
+          </div>
+        </div>
+        <div class="card-divider"></div>
+        <div class="card-author-row">
+          <span class="card-author">${c.author}</span><span class="card-author-role">&middot; ${c.role}</span>
+        </div>
+        ${previewHtml}
+      </div>`;
+    }).join('');
+  }
+
+  // ── Vibe page ────────────────────────────────────
+  const _vibeData = {
+    'Freshly baked': [
+      { key:'screenflow', rank:1,  rankColor:'#FF8140', img:'https://ik.imagekit.io/424h6me27c/images.png',             name:'ScreenFlow',    status:'live', desc:'Record your screen with one tap',                   meta:'iOS app · 2h ago',  hot:'+24', author:'Arjun',     role:'Product Designer · Swiggy',     previewImg:'https://ik.imagekit.io/424h6me27c/1769139467912.jpeg' },
+      { key:'clipt',      rank:2,  rankColor:'#EFB351', img:'https://ik.imagekit.io/424h6me27c/1769139467912.jpeg',     name:'Clipt',         status:'live', desc:'Clipboard history for iPhone',                   meta:'iOS app · 5h ago',  hot:'+14', author:'Gowtham',   role:'Product Designer · CRED',       previewImg:'https://ik.imagekit.io/424h6me27c/1773811274487.jpeg' },
+      { key:'pastery',    rank:3,  rankColor:'#596378', img:'https://ik.imagekit.io/424h6me27c/1757355199034.jpeg',     name:'Pastery',       status:'live', desc:'Single-hotkey clipboard recall for macOS',       meta:'macOS · 12h ago',   hot:'+21', author:'Priyanshu', role:'Product Designer · Zomato',     previewImg:null },
+      { key:'colorsnap',  rank:4,  rankColor:'#293142', img:'https://ik.imagekit.io/424h6me27c/1773811274487.jpeg',     name:'ColorSnap',     status:'live', desc:'Pick any colour from your screen instantly',     meta:'macOS · 14h ago',   hot:'+16', author:'Anika',     role:'Visual Designer',               previewImg:'https://ik.imagekit.io/424h6me27c/1757355199034.jpeg' },
+      { key:'pasteboard', rank:5,  rankColor:'#293142', img:'https://ik.imagekit.io/424h6me27c/icon.png',               name:'PasteBoard Pro',status:'wip',  desc:'Smart clipboard manager for iOS',                meta:'iOS app · 3h ago',  hot:'+18', author:'Sagar',     role:'Designer · CRED',               previewImg:'https://ik.imagekit.io/424h6me27c/1773811274544.jpeg' },
+    ],
+    'Surprise me': [
+      { key:'voiceblob',  rank:1,  rankColor:'#FF8140', img:'https://ik.imagekit.io/424h6me27c/1593694785946.jpeg',     name:'Voice Blob',    status:'live', desc:'Voice interactive blob particles using SwiftUI', meta:'iOS app · 10h ago', hot:'+33', author:'Sagar',     role:'Lead Designer · Urban Company', previewImg:'https://ik.imagekit.io/424h6me27c/1593694785946.jpeg' },
+      { key:'focusflow',  rank:2,  rankColor:'#EFB351', img:'https://ik.imagekit.io/424h6me27c/Calm_(company)_logo.svg',name:'FocusFlow',     status:'live', desc:'Deep work timer with habit tracking',             meta:'macOS · 4h ago',    hot:'+31', author:'Rohan',     role:'Interaction Designer',          previewImg:null },
+      { key:'brink',      rank:3,  rankColor:'#596378', img:'https://ik.imagekit.io/424h6me27c/1773811274764.jpeg',     name:'Brink',         status:'wip',  desc:'Podcast player, superpowered',                  meta:'iOS app · 8h ago',  hot:'+21', author:'Gowtham',   role:'Product Designer · CRED',       previewImg:'https://ik.imagekit.io/424h6me27c/1773811274764.jpeg' },
+      { key:'polaroid',   rank:4,  rankColor:'#293142', img:'https://ik.imagekit.io/424h6me27c/1773811274544.jpeg',     name:'Polaroid',      status:'live', desc:'Click and download a Polaroid style selfie',     meta:'iOS app · 6h ago',  hot:'+12', author:'Gowtham',   role:'Product Designer · CRED',       previewImg:null },
+      { key:'motionkit',  rank:5,  rankColor:'#293142', img:'https://ik.imagekit.io/424h6me27c/1773811274527.jpeg',     name:'MotionKit',     status:'wip',  desc:'Animate your designs in real time',              meta:'iOS app · 18h ago', hot:'+9',  author:'Rohit',     role:'Interaction Designer',          previewImg:null },
+    ],
+    'Weird only': [
+      { key:'motionkit',  rank:1,  rankColor:'#FF8140', img:'https://ik.imagekit.io/424h6me27c/1773811274527.jpeg',     name:'MotionKit',     status:'wip',  desc:'Animate your designs in real time',              meta:'iOS app · 18h ago', hot:'+9',  author:'Rohit',     role:'Interaction Designer',          previewImg:null },
+      { key:'voiceblob',  rank:2,  rankColor:'#EFB351', img:'https://ik.imagekit.io/424h6me27c/1593694785946.jpeg',     name:'Voice Blob',    status:'live', desc:'Voice interactive blob particles using SwiftUI', meta:'iOS app · 10h ago', hot:'+33', author:'Sagar',     role:'Lead Designer · Urban Company', previewImg:'https://ik.imagekit.io/424h6me27c/1593694785946.jpeg' },
+      { key:'brink',      rank:3,  rankColor:'#596378', img:'https://ik.imagekit.io/424h6me27c/1773811274764.jpeg',     name:'Brink',         status:'wip',  desc:'Podcast player, superpowered',                  meta:'iOS app · 8h ago',  hot:'+21', author:'Gowtham',   role:'Product Designer · CRED',       previewImg:'https://ik.imagekit.io/424h6me27c/1773811274764.jpeg' },
+    ],
+  };
+
+  const _vibeLabels = ['Freshly baked', 'Surprise me', 'Weird only'];
+  let _vibePreviewOn = false;
+  let _currentVibeTab = 'Freshly baked';
+
+  function openVibePage(label) {
+    const currentTab = document.body.getAttribute('data-tab') || 'home';
+    if (currentTab !== 'vibe') _prevTab = currentTab;
+    document.querySelectorAll('.tab-view').forEach(v => v.classList.add('hidden'));
+    document.getElementById('view-vibe').classList.remove('hidden');
+    document.body.setAttribute('data-tab', 'vibe');
+    _showNavBack();
+    _currentVibeTab = label;
+    _vibePreviewOn = false;
+    document.getElementById('vibePreviewToggle').classList.remove('on');
+    document.getElementById('vibePageTitle').textContent = label;
+    // Build tabs
+    const tabsEl = document.getElementById('vibeSubtabs');
+    tabsEl.innerHTML = _vibeLabels.map(l =>
+      `<button class="inner-page-tab${l === label ? ' active' : ''}" onclick="setVibeTab('${l}',this)">${l}</button>`
+    ).join('');
+    renderVibeCards(label);
+  }
+
+  function setVibeTab(label, btn) {
+    _currentVibeTab = label;
+    document.getElementById('vibePageTitle').textContent = label;
+    document.querySelectorAll('#vibeSubtabs .inner-page-tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    renderVibeCards(label);
+  }
+
+  function toggleVibePreview(el) {
+    _vibePreviewOn = !_vibePreviewOn;
+    el.classList.toggle('on', _vibePreviewOn);
+    renderVibeCards(_currentVibeTab);
+  }
+
+  function renderVibeCards(label) {
+    const cards = _vibeData[label] || [];
+    document.getElementById('vibeCards').innerHTML = cards.map(c => {
+      const badge = c.status === 'live'
+        ? `<span class="badge-live">Live</span>`
+        : `<span class="badge-platform" style="background:#FFF4E6;color:#FF8C00">WIP</span>`;
+      let previewHtml = '';
+      if (_vibePreviewOn) {
+        previewHtml = c.previewImg
+          ? `<img class="trending-preview-img" src="${c.previewImg}" alt="">`
+          : `<div class="card-no-preview">${_noImgIcon}<span class="card-no-preview-text">No image attached</span></div>`;
+      }
+      return `<div class="project-card" onclick="openPostDetail('${c.key}')" style="cursor:pointer;">
+        <div class="card-top-row">
+          <div class="card-thumb-wrap">
+            <img src="${c.img || ''}" style="width:64px;height:64px;border-radius:14px;object-fit:cover;display:block;" alt="">
           </div>
           <div class="card-info">
             <div class="card-name-row"><span class="card-app-name">${c.name}</span>${badge}</div>
@@ -4919,28 +5369,31 @@ Download now for free : pasteryapp.xyz</div>
     const role    = document.getElementById('setup-role').value.trim();
     const company = document.getElementById('setup-company').value.trim();
     const expVal  = document.getElementById('setup-exp').value.trim();
-    if (!role || !company || !expVal) {
-      const el = document.getElementById('setupMsg');
-      el.textContent = 'Designation, company and years of experience are required.';
-      el.className = 'auth-msg error'; el.style.display = 'block'; return;
-    }
     const btn = document.getElementById('setupSubmitBtn');
     btn.textContent = 'Saving…'; btn.disabled = true;
     const avatar_url = _setupAvatarData || null;
-    const bio       = document.getElementById('setup-bio').value.trim() || null;
+    const bio = document.getElementById('setup-bio').value.trim() || null;
     const experience_years = parseInt(expVal) || 0;
-    const { error } = await sb.from('profiles').update({ role, company, avatar_url, bio, experience_years })
-      .eq('id', currentProfile.id);
+    const skills_beyond_design = _msGetArray('skills');
+    const dev_tools = _msGetArray('devtools');
+    const ai_tools = _msGetArray('aitools');
+    const { error } = await sb.from('profiles').update({
+      role, company, avatar_url, bio, experience_years,
+      skills_beyond_design, dev_tools, ai_tools
+    }).eq('id', currentProfile.id);
     btn.textContent = 'Save & continue →'; btn.disabled = false;
     if (error) {
-      const el = document.getElementById('setupMsg');
-      el.textContent = error.message; el.className = 'auth-msg error'; el.style.display = 'block';
-    } else {
-      Object.assign(currentProfile, { role, company, avatar_url, bio, experience_years });
-      _setupAvatarData = null;
-      updateAuthUI(true); // refresh header avatar
-      document.getElementById('profileSetupModal').classList.remove('open');
+      // If columns don't exist yet, save without them
+      const { error: e2 } = await sb.from('profiles').update({ role, company, avatar_url, bio, experience_years }).eq('id', currentProfile.id);
+      if (e2) {
+        const el = document.getElementById('setupMsg');
+        el.textContent = e2.message; el.className = 'auth-msg error'; el.style.display = 'block'; return;
+      }
     }
+    Object.assign(currentProfile, { role, company, avatar_url, bio, experience_years, skills_beyond_design, dev_tools, ai_tools });
+    _setupAvatarData = null;
+    updateAuthUI(true);
+    document.getElementById('profileSetupModal').classList.remove('open');
   }
 
   // ── Edit own profile ────────────────────────────
@@ -4963,6 +5416,16 @@ Download now for free : pasteryapp.xyz</div>
       circle.innerHTML = `<div class="avatar-cam-icon"><svg width="22" height="20" viewBox="0 0 22 20" fill="none"><path d="M8 2h6l1.5 2H20a1 1 0 011 1v12a1 1 0 01-1 1H2a1 1 0 01-1-1V5a1 1 0 011-1h4.5L8 2z" stroke="#7A9EF5" stroke-width="1.6" stroke-linejoin="round"/><circle cx="11" cy="11" r="3.2" stroke="#7A9EF5" stroke-width="1.6"/></svg><span style="font-size:10px;color:#7A9EF5;font-family:Outfit,sans-serif;">Photo</span></div>`;
     }
     document.getElementById('editProfileModal').classList.add('open');
+    // Init multi-select dropdowns with current values
+    _msSetValues('edit-skills', currentProfile.skills_beyond_design || []);
+    _msSetValues('edit-devtools', currentProfile.dev_tools || []);
+    _msSetValues('edit-aitools', currentProfile.ai_tools || []);
+    _msInit('edit-skills', _MS_SKILLS, 'ms-edit-skills-wrap', 'ms-edit-skills-pills', 'ms-edit-skills-dd', 'ms-edit-skills-ph');
+    _msInit('edit-devtools', _MS_DEVTOOLS, 'ms-edit-devtools-wrap', 'ms-edit-devtools-pills', 'ms-edit-devtools-dd', 'ms-edit-devtools-ph');
+    _msInit('edit-aitools', _MS_AITOOLS, 'ms-edit-aitools-wrap', 'ms-edit-aitools-pills', 'ms-edit-aitools-dd', 'ms-edit-aitools-ph');
+    _msRefreshPills('edit-skills', 'ms-edit-skills-pills', 'ms-edit-skills-ph');
+    _msRefreshPills('edit-devtools', 'ms-edit-devtools-pills', 'ms-edit-devtools-ph');
+    _msRefreshPills('edit-aitools', 'ms-edit-aitools-pills', 'ms-edit-aitools-ph');
   }
   function closeEditProfile() {
     document.getElementById('editProfileModal').classList.remove('open');
@@ -4981,18 +5444,29 @@ Download now for free : pasteryapp.xyz</div>
       experience_years: expEdit !== '' ? parseInt(expEdit) : null,
       avatar_url:       _editAvatarData !== null ? _editAvatarData : (currentProfile.avatar_url || null),
       bio:              document.getElementById('edit-bio').value.trim() || null,
+      skills_beyond_design: _msGetArray('edit-skills'),
+      dev_tools:            _msGetArray('edit-devtools'),
+      ai_tools:             _msGetArray('edit-aitools'),
     };
 
     const { error } = await sb.from('profiles').update(coreUpdates).eq('id', currentProfile.id);
     btn.textContent = 'Save changes'; btn.disabled = false;
 
     if (error) {
-      const el = document.getElementById('editMsg');
-      el.textContent = error.message; el.className = 'auth-msg error'; el.style.display = 'block';
-      return;
+      // Try without the new columns in case they don't exist in DB yet
+      const { name, role, company, experience_years, avatar_url, bio } = coreUpdates;
+      const { error: e2 } = await sb.from('profiles').update({ name, role, company, experience_years, avatar_url, bio }).eq('id', currentProfile.id);
+      if (e2) {
+        const el = document.getElementById('editMsg');
+        el.textContent = e2.message; el.className = 'auth-msg error'; el.style.display = 'block';
+        return;
+      }
     }
 
     Object.assign(currentProfile, coreUpdates);
+    _msSetValues('edit-skills', coreUpdates.skills_beyond_design);
+    _msSetValues('edit-devtools', coreUpdates.dev_tools);
+    _msSetValues('edit-aitools', coreUpdates.ai_tools);
 
     // LinkedIn — column exists in schema
     const liVal = document.getElementById('edit-linkedin').value.trim() || null;
@@ -5088,12 +5562,40 @@ Download now for free : pasteryapp.xyz</div>
   const _igIcon = `<img src="https://ik.imagekit.io/424h6me27c/Frame%202147227019.png" alt="Instagram" style="width:100%;height:100%;display:block;border-radius:50%;">`;
   const _liIcon = `<img src="https://ik.imagekit.io/424h6me27c/Frame%202147227020.png" alt="LinkedIn" style="width:100%;height:100%;display:block;border-radius:50%;">`;
 
-  function renderProfileView(container, profile, posts, isOwn) {
-    // Avatar
-    const avatarHtml = profile.avatar_url
-      ? `<div class="pv-avatar"><img src="${profile.avatar_url}" onerror="_onAvatarErr(this)" alt=""></div>`
-      : `<div class="pv-avatar-init">${(profile.name||'?')[0].toUpperCase()}</div>`;
+  const _DEVTOOL_ICONS = {
+    'Xcode': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/xcode/xcode-original.svg',
+    'VS Code': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vscode/vscode-original.svg',
+    'GitHub': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg',
+    'Swift': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/swift/swift-original.svg',
+    'HTML / CSS': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg',
+    'JavaScript': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg',
+    'TypeScript': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg',
+    'React': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg',
+    'Next.js': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg',
+    'Python': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg',
+    'Docker': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg',
+    'Firebase': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/firebase/firebase-plain.svg',
+    'Figma (dev mode)': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/figma/figma-original.svg',
+    'Node.js': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg',
+    'Kotlin': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/kotlin/kotlin-original.svg',
+    'Android Studio': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/androidstudio/androidstudio-original.svg',
+    'Tailwind CSS': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-plain.svg',
+    'Supabase': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/supabase/supabase-original.svg',
+  };
+  const _AITOOL_ICONS = {
+    'ChatGPT': 'https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg',
+    'Gemini': 'https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg',
+    'Claude': 'https://ik.imagekit.io/424h6me27c/claude-icon.png',
+    'Claude Code': 'https://ik.imagekit.io/424h6me27c/claude-icon.png',
+    'Cursor': 'https://avatars.githubusercontent.com/u/124584537',
+    'Figma AI': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/figma/figma-original.svg',
+    'Midjourney': 'https://ik.imagekit.io/424h6me27c/midjourney.png',
+    'GitHub Copilot': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg',
+    'Perplexity': 'https://ik.imagekit.io/424h6me27c/perplexity.png',
+    'v0 by Vercel': 'https://ik.imagekit.io/424h6me27c/v0.png',
+  };
 
+  function renderProfileView(container, profile, posts, isOwn) {
     // Social + action buttons
     const igBtn = profile.instagram_url
       ? `<a class="pv-social-btn" href="${profile.instagram_url}" target="_blank" rel="noopener">${_igIcon}</a>`
@@ -5109,64 +5611,12 @@ Download now for free : pasteryapp.xyz</div>
     const roleStr = [profile.role, profile.company].filter(Boolean).join(' · ');
     const expStr  = profile.experience_years > 0 ? `${profile.experience_years} yr${profile.experience_years !== 1 ? 's' : ''} experience` : '';
 
-    // Stats (only if has posts)
-    const total = posts.length;
-    const live  = posts.filter(p => p.status === 'live').length;
-    const statsCard = total > 0 ? `
-      <div class="pv-stats-card">
-        <div class="pv-stat-col">
-          <div class="pv-stat-num">${String(total).padStart(2,'0')} <span class="pv-stat-unit">projects posted</span></div>
-          <div class="pv-stat-sub">till date</div>
-        </div>
-        <div class="pv-stat-vdivider"></div>
-        <div class="pv-stat-col">
-          <div class="pv-stat-num">${String(live).padStart(2,'0')} <span class="pv-stat-unit pv-stat-unit-live">live projects</span></div>
-          <div class="pv-stat-sub">this week</div>
-        </div>
-      </div>` : '';
-
-    // Reactions — aggregate across all posts
-    const rxTotals = { teach_me: 0, buy_this: 0, use_this: 0 };
-    posts.forEach(p => (p.reactions || []).forEach(r => { if (r.type in rxTotals) rxTotals[r.type]++; }));
-    const rxSum = Object.values(rxTotals).reduce((a,b) => a+b, 0);
-    const feltSection = rxSum > 0 ? `
-      <div class="pv-section-divider"></div>
-      <div class="pv-section">
-        <div class="pv-section-title">What people felt about you...</div>
-        <div class="pv-felt-grid">
-          ${rxTotals.teach_me > 0 ? `<div class="pv-felt-item"><span class="pv-felt-badge">🙏 +${rxTotals.teach_me}</span><span class="pv-felt-label">I learnt new</span></div>` : ''}
-          ${rxTotals.buy_this  > 0 ? `<div class="pv-felt-item"><span class="pv-felt-badge">🤑 +${rxTotals.buy_this}</span><span class="pv-felt-label">I&rsquo;d buy this</span></div>` : ''}
-          ${rxTotals.use_this  > 0 ? `<div class="pv-felt-item"><span class="pv-felt-badge">🔥 +${rxTotals.use_this}</span><span class="pv-felt-label">I&rsquo;d use this</span></div>` : ''}
-        </div>
-      </div>` : '';
-
-    // Tech stack — unique tools across posts
-    const techMap = new Map();
-    posts.forEach(p => {
-      let tools = [];
-      try { tools = Array.isArray(p.tools_used) ? p.tools_used : JSON.parse(p.tools_used || '[]'); } catch(e){}
-      tools.forEach(t => { if (t && t.name && !techMap.has(t.name)) techMap.set(t.name, t.icon_url || t.icon || t.img || ''); });
-    });
-    const techSection = techMap.size > 0 ? `
-      <div class="pv-section-divider"></div>
-      <div class="pv-section">
-        <div class="pv-section-title">Tech stack</div>
-        <div class="pv-tech-row">
-          ${Array.from(techMap.entries()).map(([name, img]) =>
-            `<div class="pv-tech-chip">${img ? `<div style="width:26px;height:26px;border-radius:7px;overflow:hidden;flex-shrink:0;background:#EEF2FF;"><img src="${img}" style="width:100%;height:100%;object-fit:cover;display:block;" alt="${name}"></div>` : ''}<span class="pv-tech-name">${name}</span></div>`
-          ).join('')}
-        </div>
-      </div>` : '';
-
     // Posts
     const postCards = posts.length
       ? posts.map(p => renderFullPostCard({...p, profiles: profile})).join('')
       : '<div class="profile-empty">No posts yet — share your first build!</div>';
 
-    const backBtn = '';
-
-    // ── Hardcoded extra sections for Priyanshu's profile ──
-    const isPriyanshu = profile.id === '11111111-0000-0000-0000-000000000001';
+    // ── Hero layout (all profiles) ──
     const pill = (icon, label) =>
       `<div class="pv-tool-pill">${icon}<span>${label}</span></div>`;
     const imgIcon = (src) =>
@@ -5182,187 +5632,173 @@ Download now for free : pasteryapp.xyz</div>
         </div>
       </div>`;
 
-    const devToolsSection = isPriyanshu ? `
-      <div class="pv-xsection" style="background:#EDF4FF;margin-top:28px;">
-        <div class="pv-xsection-hd">
-          <div class="pv-xsection-title">Developer native tools</div>
-          <div class="pv-xsection-sub">I'm comfortable</div>
-        </div>
-        ${pillRows([
-          pill(imgIcon('https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg'), 'Html/CSS'),
-          pill(imgIcon('https://cdn.jsdelivr.net/gh/devicons/devicon/icons/xcode/xcode-original.svg'), 'Xcode'),
-          pill(imgIcon('https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg'), 'Github'),
-          pill(imgIcon('https://cdn.jsdelivr.net/gh/devicons/devicon/icons/swift/swift-original.svg'), 'Swift'),
-          pill(imgIcon('https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg'), 'CSS'),
-          pill(imgIcon('https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg'), 'JavaScript'),
-        ])}
-      </div>` : '';
+    // Skills beyond design — fall back for Priyanshu if DB field empty
+    const isPriyanshu = profile.id === '11111111-0000-0000-0000-000000000001';
+    let skillsArr = (profile.skills_beyond_design && profile.skills_beyond_design.length)
+      ? profile.skills_beyond_design
+      : (isPriyanshu ? ['AI', 'Product Growth', 'Prompt engineer', 'Front end Dev', 'Backend', 'Design systems', 'App publishing', 'iOS app'] : []);
+    let devToolsArr = (profile.dev_tools && profile.dev_tools.length)
+      ? profile.dev_tools
+      : (isPriyanshu ? ['HTML / CSS', 'Xcode', 'GitHub', 'Swift', 'JavaScript'] : []);
+    let aiToolsArr = (profile.ai_tools && profile.ai_tools.length)
+      ? profile.ai_tools
+      : (isPriyanshu ? ['ChatGPT', 'Claude Code', 'Cursor', 'Figma AI', 'Gemini', 'Google AI'] : []);
 
-    const aiToolsSection = isPriyanshu ? `
-      <div class="pv-xsection" style="background:#EDF4FF;margin-top:20px;">
-        <div class="pv-xsection-hd">
-          <div class="pv-xsection-title">Top AI tools</div>
-        </div>
-        ${pillRows([
-          pill(imgIcon('https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg'), 'ChatGPT'),
-          pill(spanIcon('#D4570A','#fff','✳'), 'Claude Code'),
-          pill(imgIcon('https://avatars.githubusercontent.com/u/124584537'), 'Cursor'),
-          pill(imgIcon('https://cdn.jsdelivr.net/gh/devicons/devicon/icons/figma/figma-original.svg'), 'Figma AI'),
-          pill(imgIcon('https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg'), 'Gemini'),
-          pill(spanIcon('#1A73E8','#fff','G'), 'Google AI'),
-        ])}
-      </div>` : '';
+    // Build stats from actual posts
+    const total = posts.length;
+    const live  = posts.filter(p => p.status === 'live').length;
+    const wip   = posts.filter(p => p.status === 'wip' || p.status === 'in_progress').length;
+    const tabImgs = document.querySelectorAll('.tabs .tab img');
+    const _tabIcon = (src) => src ? `<img src="${src}" style="width:28px;height:28px;object-fit:contain;display:block;" alt="">` : '';
+    const iconAllProjects = tabImgs[0] ? tabImgs[0].src : '';
+    // Category → tab icon index mapping
+    const _catIconIdx = { 'iOS app': 1, 'Mobile app': 1, 'Android app': 1, 'Game': 3, 'Games': 3, 'Web app': 2, 'macOS': 2, 'Extension': 2 };
+    // Count by category
+    const catCounts = {};
+    posts.forEach(p => { if (p.category) catCounts[p.category] = (catCounts[p.category] || 0) + 1; });
+    const buildStats = [];
+    if (total > 0) buildStats.push({ count: total, label: 'Total builds', icon: _tabIcon(iconAllProjects) });
+    Object.entries(catCounts).forEach(([cat, cnt]) => {
+      const idx = _catIconIdx[cat] ?? 1;
+      const img = tabImgs[idx] ? (tabImgs[idx].dataset.activeSrc || tabImgs[idx].src) : '';
+      buildStats.push({ count: cnt, label: cat, icon: _tabIcon(img) });
+    });
 
-    if (isPriyanshu) {
-      // ── Priyanshu hero layout ──
-      // Get active tab icons from homepage tabs
-      const tabImgs = document.querySelectorAll('.tabs .tab img');
-      const iconAllProjects   = tabImgs[0] ? tabImgs[0].src : '';
-      const iconMobileApps    = tabImgs[1] ? (tabImgs[1].dataset.activeSrc || tabImgs[1].src) : '';
-      const iconInteractive   = tabImgs[3] ? (tabImgs[3].dataset.activeSrc || tabImgs[3].src) : '';
-      const tabIcon = (src) => `<img src="${src}" style="width:28px;height:28px;object-fit:contain;display:block;" alt="">`;
-
-      const buildStats = [
-        { count: 12, label: 'Total builds', icon: tabIcon(iconAllProjects)  },
-        { count: 4,  label: 'Mobile Apps',  icon: tabIcon(iconMobileApps)   },
-        { count: 4,  label: 'Games',        icon: tabIcon(iconInteractive)  },
-      ];
-
-      const dnaLabels = ['AI', 'Product Growth', 'Prompt engineer', 'Front end Dev', 'Backend', 'Design systems', 'App publishing', 'iOS app'];
-      const dnaMid = Math.ceil(dnaLabels.length / 2);
-      const dnaRow1 = dnaLabels.slice(0, dnaMid);
-      const dnaRow2 = dnaLabels.slice(dnaMid);
-      const dnaPillsHtml = `
-        <div class="pv-pill-scroll">
-          <div class="pv-pill-rows">
-            <div class="pv-pill-row">${dnaRow1.map(l => `<div class="pv-dna-pill">${l}</div>`).join('')}</div>
-            <div class="pv-pill-row">${dnaRow2.map(l => `<div class="pv-dna-pill">${l}</div>`).join('')}</div>
-          </div>
-        </div>`;
-
-      const buildingNowHtml = `
-        <div class="pv-shipped-hd">Building now <span class="pv-hd-tag-wip">WIP</span></div>
-        <div style="margin-bottom:20px;">
+    // Building now section
+    const wipPosts = posts.filter(p => p.status === 'wip' || p.status === 'in_progress');
+    const buildingNowHtml = wipPosts.length ? `
+      <div class="pv-shipped-hd">Building now <span class="pv-hd-tag-wip">WIP</span></div>
+      <div style="margin-bottom:20px;">
+        ${wipPosts.map(p => `
           <div class="project-card" style="width:100%;box-sizing:border-box;margin-bottom:10px;">
             <div class="card-top-row">
               <div class="card-thumb-wrap">
-                <img src="https://ik.imagekit.io/424h6me27c/images.png" style="width:64px;height:64px;border-radius:14px;object-fit:cover;display:block;" alt="">
+                <img src="${p.thumbnail_url || ''}" style="width:64px;height:64px;border-radius:14px;object-fit:cover;display:block;" alt="" onerror="_onAvatarErr(this)">
               </div>
               <div class="card-info">
-                <div class="card-name-row">
-                  <span class="card-app-name">Design System Builder</span>
-                </div>
-                <div class="card-desc" style="-webkit-line-clamp:3;display:-webkit-box;-webkit-box-orient:vertical;overflow:hidden;">A tool to help designers and developers build and maintain consistent design systems across products.</div>
-                <div class="card-meta-row">
-                  <span class="card-platform">Web app · In progress</span>
-                </div>
+                <div class="card-name-row"><span class="card-app-name">${p.title || ''}</span></div>
+                <div class="card-desc" style="-webkit-line-clamp:3;display:-webkit-box;-webkit-box-orient:vertical;overflow:hidden;">${p.description || ''}</div>
+                <div class="card-meta-row"><span class="card-platform">${p.category || ''}${p.created_at ? ' · ' + getTimeAgo(p.created_at) : ''}</span></div>
               </div>
             </div>
+          </div>`).join('')}
+      </div>` : '';
+
+    // Already shipped section
+    const livePosts = posts.filter(p => p.status === 'live');
+    const shippedHtml = livePosts.length ? `
+      <div class="pv-shipped-hd">Already shipped <span class="pv-hd-tag-live">LIVE</span></div>
+      <div style="margin-bottom:20px;">
+        ${livePosts.map(p => `
+          <div class="project-card" style="width:100%;box-sizing:border-box;margin-bottom:10px;">
+            <div class="card-top-row">
+              <div class="card-thumb-wrap">
+                <img src="${p.thumbnail_url || ''}" style="width:64px;height:64px;border-radius:14px;object-fit:cover;display:block;" alt="" onerror="_onAvatarErr(this)">
+              </div>
+              <div class="card-info">
+                <div class="card-name-row"><span class="card-app-name">${p.title || ''}</span></div>
+                <div class="card-desc" style="-webkit-line-clamp:3;display:-webkit-box;-webkit-box-orient:vertical;overflow:hidden;">${p.description || ''}</div>
+                <div class="card-meta-row"><span class="card-platform">${p.category || ''}${p.created_at ? ' · ' + getTimeAgo(p.created_at) : ''}</span></div>
+              </div>
+            </div>
+          </div>`).join('')}
+      </div>` : '';
+
+    // Skills section
+    const dnaPillsHtml = skillsArr.length ? (() => {
+      const mid = Math.ceil(skillsArr.length / 2);
+      return `
+        <div class="pv-dna-hd">Skills beyond design 💪</div>
+        <div class="pv-pill-scroll">
+          <div class="pv-pill-rows">
+            <div class="pv-pill-row">${skillsArr.slice(0, mid).map(l => `<div class="pv-dna-pill">${l}</div>`).join('')}</div>
+            <div class="pv-pill-row">${skillsArr.slice(mid).map(l => `<div class="pv-dna-pill">${l}</div>`).join('')}</div>
           </div>
         </div>`;
+    })() : '';
 
-      const livePosts = posts.filter(p => p.status === 'live');
-      const shippedHtml = livePosts.length ? `
-        <div class="pv-shipped-hd">Already shipped <span class="pv-hd-tag-live">LIVE</span></div>
-        <div style="margin-bottom:20px;">
-          ${livePosts.map(p => `
-            <div class="project-card" style="width:100%;box-sizing:border-box;margin-bottom:10px;">
-              <div class="card-top-row">
-                <div class="card-thumb-wrap">
-                  <img src="${p.thumbnail_url || ''}" style="width:64px;height:64px;border-radius:14px;object-fit:cover;display:block;" alt="" onerror="_onAvatarErr(this)">
-                </div>
-                <div class="card-info">
-                  <div class="card-name-row">
-                    <span class="card-app-name">${p.title || ''}</span>
-                  </div>
-                  <div class="card-desc" style="-webkit-line-clamp:3;display:-webkit-box;-webkit-box-orient:vertical;overflow:hidden;">${p.description || ''}</div>
-                  <div class="card-meta-row">
-                    <span class="card-platform">${p.category || ''}${p.created_at ? ' · ' + getTimeAgo(p.created_at) : ''}</span>
-                  </div>
-                </div>
+    // Dev tools section
+    const devToolsSection = devToolsArr.length ? `
+      <div class="pv-xsection" style="background:#EDF4FF;margin-top:28px;">
+        <div class="pv-xsection-hd">
+          <div class="pv-xsection-title">Dev tools I'm comfortable with</div>
+        </div>
+        ${pillRows(devToolsArr.map(t => {
+          const iconUrl = _DEVTOOL_ICONS[t];
+          const icon = iconUrl ? imgIcon(iconUrl) : spanIcon('#3169ED','#fff', t[0].toUpperCase());
+          return pill(icon, t);
+        }))}
+      </div>` : '';
+
+    // AI tools section
+    const aiToolsSection = aiToolsArr.length ? `
+      <div class="pv-xsection" style="background:#EDF4FF;margin-top:20px;">
+        <div class="pv-xsection-hd">
+          <div class="pv-xsection-title">My top AI tools</div>
+        </div>
+        ${pillRows(aiToolsArr.map(t => {
+          const iconUrl = _AITOOL_ICONS[t];
+          const icon = t === 'Google AI' ? spanIcon('#1A73E8','#fff','G')
+            : iconUrl ? imgIcon(iconUrl)
+            : spanIcon('#8492A6','#fff', t[0].toUpperCase());
+          return pill(icon, t);
+        }))}
+      </div>` : '';
+
+    const heroAvatarHtml = profile.avatar_url
+      ? `<div class="pv-hero-av"><img src="${profile.avatar_url}" alt="" onerror="_onAvatarErr(this)"></div>`
+      : `<div class="pv-hero-av pv-hero-av-init">${(profile.name||'?')[0].toUpperCase()}</div>`;
+
+    const actionBtns = [
+      profile.instagram_url ? igBtn : '',
+      profile.linkedin_url  ? liBtn : '',
+      actionBtn
+    ].filter(Boolean).join('');
+
+    container.innerHTML = `
+      <div class="pv-hero-header"></div>
+      <div class="pv-hero-white">
+        <div class="pv-hero-identity-row">
+          <div class="pv-hero-avatar-wrap">
+            ${heroAvatarHtml}
+            <div class="contrib-sticker" style="right:-16px;top:-10px;">
+              <img src="https://ik.imagekit.io/424h6me27c/Frame%202147207780.png" alt="" style="width:54px;height:54px;display:block;">
+              <div class="sticker-count"><span class="sticker-num">${total || 0}</span><span class="sticker-lbl">BUILDS</span></div>
+            </div>
+          </div>
+          <div style="flex:1;min-width:0;padding-top:20px;">
+            <div class="pv-hero-name">${profile.name || ''}</div>
+            ${roleStr ? `<div class="pv-hero-role">${roleStr}</div>` : ''}
+            ${expStr  ? `<div class="pv-hero-exp">${expStr}</div>`  : ''}
+          </div>
+          ${actionBtns ? `<div style="display:flex;align-items:center;gap:4px;padding-top:20px;flex-shrink:0;">${actionBtns}</div>` : ''}
+        </div>
+        ${buildStats.length ? `
+        <div class="pv-build-stats${buildStats.length > 3 ? ' scrollable' : ''}">
+          ${buildStats.map(s => `
+            <div class="pv-build-stat-card">
+              <div class="pv-bs-top">
+                <div class="pv-bs-num">${s.count}</div>
+                <div class="pv-bs-icon">${s.icon}</div>
               </div>
+              <div class="pv-bs-label">${s.label}</div>
             </div>`).join('')}
-        </div>` : '';
-
-      const heroAvatarHtml = profile.avatar_url
-        ? `<div class="pv-hero-av"><img src="${profile.avatar_url}" alt="" onerror="_onAvatarErr(this)"></div>`
-        : `<div class="pv-hero-av pv-hero-av-init">${(profile.name||'?')[0].toUpperCase()}</div>`;
-
-      const statScrollable = buildStats.length > 3;
-      const actionBtns = [
-        profile.instagram_url ? igBtn : '',
-        profile.linkedin_url  ? liBtn : '',
-        actionBtn
-      ].filter(Boolean).join('');
-
-      container.innerHTML = `
-        <div class="pv-hero-header"></div>
-        <div class="pv-hero-white">
-          <div class="pv-hero-identity-row">
-            <div class="pv-hero-avatar-wrap">
-              ${heroAvatarHtml}
-              <div class="contrib-sticker" style="right:-16px;top:-10px;">
-                <img src="https://ik.imagekit.io/424h6me27c/Frame%202147207780.png" alt="" style="width:54px;height:54px;display:block;">
-                <div class="sticker-count"><span class="sticker-num">12</span><span class="sticker-lbl">BUILDS</span></div>
-              </div>
-            </div>
-            <div style="flex:1;min-width:0;padding-top:20px;">
-              <div class="pv-hero-name">${profile.name || ''}</div>
-              ${roleStr ? `<div class="pv-hero-role">${roleStr}</div>` : ''}
-              ${expStr  ? `<div class="pv-hero-exp">${expStr}</div>`  : ''}
-            </div>
-            ${actionBtns ? `<div style="display:flex;align-items:center;gap:4px;padding-top:20px;flex-shrink:0;">${actionBtns}</div>` : ''}
-          </div>
-          <div class="pv-build-stats${statScrollable ? ' scrollable' : ''}">
-            ${buildStats.map(s => `
-              <div class="pv-build-stat-card">
-                <div class="pv-bs-top">
-                  <div class="pv-bs-num">${s.count}</div>
-                  <div class="pv-bs-icon">${s.icon}</div>
-                </div>
-                <div class="pv-bs-label">${s.label}</div>
-              </div>`).join('')}
-          </div>
-          ${buildingNowHtml}
-          ${shippedHtml}
-          <div class="pv-dna-hd">Builder DNA</div>
-          ${dnaPillsHtml}
-        </div>
-        ${devToolsSection}
-        ${aiToolsSection}
-        <div class="pv-section-divider"></div>
-        <div class="pv-posts-hd">Recent build posts</div>
-        ${postCards}`;
-    } else {
-      container.innerHTML = `
-        ${backBtn}
-        <div class="pv-avatar-row">
-          ${avatarHtml}
-        </div>
-        <div class="pv-info-row">
-          <div class="pv-info-col">
-            <div class="pv-name">${profile.name || ''}</div>
-            ${roleStr ? `<div class="pv-role">${roleStr}</div>` : ''}
-            ${expStr  ? `<div class="pv-exp">${expStr}</div>`  : ''}
-          </div>
-          <div class="pv-social-row">
-            ${igBtn}
-            ${liBtn}
-            ${actionBtn}
-          </div>
-        </div>
-        ${profile.bio ? `<div class="pv-bio">${profile.bio}</div>` : ''}
-        ${statsCard}
-        ${feltSection}
-        ${techSection}
-        <div class="pv-section-divider"></div>
-        <div class="pv-posts-hd">Recent build posts</div>
-        ${postCards}`;
-    }
+        </div>` : ''}
+        ${buildingNowHtml}
+        ${shippedHtml}
+        ${dnaPillsHtml}
+      </div>
+      ${devToolsSection}
+      ${aiToolsSection}
+      <div class="pv-section-divider"></div>
+      <div class="pv-posts-hd">Recent build posts</div>
+      ${postCards}`;
   }
 
   // ── Tools Sheet ──────────────────────────────────
   const _postToolsCache = {};
+  const _postRolesCache = {};
+  const _postCatsCache = {};
 
   function openToolsSheet(postId) {
     const tools = _postToolsCache[postId] || [];
@@ -5383,6 +5819,175 @@ Download now for free : pasteryapp.xyz</div>
 
   function closeToolsSheet() {
     document.getElementById('toolsSheet').classList.remove('open');
+  }
+
+  function openCategorySheet() {
+    const el = document.getElementById('categorySheet');
+    el.style.display = 'flex';
+  }
+  function closeCategorySheet() {
+    document.getElementById('categorySheet').style.display = 'none';
+  }
+  function openRolesSheet() {
+    document.getElementById('rolesSheet').style.display = 'flex';
+  }
+  function closeRolesSheet() {
+    document.getElementById('rolesSheet').style.display = 'none';
+  }
+
+  function openPostRolesSheet(postId) {
+    const roles = _postRolesCache[postId] || [];
+    const sheet = document.getElementById('rolesSheet');
+    const list = sheet.querySelector('.tools-sheet-list');
+    list.innerHTML = roles.map(r => `<div class="tools-sheet-item"><div class="tools-sheet-icon" style="font-size:20px;background:#EEF3FD;">🎭</div><span class="tools-sheet-name">${r}</span></div>`).join('') || '<div style="color:#8492A6;font-size:14px;padding:8px 0;">No roles listed.</div>';
+    sheet.style.display = 'flex';
+  }
+  function openPostCategoriesSheet(postId) {
+    const cats = _postCatsCache[postId] || [];
+    const sheet = document.getElementById('categorySheet');
+    const list = sheet.querySelector('.tools-sheet-list');
+    list.innerHTML = cats.map(c => `<div class="tools-sheet-item"><div class="tools-sheet-icon" style="font-size:20px;background:#EEF3FD;">🏷️</div><span class="tools-sheet-name">${c}</span></div>`).join('') || '<div style="color:#8492A6;font-size:14px;padding:8px 0;">No categories listed.</div>';
+    sheet.style.display = 'flex';
+  }
+
+  // ── Multi-select system ──────────────────────────
+  const _MS_SKILLS = [
+    'Frontend Development','Backend Development','Full Stack','iOS Development','Android Development',
+    'React / React Native','Vue.js','Node.js','Python','Swift','Kotlin','Flutter','TypeScript',
+    'HTML / CSS','JavaScript','SQL / Databases','REST APIs','GraphQL','DevOps / CI-CD','Cloud (AWS/GCP/Azure)',
+    'App Store Publishing','Product Growth','Product Strategy','User Research','Data Analytics',
+    'AI / ML','Prompt Engineering','Design Systems','Motion Design','Brand Identity',
+    'Copywriting','Content Strategy','SEO','Marketing','No-code / Low-code','Automation',
+    'Figma Plugins','Chrome Extensions','Web Scraping','WebGL / Three.js','Game Development',
+  ];
+  const _MS_DEVTOOLS = [
+    'Xcode','Android Studio','VS Code','Cursor','Zed','Vim / Neovim','IntelliJ IDEA',
+    'GitHub','GitLab','Bitbucket','Terminal / CLI','Docker','Vercel','Netlify','Railway',
+    'Supabase','Firebase','AWS','GCP','Azure','Postman','Insomnia','TablePlus','Linear',
+    'Jira','Notion','Obsidian','HTML / CSS','JavaScript','Swift','Python','Kotlin',
+    'React','Next.js','Tailwind CSS','Node.js','TypeScript','Figma (dev mode)','Storybook',
+    'Playwright / Cypress','Webflow','Framer','Bubble','Glide','AppGyver',
+  ];
+  const _MS_AITOOLS = [
+    'ChatGPT','Claude','Claude Code','Cursor','Copilot (GitHub)','Gemini','Google AI Studio',
+    'Perplexity','Grok','Midjourney','DALL-E','Stable Diffusion','Runway ML','Kling AI',
+    'ElevenLabs','Suno','Udio','Figma AI','Framer AI','Webflow AI','Notion AI','Linear AI',
+    'v0 by Vercel','Bolt.new','Lovable','Replit AI','Devin','Codex','Copilot (MS 365)',
+    'HeyGen','Synthesia','Make (Integromat)','Zapier AI','Bardeen','Merlin','Pika Labs',
+  ];
+
+  const _PC_ROLES = ['Designer','iOS Developer','Android Developer','Frontend Dev','Backend Dev','Full Stack Dev','Vibe coder','Product Manager','UX Researcher','Prompt Engineer','Marketing','Growth','Content','Brand'];
+  const _PC_CATS = ['Productivity','Utilities','Self-improvement','Finance','Wellness','Education','Entertainment','Social','Travel','Food','Health','Gaming','Developer Tools','AI Tools','Creativity'];
+
+  const _msState = {};
+
+  function _msInit(key, options, containerId, pillsId, ddId, phId) {
+    if (!_msState[key]) _msState[key] = new Set();
+    const dd = document.getElementById(ddId);
+    if (!dd) return;
+    dd.innerHTML = options.map(o => `
+      <div class="ms-option${_msState[key].has(o) ? ' selected' : ''}" onclick="_msToggleOption('${key}','${o.replace(/'/g,"\\'")}','${ddId}','${pillsId}','${phId}')">
+        <div class="ms-check">${_msState[key].has(o) ? '✓' : ''}</div>
+        ${o}
+      </div>`).join('');
+  }
+
+  function _msToggle(key) {
+    ['skills','devtools','aitools','edit-skills','edit-devtools','edit-aitools','pc-roles','pc-cats-ms'].forEach(k => {
+      if (k !== key) {
+        const el = document.getElementById('ms-' + k + '-dd');
+        if (el) el.classList.remove('open');
+      }
+    });
+    const dd = document.getElementById('ms-' + key + '-dd');
+    if (dd) dd.classList.toggle('open');
+  }
+
+  function _msToggleOption(key, value, ddId, pillsId, phId) {
+    if (!_msState[key]) _msState[key] = new Set();
+    if (_msState[key].has(value)) _msState[key].delete(value);
+    else _msState[key].add(value);
+    _msRefreshPills(key, pillsId, phId);
+    _msRefreshDd(key, ddId);
+  }
+
+  function _msRefreshPills(key, pillsId, phId) {
+    const pills = document.getElementById(pillsId);
+    const ph = document.getElementById(phId);
+    if (!pills) return;
+    const vals = _msState[key] ? Array.from(_msState[key]) : [];
+    Array.from(pills.querySelectorAll('.ms-pill')).forEach(p => p.remove());
+    if (ph) ph.style.display = vals.length ? 'none' : '';
+    vals.forEach(v => {
+      const el = document.createElement('div');
+      el.className = 'ms-pill';
+      el.innerHTML = v + '<span class="ms-pill-x" onclick="event.stopPropagation();_msRemove(\'' + key + '\',\'' + v.replace(/'/g,"\\'") + '\',\'' + pillsId + '\',\'' + phId + '\')">×</span>';
+      pills.insertBefore(el, ph || null);
+    });
+  }
+
+  function _msRemove(key, value, pillsId, phId) {
+    if (_msState[key]) _msState[key].delete(value);
+    _msRefreshPills(key, pillsId, phId);
+    _msRefreshDd(key, 'ms-' + key + '-dd');
+  }
+
+  function _msRefreshDd(key, ddId) {
+    const dd = document.getElementById(ddId);
+    if (!dd) return;
+    const lists = { skills: _MS_SKILLS, devtools: _MS_DEVTOOLS, aitools: _MS_AITOOLS, 'edit-skills': _MS_SKILLS, 'edit-devtools': _MS_DEVTOOLS, 'edit-aitools': _MS_AITOOLS, 'pc-roles': _PC_ROLES, 'pc-cats-ms': _PC_CATS };
+    const list = lists[key];
+    if (!list) return;
+    const pillsId = 'ms-' + key + '-pills';
+    const phId = 'ms-' + key + '-ph';
+    dd.innerHTML = list.map(o => `
+      <div class="ms-option${_msState[key] && _msState[key].has(o) ? ' selected' : ''}" onclick="_msToggleOption('${key}','${o.replace(/'/g,"\\'")}','${ddId}','${pillsId}','${phId}')">
+        <div class="ms-check">${_msState[key] && _msState[key].has(o) ? '✓' : ''}</div>
+        ${o}
+      </div>`).join('');
+  }
+
+  function _msGetArray(key) {
+    return _msState[key] ? Array.from(_msState[key]) : [];
+  }
+
+  function _msSetValues(key, values) {
+    _msState[key] = new Set(values || []);
+  }
+
+  document.addEventListener('click', function(e) {
+    if (!e.target.closest('.ms-wrap')) {
+      document.querySelectorAll('.ms-dropdown.open').forEach(d => d.classList.remove('open'));
+    }
+  });
+
+  // ── Setup step navigation ────────────────────────
+  function _setupGoStep2() {
+    const role = document.getElementById('setup-role').value.trim();
+    const company = document.getElementById('setup-company').value.trim();
+    const expVal = document.getElementById('setup-exp').value.trim();
+    if (!role || !company || !expVal) {
+      const el = document.getElementById('setupMsg');
+      el.textContent = 'Designation, company and years of experience are required.';
+      el.className = 'auth-msg error'; el.style.display = 'block'; return;
+    }
+    document.getElementById('setupMsg').style.display = 'none';
+    document.getElementById('setupStep1').style.display = 'none';
+    document.getElementById('setupStep2').style.display = 'block';
+    document.getElementById('setupDot1').classList.remove('active');
+    document.getElementById('setupDot2').classList.add('active');
+    document.getElementById('setupStepLabel').textContent = 'Step 2 of 2 · Your skills & tools';
+    _msInit('skills', _MS_SKILLS, 'ms-skills-wrap', 'ms-skills-pills', 'ms-skills-dd', 'ms-skills-ph');
+    _msInit('devtools', _MS_DEVTOOLS, 'ms-devtools-wrap', 'ms-devtools-pills', 'ms-devtools-dd', 'ms-devtools-ph');
+    _msInit('aitools', _MS_AITOOLS, 'ms-aitools-wrap', 'ms-aitools-pills', 'ms-aitools-dd', 'ms-aitools-ph');
+  }
+
+  function _setupGoStep1() {
+    document.getElementById('setupStep2').style.display = 'none';
+    document.getElementById('setupStep1').style.display = 'block';
+    document.getElementById('setupDot2').classList.remove('active');
+    document.getElementById('setupDot1').classList.add('active');
+    document.getElementById('setupStepLabel').textContent = 'Step 1 of 2 · The basics';
   }
 
   // ── Post Detail ─────────────────────────────────
