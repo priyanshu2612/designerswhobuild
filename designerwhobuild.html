@@ -628,7 +628,7 @@
     border-radius: 14px 14px 0 0;
     position: relative;
   }
-  .tab.active { background: #fff; z-index: 2; }
+  .tab.active { background: #fff; z-index: 2; margin-bottom: -1px; }
   .tab.active::before,
   .tab.active::after {
     content: '';
@@ -638,6 +638,7 @@
     height: 20px;
     background-size: 100% 100%;
     background-repeat: no-repeat;
+    z-index: -1;
   }
   .tab.active::before {
     left: -20px;
