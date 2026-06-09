@@ -3793,7 +3793,7 @@
       <div style="height:1px;background:#F2F4F7;margin:8px 12px 12px;"></div>
       <div class="post-ctas">
         <button class="post-btn-primary">Visit live site <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path d="M2.5 11.5L11.5 2.5M11.5 2.5H5.5M11.5 2.5V8.5" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-        <button class="post-btn-outline">View journey <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="display:inline-block;vertical-align:middle;flex-shrink:0"><rect x="1" y="8" width="3" height="5" rx="0.8" fill="#3169ED"/><rect x="5.5" y="5" width="3" height="8" rx="0.8" fill="#3169ED"/><rect x="10" y="2" width="3" height="11" rx="0.8" fill="#3169ED"/></svg></button>
+        <button class="post-btn-outline" onclick="openPostDetail('clipt')">View journey <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="display:inline-block;vertical-align:middle;flex-shrink:0"><rect x="1" y="8" width="3" height="5" rx="0.8" fill="#3169ED"/><rect x="5.5" y="5" width="3" height="8" rx="0.8" fill="#3169ED"/><rect x="10" y="2" width="3" height="11" rx="0.8" fill="#3169ED"/></svg></button>
       </div>
     </div>
 
@@ -6121,7 +6121,45 @@ Download now for free : pasteryapp.xyz</div>
     clipt: {
       key: 'clipt', title: 'Clipt', desc: 'Clipboard history for iPhone. Every text, link, and image you copy is saved and searchable. Access your full copy history from any app with a quick tap.',
       status: 'live', category: 'iOS app', img: 'https://ik.imagekit.io/424h6me27c/1769139467912.jpeg', liveUrl: '#',
-      author: { name: 'Gowtham', role: 'Product Designer', company: 'CRED', avatar: 'https://ik.imagekit.io/424h6me27c/1745770693685.jpeg', id: '11111111-0000-0000-0000-000000000007' }
+      builtInDays: 2,
+      roles: ['Vibe coder', 'Product Designer', 'iOS Dev', 'UX Researcher'],
+      categories: ['Productivity', 'Utility', 'Tools', 'Clipboard'],
+      tools: [
+        { name: 'ChatGPT', img: 'https://ik.imagekit.io/424h6me27c/chatgpt-logo-chat-gpt-icon-on-white-background-free-vector.jpg' },
+        { name: 'Codex', img: 'https://ik.imagekit.io/424h6me27c/codex-color.png' },
+        { name: 'Xcode', img: 'https://ik.imagekit.io/424h6me27c/images.png' },
+        { name: 'Figma', img: 'https://ik.imagekit.io/424h6me27c/icon.png' },
+        { name: 'Cursor', img: 'https://ik.imagekit.io/424h6me27c/1593694785946.jpeg' }
+      ],
+      rxn: { tm: 14, tb: 3, tu: 14, comments: 8 },
+      author: { name: 'Gowtham Oleti', role: 'Product Designer', company: 'CRED', avatar: 'https://ik.imagekit.io/424h6me27c/1745770693685.jpeg', id: '11111111-0000-0000-0000-000000000007' },
+      journey: [
+        {
+          q: 'What sparked the idea?',
+          a: 'I kept losing things I copied — a link I copied on my Mac wouldn\'t be on my iPhone, an address I grabbed mid-task was gone. Every clipboard app I tried was either ugly or way over-engineered. I wanted one that felt native, invisible, and just worked.',
+          imgs: ['https://ik.imagekit.io/424h6me27c/1769139467912.jpeg']
+        },
+        {
+          q: 'How did you scope it down to 2 days?',
+          a: 'I cut everything that wasn\'t the core loop: copy → save → paste. No tags, no folders, no sync in v1. Just the history. I sketched the flow in Figma in an hour, decided on a floating overlay UI, and started coding straight away with ChatGPT + Codex handling the boilerplate.',
+          imgs: ['https://ik.imagekit.io/424h6me27c/1773811274487.jpeg', 'https://ik.imagekit.io/424h6me27c/1773811274544.jpeg']
+        },
+        {
+          q: 'What was the hardest part of building it?',
+          a: 'Getting the keyboard extension to reliably pull from the shared container. iOS sandboxing is brutal — the main app and the keyboard live in different processes. I probably spent 6 of the 48 hours on that one edge case alone.',
+          imgs: []
+        },
+        {
+          q: 'What did you ship and what did you cut?',
+          a: 'Shipped: clipboard history for text, links, and images, a keyboard extension for one-tap paste, and iCloud sync across iPhone + iPad. Cut: Mac app, Siri Shortcut integration, and a "vaults" feature for organized bookmarks — all moved to v2.',
+          imgs: ['https://ik.imagekit.io/424h6me27c/1757355199034.jpeg']
+        },
+        {
+          q: 'What would you do differently?',
+          a: 'I\'d set up a TestFlight group on day one, not day two. The feedback loop from real users is so much faster than building in isolation. Also: write the App Store screenshots before you write the UI — it forces you to think about the core value prop first.',
+          imgs: []
+        }
+      ]
     },
     brink: {
       key: 'brink', title: 'Brink', desc: 'Podcast player, superpowered. Variable speed without chipmunk voice, chapter markers, AI-generated summaries, and a clip-to-notes feature for deep listeners.',
@@ -6218,12 +6256,43 @@ Download now for free : pasteryapp.xyz</div>
         </div>`;
     }
 
+    // ── 2-row tags container (same as post card) ──
+    let tagsContainerHtml = '';
+    if (data.builtInDays || (data.roles && data.roles.length) || (data.categories && data.categories.length) || (data.tools && data.tools.length)) {
+      const builtInPill = data.builtInDays
+        ? `<div class="pv-dna-pill" style="white-space:nowrap;flex-shrink:0;">⏱ Built in ${data.builtInDays} day${data.builtInDays > 1 ? 's' : ''}</div>` : '';
+      const toolsPill = data.tools && data.tools.length
+        ? `<div class="post-tech-pill" style="flex-shrink:0;">
+            <div class="post-tech-icons">${data.tools.slice(0,3).map(t => `<div class="post-tech-dot"><img src="${t.img}" alt="${t.name}"></div>`).join('')}</div>
+            ${data.tools.length} tools used <svg width="12" height="8" viewBox="0 0 12 8" fill="none" style="display:inline-block;vertical-align:middle;margin-left:2px"><path d="M1 1L6 6.5L11 1" stroke="#454C5F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>` : '';
+      const row1 = `<div style="display:flex;gap:8px;align-items:center;">${statusTag}${categoryTag}${builtInPill}${toolsPill}</div>`;
+
+      let row2 = '';
+      if ((data.roles && data.roles.length) || (data.categories && data.categories.length)) {
+        const rolesPill = data.roles && data.roles.length
+          ? `<div class="pv-dna-pill" style="white-space:nowrap;flex-shrink:0;"><span style="color:#8492A6;font-weight:500;">Roles:</span> ${data.roles[0]}${data.roles.length > 1 ? ` <span style="color:#8492A6;">(+${data.roles.length - 1})</span>` : ''}</div>` : '';
+        const catsPill = data.categories && data.categories.length
+          ? `<div class="pv-dna-pill" style="white-space:nowrap;flex-shrink:0;"><span style="color:#8492A6;font-weight:500;">Category:</span> ${data.categories[0]}${data.categories.length > 1 ? ` <span style="color:#8492A6;">(+${data.categories.length - 1})</span>` : ''}</div>` : '';
+        row2 = `<div style="display:flex;gap:8px;align-items:center;">${rolesPill}${catsPill}</div>`;
+      }
+
+      tagsContainerHtml = `
+        <div style="overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding:12px 0 4px;">
+          <div style="display:flex;flex-direction:column;gap:8px;width:max-content;padding:0 16px;">
+            ${row1}
+            ${row2}
+          </div>
+        </div>`;
+    }
+
     el.innerHTML = `
       <div class="pd-hero">
         <img class="pd-hero-img" src="${data.img}" alt="${data.title}">
       </div>
+      ${tagsContainerHtml}
       <div class="pd-body">
-        <div class="pd-status-row">${statusTag}${categoryTag}</div>
+        <div class="pd-status-row" ${tagsContainerHtml ? 'style="display:none;"' : ''}>${statusTag}${categoryTag}</div>
         <div class="pd-title">${data.title}</div>
         <div class="pd-desc">${data.desc}</div>
         <div class="pd-cta-row">${liveBtn}</div>
