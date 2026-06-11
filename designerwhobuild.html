@@ -263,13 +263,7 @@
     if (p.id && postCats.length) _postCatsCache[p.id] = postCats;
     const rolesPill = roles.length ? `<div class="pv-dna-pill" style="cursor:pointer;white-space:nowrap;flex-shrink:0;" onclick="openPostRolesSheet('${p.id}')"><span style="color:#8492A6;font-weight:500;">Roles:</span> ${roles[0]}${roles.length > 1 ? ` <span style="color:#8492A6;">(+${roles.length - 1})</span>` : ''} <svg width="10" height="7" viewBox="0 0 12 8" fill="none" style="display:inline-block;vertical-align:middle;margin-left:2px"><path d="M1 1L6 6.5L11 1" stroke="#454C5F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>` : '';
     const catsPill = postCats.length ? `<div class="pv-dna-pill" style="cursor:pointer;white-space:nowrap;flex-shrink:0;" onclick="openPostCategoriesSheet('${p.id}')"><span style="color:#8492A6;font-weight:500;">Category:</span> ${postCats[0]}${postCats.length > 1 ? ` <span style="color:#8492A6;">(+${postCats.length - 1})</span>` : ''} <svg width="10" height="7" viewBox="0 0 12 8" fill="none" style="display:inline-block;vertical-align:middle;margin-left:2px"><path d="M1 1L6 6.5L11 1" stroke="#454C5F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>` : '';
-    const row2 = (rolesPill || catsPill) ? `<div style="display:flex;gap:8px;align-items:center;">${rolesPill}${catsPill}</div>` : '';
-    const tagBlock = `<div style="overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding-bottom:12px;">
-  <div style="display:flex;flex-direction:column;gap:8px;width:max-content;padding:0 16px;">
-    <div style="display:flex;gap:8px;align-items:center;">${statusTag}${p.category?`<span class="post-tag post-tag-type" style="white-space:nowrap;flex-shrink:0;">${p.category}</span>`:''}${builtInPill}${toolsHtml}</div>
-    ${row2}
-  </div>
-</div>`;
+    const tagBlock = `<div style="padding:0 16px 12px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;">${statusTag}${p.category?`<span class="post-tag post-tag-type" style="white-space:nowrap;flex-shrink:0;">${p.category}</span>`:''}${builtInPill}${toolsHtml}${rolesPill}${catsPill}</div>`;
 
     // Media
     const mu = p.media_urls || [];
