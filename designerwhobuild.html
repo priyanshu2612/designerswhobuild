@@ -1465,13 +1465,16 @@
   .post-media-video {
     width: 100%;
     aspect-ratio: 9/16;
-    max-height: 480px;
+    max-height: 560px;
     position: relative;
     overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
   }
+  .post-media-video.ratio-landscape { aspect-ratio: 16/9; max-height: 260px; }
+  .post-media-video.ratio-square    { aspect-ratio: 1/1;  max-height: 420px; }
+  .post-media-video.ratio-portrait  { aspect-ratio: 9/16; max-height: 560px; }
   .video-play-btn {
     width: 60px;
     height: 60px;
@@ -4446,6 +4449,16 @@ Download now for free : pasteryapp.xyz</div>
     }
   }
 
+  function _applyVideoRatio(video) {
+    const wrap = video.closest('.post-media-video');
+    if (!wrap || !video.videoWidth || !video.videoHeight) return;
+    const ratio = video.videoWidth / video.videoHeight;
+    wrap.classList.remove('ratio-landscape', 'ratio-square', 'ratio-portrait');
+    if (ratio > 1.2)      wrap.classList.add('ratio-landscape');
+    else if (ratio < 0.85) wrap.classList.add('ratio-portrait');
+    else                   wrap.classList.add('ratio-square');
+  }
+
   const postVideoObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       const video = entry.target;
@@ -4459,7 +4472,13 @@ Download now for free : pasteryapp.xyz</div>
     });
   }, { threshold: 0.5 });
 
-  document.querySelectorAll('.post-video').forEach(v => postVideoObserver.observe(v));
+  function _observeVideo(v) {
+    postVideoObserver.observe(v);
+    if (v.videoWidth) { _applyVideoRatio(v); }
+    else { v.addEventListener('loadedmetadata', () => _applyVideoRatio(v), { once: true }); }
+  }
+
+  document.querySelectorAll('.post-video').forEach(v => _observeVideo(v));
 
   function openNavMenu() {
     document.getElementById('navMenuOverlay').classList.add('open');
@@ -4931,7 +4950,7 @@ Download now for free : pasteryapp.xyz</div>
     const { data: posts, error } = await query;
     if (!error && posts && posts.length > 0) {
       container.innerHTML = posts.map(renderFullPostCard).join('');
-      container.querySelectorAll('.post-video').forEach(v => postVideoObserver.observe(v));
+      container.querySelectorAll('.post-video').forEach(v => _observeVideo(v));
       // Restore this user's reaction selected states
       if (currentProfile) {
         const { data: myReactions } = await sb.from('reactions')
