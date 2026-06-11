@@ -326,7 +326,7 @@
       </div>
       <div class="post-content">
         <div class="post-title-row"><span class="post-title">${p.title}</span></div>
-        ${p.description?`<div class="post-desc">${p.description.replace(/\n/g,'<br>')}</div>`:''}
+        ${p.description?`<div class="post-desc-container"><div class="post-desc">${p.description.replace(/\n/g,'<br>')}</div><span class="read-more-btn" data-expanded="false" onclick="toggleDesc(this)">read more</span></div>`:''}
       </div>
       ${tagBlock}
       ${media}
@@ -1337,9 +1337,14 @@
   }
   .post-desc-container {
     position: relative;
+    overflow: hidden;
+  }
+  .post-desc-container:not(.expanded-container) {
+    max-height: 40px;
   }
   .post-desc-container:not(.expanded-container) .post-desc {
-    height: 40px;
+    height: auto;
+    max-height: 40px;
     overflow: hidden;
     display: block;
   }
@@ -4338,6 +4343,14 @@ Download now for free : pasteryapp.xyz</div>
     });
   });
 
+  function _initReadMore(container) {
+    const desc = container.querySelector('.post-desc');
+    const btn  = container.querySelector('.read-more-btn');
+    if (!desc || !btn) return;
+    // Hide button if text doesn't overflow the 2-line clamp
+    if (desc.scrollHeight <= 42) btn.style.display = 'none';
+  }
+
   function toggleDesc(btn) {
     const container = btn.closest('.post-desc-container');
     const isExpanded = btn.dataset.expanded === 'true';
@@ -4951,6 +4964,7 @@ Download now for free : pasteryapp.xyz</div>
     if (!error && posts && posts.length > 0) {
       container.innerHTML = posts.map(renderFullPostCard).join('');
       container.querySelectorAll('.post-video').forEach(v => _observeVideo(v));
+      container.querySelectorAll('.post-desc-container').forEach(c => _initReadMore(c));
       // Restore this user's reaction selected states
       if (currentProfile) {
         const { data: myReactions } = await sb.from('reactions')
