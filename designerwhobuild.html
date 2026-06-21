@@ -246,12 +246,13 @@
     // Tools
     let tools = [];
     try { tools = Array.isArray(p.tools_used) ? p.tools_used : JSON.parse(p.tools_used || '[]'); } catch(e){}
-    if (p.id && tools.length) _postToolsCache[p.id] = tools;
-    const toolsHtml = tools.length ? `<div class="post-tech-pill" style="cursor:pointer;" onclick="openToolsSheet('${p.id}')">
+    const _normTools = tools.map(t => typeof t === 'string' ? { name: t, icon_url: _getToolIcon(t) } : t);
+    if (p.id && _normTools.length) _postToolsCache[p.id] = _normTools;
+    const toolsHtml = _normTools.length ? `<div class="post-tech-pill" style="cursor:pointer;" onclick="openToolsSheet('${p.id}')">
       <div class="post-tech-icons">
-        ${tools.slice(0,3).map(t=>`<div class="post-tech-dot"><img src="${t.icon_url}" alt="${t.name}"></div>`).join('')}
+        ${_normTools.slice(0,3).map(t=> t.icon_url ? `<div class="post-tech-dot"><img src="${t.icon_url}" alt="${t.name}"></div>` : `<div class="post-tech-dot" style="background:#E8EBF0;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#454C5F;">${(t.name||'?')[0]}</div>`).join('')}
       </div>
-      ${p.tools_count || tools.length} tools used
+      ${p.tools_count || _normTools.length} tools used
       <svg width="12" height="8" viewBox="0 0 12 8" fill="none" style="display:inline-block;vertical-align:middle;margin-left:2px"><path d="M1 1L6 6.5L11 1" stroke="#454C5F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </div>` : '';
 
@@ -1867,19 +1868,17 @@
     box-sizing: border-box;
   }
   .cp-joined-tag {
-    position: absolute;
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%);
+    display: inline-block;
     background: rgba(255,255,255,0.9);
-    border-radius: 0 0 8px 8px;
-    padding: 4px 14px;
+    border-radius: 6px;
+    padding: 4px 10px;
     font-size: 11px;
     font-weight: 500;
     color: #596378;
     white-space: nowrap;
     font-family: 'Outfit', sans-serif;
     letter-spacing: 0.2px;
+    margin-bottom: 12px;
   }
   /* Full-width horizontal card (Top 10, Just Joined, Community) */
   .contrib-page-cards .cp-top10-card,
@@ -5865,6 +5864,22 @@ Download now for free : pasteryapp.xyz</div>
   const _postToolsCache = {};
   const _postRolesCache = {};
   const _postCatsCache = {};
+
+  const _IK = 'https://ik.imagekit.io/424h6me27c/';
+  const _TOOL_ICON_MAP = {
+    'figma':                    _IK + 'figma-icon.png',
+    'cursor':                   _IK + 'images.png',
+    'chatgpt':                  _IK + 'chatgpt-logo-chat-gpt-icon-on-white-background-free-vector.jpg',
+    'claude':                   _IK + 'claude-icon.png',
+    'claude code':              _IK + 'claude-icon.png',
+    'codex':                    _IK + 'codex-color.png',
+    'copilot (github)':         _IK + 'codex-color.png',
+    'perplexity':               _IK + 'perplexity.png',
+  };
+
+  function _getToolIcon(name) {
+    return _TOOL_ICON_MAP[(name || '').toLowerCase().trim()] || null;
+  }
 
   function openToolsSheet(postId) {
     const tools = _postToolsCache[postId] || [];
