@@ -1855,25 +1855,21 @@
     box-sizing: border-box;
   }
   .cp-joined-tag {
-    position: absolute;
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%);
+    display: inline-block;
     background: rgba(255,255,255,0.9);
-    border-radius: 0 0 6px 6px;
-    padding: 5px 14px;
+    border-radius: 6px;
+    padding: 4px 10px;
     font-size: 11px;
     font-weight: 500;
     color: #596378;
     white-space: nowrap;
     font-family: 'Outfit', sans-serif;
     letter-spacing: 0.2px;
+    margin-bottom: 6px;
   }
-  .contrib-page-cards .cp-has-joined-tag {
-    padding-top: 40px;
-  }
-  /* Top 10 — full-width horizontal card */
-  .contrib-page-cards .cp-top10-card {
+  /* Full-width horizontal card (Top 10, Just Joined, Community) */
+  .contrib-page-cards .cp-top10-card,
+  .contrib-page-cards .cp-fullrow-card {
     grid-column: span 2;
     flex-direction: row;
     align-items: flex-start;
@@ -1881,38 +1877,44 @@
     padding: 16px 16px 10px;
     min-height: 124px;
   }
-  .cp-top10-card .contrib-av-wrap {
+  .cp-top10-card .contrib-av-wrap,
+  .cp-fullrow-card .contrib-av-wrap {
     margin: 0;
     flex-shrink: 0;
     padding-left: 12px;
+    width: 72px;
   }
-  .cp-top10-info {
+  .cp-top10-info,
+  .cp-fullrow-info {
     flex: 1;
     min-width: 0;
   }
-  .cp-top10-card .contrib-av-wrap {
-    width: 72px;
-  }
-  .cp-top10-card .contrib-avatar {
+  .cp-top10-card .contrib-avatar,
+  .cp-fullrow-card .contrib-avatar {
     width: 72px;
     height: 96px;
   }
-  .cp-top10-card .contrib-sticker {
+  .cp-top10-card .contrib-sticker,
+  .cp-fullrow-card .contrib-sticker {
     right: -20px;
     width: 42px;
     height: 42px;
   }
-  .cp-top10-card .contrib-sticker > img {
+  .cp-top10-card .contrib-sticker > img,
+  .cp-fullrow-card .contrib-sticker > img {
     width: 42px;
     height: 42px;
   }
-  .cp-top10-card .sticker-num {
+  .cp-top10-card .sticker-num,
+  .cp-fullrow-card .sticker-num {
     font-size: 11px;
   }
-  .cp-top10-card .sticker-lbl {
+  .cp-top10-card .sticker-lbl,
+  .cp-fullrow-card .sticker-lbl {
     font-size: 7px;
   }
-  .cp-top10-card .contrib-name {
+  .cp-top10-card .contrib-name,
+  .cp-fullrow-card .contrib-name {
     text-align: left;
     margin-top: 0;
     white-space: nowrap;
@@ -1920,10 +1922,13 @@
     text-overflow: ellipsis;
   }
   .cp-top10-card .contrib-role,
-  .cp-top10-card .contrib-exp {
+  .cp-top10-card .contrib-exp,
+  .cp-fullrow-card .contrib-role,
+  .cp-fullrow-card .contrib-exp {
     text-align: left;
   }
-  .cp-top10-card .contrib-tags {
+  .cp-top10-card .contrib-tags,
+  .cp-fullrow-card .contrib-tags {
     justify-content: flex-start;
     margin-top: 8px;
   }
@@ -5351,17 +5356,19 @@ Download now for free : pasteryapp.xyz</div>
         </div>`;
       }
 
-      return `<div class="contributor-card${isNew ? ' cp-has-joined-tag' : ''}" onclick="viewProfile('${c.id}')" style="cursor:pointer;background:${bg};">
-        ${joinedTag}
+      return `<div class="contributor-card cp-fullrow-card" onclick="viewProfile('${c.id}')" style="cursor:pointer;background:${bg};">
         <div class="contrib-av-wrap">
           ${rankBadge}
           <img class="contrib-avatar" src="${c.avatar}" onerror="_onAvatarErr(this)" alt="">
           ${sticker}
         </div>
-        <div class="contrib-name">${nameHtml}</div>
-        <div class="contrib-role">${c.role}</div>
-        ${expHtml}
-        ${tagsHtml}
+        <div class="cp-fullrow-info">
+          ${joinedTag}
+          <div class="contrib-name">${c.name}</div>
+          <div class="contrib-role">${c.role}</div>
+          ${expHtml}
+          ${tagsHtml}
+        </div>
       </div>`;
     }).join('');
   }
