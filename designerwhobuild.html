@@ -263,7 +263,19 @@
     if (p.id && postCats.length) _postCatsCache[p.id] = postCats;
     const rolesPill = roles.length ? `<div class="pv-dna-pill" style="cursor:pointer;white-space:nowrap;flex-shrink:0;" onclick="openPostRolesSheet('${p.id}')"><span style="color:#8492A6;font-weight:500;">Roles:</span> ${roles[0]}${roles.length > 1 ? ` <span style="color:#8492A6;">(+${roles.length - 1})</span>` : ''} <svg width="10" height="7" viewBox="0 0 12 8" fill="none" style="display:inline-block;vertical-align:middle;margin-left:2px"><path d="M1 1L6 6.5L11 1" stroke="#454C5F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>` : '';
     const catsPill = postCats.length ? `<div class="pv-dna-pill" style="cursor:pointer;white-space:nowrap;flex-shrink:0;" onclick="openPostCategoriesSheet('${p.id}')"><span style="color:#8492A6;font-weight:500;">Category:</span> ${postCats[0]}${postCats.length > 1 ? ` <span style="color:#8492A6;">(+${postCats.length - 1})</span>` : ''} <svg width="10" height="7" viewBox="0 0 12 8" fill="none" style="display:inline-block;vertical-align:middle;margin-left:2px"><path d="M1 1L6 6.5L11 1" stroke="#454C5F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>` : '';
-    const tagBlock = `<div style="padding:0 16px 12px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;">${statusTag}${p.category?`<span class="post-tag post-tag-type" style="white-space:nowrap;flex-shrink:0;">${p.category}</span>`:''}${builtInPill}${toolsHtml}${rolesPill}${catsPill}</div>`;
+    const _catTag = p.category ? `<span class="post-tag post-tag-type" style="white-space:nowrap;flex-shrink:0;">${p.category}</span>` : '';
+    const _row1Pills = [statusTag, _catTag, builtInPill, toolsHtml].filter(Boolean);
+    const _row2Pills = [rolesPill, catsPill].filter(Boolean);
+    const _totalCount = _row1Pills.length + _row2Pills.length;
+    let tagBlock;
+    if (_totalCount <= 3 || _row2Pills.length === 0) {
+      tagBlock = `<div style="overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding-bottom:12px;"><div style="display:flex;gap:8px;align-items:center;width:max-content;padding:0 16px;">${[..._row1Pills,..._row2Pills].join('')}</div></div>`;
+    } else {
+      tagBlock = `<div style="display:flex;flex-direction:column;gap:8px;padding-bottom:12px;">
+        <div style="overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;"><div style="display:flex;gap:8px;align-items:center;width:max-content;padding:0 16px;">${_row1Pills.join('')}</div></div>
+        <div style="overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;"><div style="display:flex;gap:8px;align-items:center;width:max-content;padding:0 16px;">${_row2Pills.join('')}</div></div>
+      </div>`;
+    }
 
     // Media
     const mu = p.media_urls || [];
@@ -5727,10 +5739,10 @@ Download now for free : pasteryapp.xyz</div>
           <div class="project-card" style="width:100%;box-sizing:border-box;margin-bottom:10px;">
             <div class="card-top-row">
               <div class="card-thumb-wrap">
-                <img src="${p.thumbnail_url || ''}" style="width:64px;height:64px;border-radius:14px;object-fit:cover;display:block;" alt="" onerror="_onAvatarErr(this)">
+                <img src="${p.thumbnail_url || (p.media_urls && p.media_urls[0]) || _categoryIcon(p.category)}" style="width:64px;height:64px;border-radius:14px;object-fit:cover;display:block;" alt="">
               </div>
               <div class="card-info">
-                <div class="card-name-row"><span class="card-app-name">${p.title || ''}</span></div>
+                <div class="card-name-row"><span class="card-app-name">${p.app_name || p.title || ''}</span></div>
                 <div class="card-desc" style="-webkit-line-clamp:3;display:-webkit-box;-webkit-box-orient:vertical;overflow:hidden;">${p.description || ''}</div>
                 <div class="card-meta-row"><span class="card-platform">${p.category || ''}${p.created_at ? ' · ' + getTimeAgo(p.created_at) : ''}</span></div>
               </div>
@@ -5747,10 +5759,10 @@ Download now for free : pasteryapp.xyz</div>
           <div class="project-card" style="width:100%;box-sizing:border-box;margin-bottom:10px;">
             <div class="card-top-row">
               <div class="card-thumb-wrap">
-                <img src="${p.thumbnail_url || ''}" style="width:64px;height:64px;border-radius:14px;object-fit:cover;display:block;" alt="" onerror="_onAvatarErr(this)">
+                <img src="${p.thumbnail_url || (p.media_urls && p.media_urls[0]) || _categoryIcon(p.category)}" style="width:64px;height:64px;border-radius:14px;object-fit:cover;display:block;" alt="">
               </div>
               <div class="card-info">
-                <div class="card-name-row"><span class="card-app-name">${p.title || ''}</span></div>
+                <div class="card-name-row"><span class="card-app-name">${p.app_name || p.title || ''}</span></div>
                 <div class="card-desc" style="-webkit-line-clamp:3;display:-webkit-box;-webkit-box-orient:vertical;overflow:hidden;">${p.description || ''}</div>
                 <div class="card-meta-row"><span class="card-platform">${p.category || ''}${p.created_at ? ' · ' + getTimeAgo(p.created_at) : ''}</span></div>
               </div>
