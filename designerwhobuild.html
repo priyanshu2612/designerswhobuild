@@ -5697,17 +5697,24 @@ Download now for free : pasteryapp.xyz</div>
         </div>
       </div>`;
 
-    // Skills beyond design — fall back for Priyanshu if DB field empty
+    // Skills beyond design — hardcoded fallbacks per profile
     const isPriyanshu = profile.id === '11111111-0000-0000-0000-000000000001';
+    const isGowtham   = profile.id === '11111111-0000-0000-0000-000000000007';
     let skillsArr = (profile.skills_beyond_design && profile.skills_beyond_design.length)
       ? profile.skills_beyond_design
-      : (isPriyanshu ? ['AI', 'Product Growth', 'Prompt engineer', 'Front end Dev', 'Backend', 'Design systems', 'App publishing', 'iOS app'] : []);
+      : isPriyanshu ? ['AI', 'Product Growth', 'Prompt engineer', 'Front end Dev', 'Backend', 'Design systems', 'App publishing', 'iOS app']
+      : isGowtham   ? ['Prototyping', 'Motion design', 'iOS dev', 'Design systems', 'User research', 'App publishing', 'Swift UI', 'Interaction design']
+      : [];
     let devToolsArr = (profile.dev_tools && profile.dev_tools.length)
       ? profile.dev_tools
-      : (isPriyanshu ? ['HTML / CSS', 'Xcode', 'GitHub', 'Swift', 'JavaScript'] : []);
+      : isPriyanshu ? ['HTML / CSS', 'Xcode', 'GitHub', 'Swift', 'JavaScript']
+      : isGowtham   ? ['Swift', 'SwiftUI', 'Xcode', 'GitHub', 'TestFlight']
+      : [];
     let aiToolsArr = (profile.ai_tools && profile.ai_tools.length)
       ? profile.ai_tools
-      : (isPriyanshu ? ['ChatGPT', 'Claude Code', 'Cursor', 'Figma AI', 'Gemini', 'Google AI'] : []);
+      : isPriyanshu ? ['ChatGPT', 'Claude Code', 'Cursor', 'Figma AI', 'Gemini', 'Google AI']
+      : isGowtham   ? ['Claude Code', 'ChatGPT', 'Figma AI', 'Cursor', 'Midjourney']
+      : [];
 
     // Build stats from actual posts
     const total = posts.length;
