@@ -1855,26 +1855,28 @@
     box-sizing: border-box;
   }
   .cp-joined-tag {
-    display: inline-block;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
     background: rgba(255,255,255,0.9);
-    border-radius: 6px;
-    padding: 4px 10px;
+    border-radius: 0 0 8px 8px;
+    padding: 4px 14px;
     font-size: 11px;
     font-weight: 500;
     color: #596378;
     white-space: nowrap;
     font-family: 'Outfit', sans-serif;
     letter-spacing: 0.2px;
-    margin-bottom: 6px;
   }
   /* Full-width horizontal card (Top 10, Just Joined, Community) */
   .contrib-page-cards .cp-top10-card,
   .contrib-page-cards .cp-fullrow-card {
     grid-column: span 2;
     flex-direction: row;
-    align-items: flex-start;
+    align-items: center;
     gap: 36px;
-    padding: 16px 16px 10px;
+    padding: 24px 16px 16px;
     min-height: 124px;
   }
   .cp-top10-card .contrib-av-wrap,
@@ -1883,6 +1885,7 @@
     flex-shrink: 0;
     padding-left: 12px;
     width: 72px;
+    align-self: center;
   }
   .cp-top10-info,
   .cp-fullrow-info {
@@ -3385,7 +3388,7 @@
             <div class="sticker-count"><span class="sticker-num">09</span><span class="sticker-lbl">BUILDS</span></div>
           </div>
         </div>
-        <div class="contrib-name">Priya Menon</div>
+        <div class="contrib-name">Manan Kumar</div>
         <div class="contrib-role">UX Designer · Razorpay</div>
         <div class="contrib-exp">3 yrs exp</div>
         <div class="contrib-tags">
@@ -5208,7 +5211,7 @@ Download now for free : pasteryapp.xyz</div>
   // joinedDays: lower = more recent. hasPosts: whether they've uploaded anything.
   const contribPageData = [
     { rank:1,  rankColor:'#FF8140', avatar:'https://ik.imagekit.io/424h6me27c/1720635179303.jpeg', name:'Priyanshu Barnwal', role:'Product Designer · Zomato',          total:'12', live:'07', tags:['4 Apps','1 Game','1 Interaction'],  id:1, joinedDays:150, joined:'5 months ago', exp:6,  hasPosts:true  },
-    { rank:2,  rankColor:'#EFB351', avatar:'https://ik.imagekit.io/424h6me27c/1774526753952.jpeg', name:'Priya Menon',      role:'UX Designer · Razorpay',              total:'09', live:'04', tags:['3 Apps','2 Web','1 macOS'],           id:2, joinedDays:120, joined:'4 months ago', exp:4,  hasPosts:true  },
+    { rank:2,  rankColor:'#EFB351', avatar:'https://ik.imagekit.io/424h6me27c/1774526753952.jpeg', name:'Manan Kumar',      role:'UX Designer · Razorpay',              total:'09', live:'04', tags:['3 Apps','2 Web','1 macOS'],           id:2, joinedDays:120, joined:'4 months ago', exp:4,  hasPosts:true  },
     { rank:3,  rankColor:'#596378', avatar:'https://ik.imagekit.io/424h6me27c/1758728645137.jpeg', name:'Arjun Sethi',      role:'Interaction Designer · CRED',         total:'15', live:'05', tags:['5 Apps','2 Web'],                    id:3, joinedDays:90,  joined:'3 months ago', exp:7,  hasPosts:true  },
     { rank:4,  rankColor:'#293142', avatar:'https://ik.imagekit.io/424h6me27c/1669709292471.jpeg', name:'Neha Kapoor',      role:'Visual Designer · Flipkart',          total:'08', live:'03', tags:['2 Apps','1 macOS'],                  id:4, joinedDays:60,  joined:'2 months ago', exp:3,  hasPosts:true  },
     { rank:5,  rankColor:'#293142', avatar:'https://ik.imagekit.io/424h6me27c/1746609724722.jpeg', name:'Rohan Verma',      role:'Product Designer · Swiggy',           total:'11', live:'06', tags:['4 Apps','1 Web'],                    id:5, joinedDays:45,  joined:'45 days ago',  exp:5,  hasPosts:true  },
