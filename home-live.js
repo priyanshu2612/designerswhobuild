@@ -147,10 +147,17 @@
     const cnt = t => (p.reactions || []).filter(r => r.type === t).length;
     let tools = [];
     try { tools = Array.isArray(p.tools_used) ? p.tools_used : JSON.parse(p.tools_used || '[]'); } catch (e) {}
-    tools = tools.map(t => typeof t === 'string' ? { name: t, icon_url: (typeof _getToolIcon === 'function' ? _getToolIcon(t) : null) } : t);
+    tools = tools.map(t => {
+      const name = typeof t === 'string' ? t : (t.name || '');
+      const icon = typeof t === 'string' ? (typeof _getToolIcon === 'function' ? _getToolIcon(t) : null) : (t.icon_url || t.img);
+      return { name, img: icon || _AVATAR_FB };
+    });
+    const imgs = (p.media_urls || []).filter(Boolean);
     _postDetailData[n.id] = {
       key: n.id, title: n.name, desc: p.description || n.title,
-      status: n.status, category: p.category || '', img: n.image || iconFor(n),
+      status: n.status, category: p.category || '',
+      video: n.video, images: imgs, hasMedia: n.hasMedia,
+      img: imgs[0] || p.thumbnail_url || iconFor(n),
       liveUrl: p.live_url || null,
       rxn: { tm: cnt('teach_me'), tb: cnt('buy_this'), tu: cnt('use_this'), comments: n.cm },
       tools, roles: Array.isArray(p.roles) ? p.roles : [], categories: n.postCats,
@@ -181,6 +188,8 @@
       seen.add(n.profile.id); pick.push(n);
       if (pick.length === 6) break;
     }
+    // Ashley Green always goes last in the carousel (owner's request)
+    pick.sort((a, b) => (a.author === 'Ashley Green') - (b.author === 'Ashley Green'));
     el.innerHTML = pick.map((n, i) => heroCard(n, 'botd-card', i)).join('');
     el.querySelectorAll('video.hmiss-video').forEach(v => { try { hmissObserver.observe(v); } catch (e) {} });
     if (typeof _updateBotdHero === 'function') _updateBotdHero();

@@ -6357,9 +6357,23 @@ Download now for free : pasteryapp.xyz</div>
         </div>`;
     }
 
+    // Hero = the post's media (video → image strip → single image); placeholder icon only when there is no media
+    let heroHtml;
+    if (data.video) {
+      heroHtml = `<video class="pd-hero-video" src="${data.video}" controls autoplay muted loop playsinline preload="metadata" style="aspect-ratio:auto;height:auto;max-height:75vh;object-fit:contain;background:#000;"></video>`;
+    } else if (data.images && data.images.length > 1) {
+      heroHtml = `<div style="display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch;">${data.images.map(src => `<img src="${src}" alt="${data.title}" style="flex:0 0 100%;width:100%;max-height:75vh;object-fit:contain;scroll-snap-align:start;background:#10192D;display:block;">`).join('')}</div>`;
+    } else if (data.hasMedia === false) {
+      heroHtml = `<img class="pd-hero-img" src="${data.img}" alt="${data.title}" style="object-fit:contain;padding:36px;background:#EEF2FF;box-sizing:border-box;">`;
+    } else if (data.hasMedia) {
+      heroHtml = `<img src="${data.img}" alt="${data.title}" style="width:100%;max-height:75vh;object-fit:contain;background:#10192D;display:block;">`;
+    } else {
+      heroHtml = `<img class="pd-hero-img" src="${data.img}" alt="${data.title}">`;
+    }
+
     el.innerHTML = `
       <div class="pd-hero">
-        <img class="pd-hero-img" src="${data.img}" alt="${data.title}">
+        ${heroHtml}
       </div>
       ${tagsContainerHtml}
       <div class="pd-body">
@@ -6831,6 +6845,6 @@ Download now for free : pasteryapp.xyz</div>
     initAuth();
   });
 </script>
-<script src="home-live.js?v=2"></script>
+<script src="home-live.js?v=3"></script>
 </body>
 </html>
