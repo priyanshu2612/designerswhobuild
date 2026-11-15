@@ -92,7 +92,7 @@
     return `<div class="${cls}" onclick="openPostDetail('${n.id}')" style="${style}">
       ${media}${blurs}
       <div class="hmiss-overlay"${ov}>
-        <div class="hmiss-meta-label"><span>${esc(n.meta)}</span><span class="hmiss-meta-fire">${n.hot === 'New' ? '✨ New' : '🔥 ' + n.hot}</span></div>
+        <div class="hmiss-meta-label"><span>${esc(n.meta)}</span><span class="hmiss-meta-fire">${n.hot === 'New' ? '' : '🔥 ' + n.hot}</span></div>
         <div class="hmiss-title">${esc(n.title)}</div>
         <div class="hmiss-author-row" onclick="event.stopPropagation();viewProfile('${n.profile.id}')">
           <div class="hmiss-author-avatar">${avatarImg(n)}</div>
@@ -122,7 +122,7 @@
           <div class="card-desc">${esc(n.tagline)}</div>
           <div class="card-meta-row">
             <span class="card-platform">${esc(n.meta)}</span>
-            <span class="card-time">🔥 <span class="hot-count">${n.hot}</span></span>
+            <span class="card-time">🔥 <span class="hot-count">${n.hot === 'New' ? '' : n.hot}</span></span>
           </div>
         </div>
       </div>
@@ -136,7 +136,7 @@
     return {
       key: n.id, rank, rankColor: rank === 1 ? '#FF8140' : rank === 2 ? '#EFB351' : rank === 3 ? '#596378' : '#293142',
       img: hasRealIcon(n) ? n.raw.thumbnail_url : iconFor(n),
-      name: n.name, status: n.status, desc: n.tagline, meta: n.meta, hot: n.hot === 'New' ? 'New' : n.hot,
+      name: n.name, status: n.status, desc: n.tagline, meta: n.meta, hot: n.hot === 'New' ? '' : n.hot,
       author: n.author, role: n.role, previewImg: n.image, liveUrl: n.raw.live_url || '#',
     };
   }
@@ -196,27 +196,53 @@
   }
 
   const SELFCARE = /mood|journal|calm|breath|mindful|meditat|wellness|habit|self[- ]?track|pomodoro|sleep|health|remind|focus|timer/i;
+  let _helpN = {};
   function buildHelpful(all) {
     const used = new Set();
     const tabs = ['utility', 'fun', 'productivity', 'self-care'];
-    tabs.forEach(t => { helpfulData[t] = []; });
+    tabs.forEach(t => { _helpN[t] = []; });
     const by = t => all.filter(n => t === 'self-care'
       ? (n.tags.includes(t) || SELFCARE.test(n.title + ' ' + (n.raw.description || '').slice(0, 300)))
       : n.tags.includes(t));
-    tabs.forEach(t => { by(t).slice(0, 4).forEach(n => { helpfulData[t].push(n); used.add(n.id); }); });
+    tabs.forEach(t => { by(t).slice(0, 6).forEach(n => { _helpN[t].push(n); used.add(n.id); }); });
     // top up every tab to 3 with best posts not yet shown anywhere, then any
     tabs.forEach(t => {
       const pool = [...all.filter(n => !used.has(n.id)), ...all.filter(n => used.has(n.id))];
       for (const n of pool) {
-        if (helpfulData[t].length >= 3) break;
-        if (!helpfulData[t].includes(n)) { helpfulData[t].push(n); used.add(n.id); }
+        if (_helpN[t].length >= 3) break;
+        if (!_helpN[t].includes(n)) { _helpN[t].push(n); used.add(n.id); }
       }
     });
-    tabs.forEach(t => { helpfulData[t] = helpfulData[t].map(n => legacyObj(n, 0)); });
     const active = document.querySelector('.helpful-tab.active');
     const m = active && /setHelpfulTab\('([^']+)'/.exec(active.getAttribute('onclick') || '');
     renderHelpfulCards(m ? m[1] : 'utility');
   }
+
+  // Carousel hero scaling (same behaviour as Builds of the day)
+  function updateHero(s) {
+    const cx = s.scrollLeft + s.clientWidth / 2;
+    let hero = null, min = Infinity;
+    const cards = s.querySelectorAll('.botd-card');
+    cards.forEach(c => { const d = Math.abs(c.offsetLeft + c.offsetWidth / 2 - cx); if (d < min) { min = d; hero = c; } });
+    cards.forEach(c => {
+      const h = c === hero; c.classList.toggle('botd-hero', h);
+      const v = c.querySelector('video.hmiss-video');
+      if (v) { h ? v.play().catch(() => {}) : v.pause(); }
+    });
+  }
+  // Replaces the old vertical list: Thoughtfully built is now a card carousel
+  window.renderHelpfulCards = function (tab) {
+    const el = document.getElementById('helpfulCards');
+    if (!el) return;
+    const list = _helpN[tab] || [];
+    el.className = 'botd-scroll helpful-carousel';
+    el.style.cssText = 'padding:0;gap:1px;';
+    el.scrollLeft = 0;
+    el.innerHTML = list.map((n, i) => heroCard(n, 'botd-card', i)).join('');
+    el.querySelectorAll('video.hmiss-video').forEach(v => { try { hmissObserver.observe(v); } catch (e) {} });
+    if (!el._heroBound) { el.addEventListener('scroll', () => updateHero(el), { passive: true }); el._heroBound = true; }
+    updateHero(el);
+  };
 
   function buildVibes(all) {
     const day = new Date().toISOString().slice(0, 10);
@@ -318,17 +344,75 @@
   function buildCommunityFeed(posts) {
     const sec = document.querySelector('.nebuild-section');
     if (!sec) return;
+    const h = sec.querySelector('.h-black');
+    if (h) h.textContent = 'All posts from the community';
     const old = sec.querySelectorAll('.post-card');
     if (!old.length) return;
     const holder = document.createElement('div');
     holder.id = 'homeLiveFeed';
     old[0].parentNode.insertBefore(holder, old[0]);
     old.forEach(c => c.remove());
-    const newest = [...posts].sort((a, b) => new Date(b.created_at) - new Date(a.created_at)).slice(0, 4);
-    holder.innerHTML = newest.map(renderFullPostCard).join('');
-    holder.querySelectorAll('.post-video').forEach(v => { try { _observeVideo(v); } catch (e) {} });
-    holder.querySelectorAll('.post-desc-container').forEach(c => { try { _initReadMore(c); } catch (e) {} });
+    const list = [...posts].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+    const STEP = 5;
+    let shown = 0;
+    const more = document.createElement('div');
+    more.style.cssText = 'padding:8px 16px 24px;text-align:center;';
+    more.innerHTML = '<button type="button" style="width:100%;height:44px;border:1.5px solid #3169ED;border-radius:10px;background:#fff;color:#3169ED;font-family:Outfit,sans-serif;font-size:15px;font-weight:600;cursor:pointer;">Show more posts</button>';
+    holder.after(more);
+    function renderMore() {
+      const chunk = list.slice(shown, shown + STEP);
+      const box = document.createElement('div');
+      box.innerHTML = chunk.map(renderFullPostCard).join('');
+      box.querySelectorAll('.post-video').forEach(v => { try { _observeVideo(v); } catch (e) {} });
+      box.querySelectorAll('.post-desc-container').forEach(c => { try { _initReadMore(c); } catch (e) {} });
+      holder.append(...box.childNodes);
+      shown += chunk.length;
+      if (shown >= list.length) more.remove();
+    }
+    more.querySelector('button').addEventListener('click', renderMore);
+    renderMore();
   }
+
+  // ── Tag pills: one scrollable row; wrap to a 2nd row only if 2+ pills are cut off ──
+  function flowTags() {
+    document.querySelectorAll('.tag-flow:not([data-flowed])').forEach(f => {
+      const row = f.querySelector('.tag-flow-row');
+      if (!row || !row.clientWidth) return;       // hidden tab — try again later
+      f.setAttribute('data-flowed', '1');
+      const inner = row.firstElementChild;
+      const left = row.getBoundingClientRect().left, W = row.clientWidth;
+      const pills = [...inner.children];
+      const idx = pills.findIndex(p => p.getBoundingClientRect().right - left > W + 1);
+      const over = idx === -1 ? [] : pills.slice(idx);
+      if (over.length < 2) return;                // 0–1 clipped → keep single row
+      const row2 = row.cloneNode(false), inner2 = inner.cloneNode(false);
+      row2.style.marginTop = '8px';
+      row2.appendChild(inner2); over.forEach(p => inner2.appendChild(p));
+      row.after(row2);
+    });
+  }
+  function resetFlow() {
+    document.querySelectorAll('.tag-flow[data-flowed]').forEach(f => {
+      const rows = f.querySelectorAll('.tag-flow-row');
+      if (rows.length > 1) { for (let i = 1; i < rows.length; i++) { [...rows[i].firstElementChild.children].forEach(p => rows[0].firstElementChild.appendChild(p)); rows[i].remove(); } }
+      f.removeAttribute('data-flowed');
+    });
+    flowTags();
+  }
+  let _raf = 0;
+  const schedule = () => { cancelAnimationFrame(_raf); _raf = requestAnimationFrame(flowTags); };
+  new MutationObserver(schedule).observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['class'] });
+  window.addEventListener('resize', () => { clearTimeout(window._flowT); window._flowT = setTimeout(resetFlow, 150); });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(resetFlow);
+
+  // ── Small style additions ──
+  const st = document.createElement('style');
+  st.textContent = `
+    .post-source { color:#A9B0BE; display:inline-flex; align-items:center; gap:4px; font-size:13px; vertical-align:baseline; }
+    .post-source svg { flex-shrink:0; position:relative; top:1px; }
+    .card-time:has(.hot-count:empty) { display:none; }
+    .helpful-carousel { margin-top:4px; }`;
+  document.head.appendChild(st);
 
   // ───────────────────────── boot ─────────────────────────
   async function run() {

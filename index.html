@@ -267,16 +267,8 @@
     const _catTag = p.category ? `<span class="post-tag post-tag-type" style="white-space:nowrap;flex-shrink:0;">${p.category}</span>` : '';
     const _row1Pills = [statusTag, _catTag, builtInPill, toolsHtml].filter(Boolean);
     const _row2Pills = [rolesPill, catsPill].filter(Boolean);
-    const _totalCount = _row1Pills.length + _row2Pills.length;
-    let tagBlock;
-    if (_totalCount <= 3 || _row2Pills.length === 0) {
-      tagBlock = `<div style="overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding-bottom:12px;"><div style="display:flex;gap:8px;align-items:center;width:max-content;padding:0 16px;">${[..._row1Pills,..._row2Pills].join('')}</div></div>`;
-    } else {
-      tagBlock = `<div style="display:flex;flex-direction:column;gap:8px;padding-bottom:12px;">
-        <div style="overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;"><div style="display:flex;gap:8px;align-items:center;width:max-content;padding:0 16px;">${_row1Pills.join('')}</div></div>
-        <div style="overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;"><div style="display:flex;gap:8px;align-items:center;width:max-content;padding:0 16px;">${_row2Pills.join('')}</div></div>
-      </div>`;
-    }
+    // One flowing pill row; overflow wraps to a 2nd row only when 2+ pills don't fit (see _flowTags)
+    const tagBlock = `<div class="tag-flow" style="padding-bottom:12px;"><div class="tag-flow-row" style="overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;"><div style="display:flex;gap:8px;align-items:center;width:max-content;padding:0 16px;">${[..._row1Pills, ..._row2Pills].join('')}</div></div></div>`;
 
     // Media
     const mu = p.media_urls || [];
@@ -334,7 +326,7 @@
         <div class="post-meta">
           <div class="post-name">${pr.name||''}</div>
           <div class="post-role">${pr.role||''}${pr.company?' · '+pr.company:''}${pr.experience_years?' · '+pr.experience_years+'yr exp':''}</div>
-          <div class="post-subtext">${timeAgo}${p.source?' · '+p.source:''}</div>
+          <div class="post-subtext">${timeAgo}${p.source?' · <span class="post-source"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9S14.5 18.4 12 21c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/></svg>Sourced from '+p.source+'</span>':''}</div>
         </div>
       </div>
       <div class="post-content">
@@ -6337,7 +6329,6 @@ Download now for free : pasteryapp.xyz</div>
             <div class="post-tech-icons">${data.tools.slice(0,3).map(t => `<div class="post-tech-dot"><img src="${t.img}" alt="${t.name}"></div>`).join('')}</div>
             ${data.tools.length} tools used <svg width="12" height="8" viewBox="0 0 12 8" fill="none" style="display:inline-block;vertical-align:middle;margin-left:2px"><path d="M1 1L6 6.5L11 1" stroke="#454C5F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </div>` : '';
-      const row1 = `<div style="display:flex;gap:8px;align-items:center;">${statusTag}${categoryTag}${builtInPill}${toolsPill}</div>`;
 
       let row2 = '';
       if ((data.roles && data.roles.length) || (data.categories && data.categories.length)) {
@@ -6345,14 +6336,13 @@ Download now for free : pasteryapp.xyz</div>
           ? `<div class="pv-dna-pill" style="white-space:nowrap;flex-shrink:0;"><span style="color:#8492A6;font-weight:500;">Roles:</span> ${data.roles[0]}${data.roles.length > 1 ? ` <span style="color:#8492A6;">(+${data.roles.length - 1})</span>` : ''}</div>` : '';
         const catsPill = data.categories && data.categories.length
           ? `<div class="pv-dna-pill" style="white-space:nowrap;flex-shrink:0;"><span style="color:#8492A6;font-weight:500;">Category:</span> ${data.categories[0]}${data.categories.length > 1 ? ` <span style="color:#8492A6;">(+${data.categories.length - 1})</span>` : ''}</div>` : '';
-        row2 = `<div style="display:flex;gap:8px;align-items:center;">${rolesPill}${catsPill}</div>`;
+        row2 = `${rolesPill}${catsPill}`;
       }
 
       tagsContainerHtml = `
-        <div style="overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding:12px 0 4px;">
-          <div style="display:flex;flex-direction:column;gap:8px;width:max-content;padding:0 16px;">
-            ${row1}
-            ${row2}
+        <div class="tag-flow" style="padding:12px 0 4px;">
+          <div class="tag-flow-row" style="overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;">
+            <div style="display:flex;gap:8px;align-items:center;width:max-content;padding:0 16px;">${statusTag}${categoryTag}${builtInPill}${toolsPill}${row2}</div>
           </div>
         </div>`;
     }
@@ -6845,6 +6835,6 @@ Download now for free : pasteryapp.xyz</div>
     initAuth();
   });
 </script>
-<script src="home-live.js?v=3"></script>
+<script src="home-live.js?v=4"></script>
 </body>
 </html>
