@@ -5,7 +5,7 @@
    • Quality gate ...... title ≥ 15 chars (drops "Test test", "Yes").
    • Score ............. reactions×3 + comments×4 + media(4) + live(2)
                          + live link(1) + recency boost (10·e^(-age/30d)).
-   • Builds of the day . top 3 scored posts that have media, one per author.
+   • Builds of the day . top 6 scored VIDEO posts, one per author.
    • Thoughtfully built  by helpful_tags; gaps are filled by keyword match
                          (self-care) and then by best remaining posts.
    • What's your vibe? . Freshly baked = newest · Surprise me = daily
@@ -176,10 +176,10 @@
     const el = document.querySelector('.botd-scroll');
     if (!el) return;
     const seen = new Set(), pick = [];
-    for (const n of all.filter(x => x.hasMedia)) {
+    for (const n of all.filter(x => x.video)) {
       if (seen.has(n.profile.id)) continue;
       seen.add(n.profile.id); pick.push(n);
-      if (pick.length === 3) break;
+      if (pick.length === 6) break;
     }
     el.innerHTML = pick.map((n, i) => heroCard(n, 'botd-card', i)).join('');
     el.querySelectorAll('video.hmiss-video').forEach(v => { try { hmissObserver.observe(v); } catch (e) {} });
