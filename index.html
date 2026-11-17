@@ -4350,7 +4350,7 @@ Download now for free : pasteryapp.xyz</div>
     const typeMap = {'Teach me':'teach_me',"I'd buy this":'buy_this',"I'd use this":'use_this'};
     const label = el.querySelector('.reaction-label')?.textContent.trim();
     const type  = typeMap[label];
-    const postId = el.closest('.post-card')?.dataset?.postId;
+    const postId = el.closest('[data-post-id]')?.dataset?.postId;
     const current = parseInt(badge.dataset.count);
     if (el.classList.contains('selected')) {
       el.classList.remove('selected');
@@ -6251,7 +6251,10 @@ Download now for free : pasteryapp.xyz</div>
     const rxn = data.rxn || { tm: 0, tb: 0, tu: 0, comments: 0 };
     const ccBadge = rxn.comments > 0
       ? `<span class="reaction-count-badge" data-count="${rxn.comments}">+${rxn.comments}</span>` : '';
+    // Only real (database) posts can be reacted to / commented on
+    const isDbPost = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(data.key || '');
     const reactionsHtml = `
+      <div id="pdReactions" ${isDbPost ? `data-post-id="${data.key}"` : ''}>
       <div style="height:1px;background:#F2F4F7;margin:0 16px;"></div>
       <div class="post-reactions" style="padding:10px 16px 16px;border-top:none;">
         <div class="reaction-item" onclick="toggleReaction(this)">
@@ -6267,10 +6270,11 @@ Download now for free : pasteryapp.xyz</div>
           <div class="reaction-label">I'd use this</div>
         </div>
         <div class="post-react-vdivider"></div>
-        <div class="comment-reaction">
+        <div class="comment-reaction" ${isDbPost ? `onclick="openComments('${data.key}')" style="cursor:pointer;"` : ''}>
           <div class="reaction-emoji-wrap" style="font-size:0"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M4 4h14a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H7l-4 3V5a1 1 0 0 1 1-1z" stroke="#293142" stroke-width="1.4" stroke-linejoin="round"/></svg>${ccBadge}</div>
           <div class="reaction-label">Comment</div>
         </div>
+      </div>
       </div>`;
 
     // Journey section (only if data.journey exists)
@@ -6370,6 +6374,18 @@ Download now for free : pasteryapp.xyz</div>
       </div>
       <div style="height:1px;background:#F2F4F7;margin:0 16px;"></div>
       ${journeyHtml}`;
+
+    // Show which reactions this signed-in user already gave
+    if (isDbPost && currentProfile) {
+      sb.from('reactions').select('type').eq('post_id', data.key).eq('profile_id', currentProfile.id).then(({ data: mine }) => {
+        const label = { teach_me: 'Teach me', buy_this: "I'd buy this", use_this: "I'd use this" };
+        (mine || []).forEach(r => {
+          el.querySelectorAll('#pdReactions .reaction-item').forEach(item => {
+            if (item.querySelector('.reaction-label')?.textContent.trim() === label[r.type]) item.classList.add('selected');
+          });
+        });
+      });
+    }
   }
 
   // ── Notification System ──────────────────────────
@@ -6822,6 +6838,6 @@ Download now for free : pasteryapp.xyz</div>
     initAuth();
   });
 </script>
-<script src="home-live.js?v=14"></script>
+<script src="home-live.js?v=15"></script>
 </body>
 </html>
