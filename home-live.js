@@ -444,7 +444,7 @@
       -webkit-text-stroke:7px #fff; paint-order:stroke fill; text-shadow:0 2px 8px rgba(0,0,0,.18); pointer-events:none; }
     .trend-note { margin:4px 16px 14px; padding:10px 12px; border-radius:12px; background:#F3F6FC; color:#6B7790; font:500 13px/1.4 'Outfit',sans-serif; display:flex; gap:8px; align-items:flex-start; }
     .trend-note b { color:#293142; font-weight:600; }
-    .trend-note-ic { color:#3169ED; font-size:14px; line-height:1.3; }
+    .trend-note-ic { color:#3169ED; flex-shrink:0; margin-top:1px; }
     /* long names no longer spill out of list cards */
     .project-card .card-info { min-width:0; flex:1; }
     .project-card .card-name-row { min-width:0; }
