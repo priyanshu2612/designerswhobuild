@@ -185,16 +185,45 @@
     return [...list.filter(n => f(n) !== LAST_AUTHOR), ...list.filter(n => f(n) === LAST_AUTHOR)];
   };
 
+  // ── Variety engine ──
+  // Every section picks its posts through this, so featured slots spread across many creators and
+  // build types instead of the top scorers appearing everywhere. Rules:
+  //  • one post per creator within a section
+  //  • creators already featured in an earlier section are pushed down (EXP)
+  //  • a category already used in this section is pushed down
+  //  • a small daily-seeded jitter rotates who gets spotlight, so everyone gets a turn over time
+  const EXP = {};
+  let RANK = new Map();
+  const DAYKEY = new Date().toISOString().slice(0, 10);
+  function pickDiverse(pool, n, opt) {
+    opt = opt || {};
+    const expw = opt.expw == null ? 9 : opt.expw;
+    const have = opt.have || new Set();
+    const cats = {}, out = [];
+    let rest = pool.slice();
+    while (out.length < n && rest.length) {
+      let best = null, bs = Infinity;
+      for (const c of rest) {
+        const aid = c.profile.id;
+        if (have.has(aid)) continue;
+        const jit = seeded(DAYKEY + c.id)() * 7;
+        const s = (RANK.get(c.id) || 0) + expw * (EXP[aid] || 0) + 3 * (cats[c.category] || 0) + jit + (c.author === LAST_AUTHOR ? 100 : 0);
+        if (s < bs) { bs = s; best = c; }
+      }
+      if (!best) break;
+      out.push(best); have.add(best.profile.id);
+      cats[best.category] = (cats[best.category] || 0) + 1;
+      EXP[best.profile.id] = (EXP[best.profile.id] || 0) + 1;
+      rest = rest.filter(x => x !== best);
+    }
+    return out;
+  }
+
   // ───────────────────────── sections ─────────────────────────
   function buildBotd(all) {
     const el = document.querySelector('.botd-scroll');
     if (!el) return;
-    const seen = new Set(), pick = [];
-    for (const n of all.filter(x => x.video)) {
-      if (seen.has(n.profile.id)) continue;
-      seen.add(n.profile.id); pick.push(n);
-      if (pick.length === 6) break;
-    }
+    const pick = pickDiverse(all.filter(x => x.video), 6);
     // Ashley Green second-last, James Chughh last (owner's requests)
     const slot = n => n.author === LAST_AUTHOR ? 2 : n.author === 'Ashley Green' ? 1 : 0;
     pick.sort((a, b) => slot(a) - slot(b));
@@ -212,14 +241,15 @@
     const by = t => all.filter(n => t === 'self-care'
       ? (n.tags.includes(t) || SELFCARE.test(n.title + ' ' + (n.raw.description || '').slice(0, 300)))
       : n.tags.includes(t));
-    tabs.forEach(t => { by(t).slice(0, 6).forEach(n => { _helpN[t].push(n); used.add(n.id); }); });
-    // top up every tab to 3 with best posts not yet shown anywhere, then any
     tabs.forEach(t => {
-      const pool = [...all.filter(n => !used.has(n.id)), ...all.filter(n => used.has(n.id))];
-      for (const n of pool) {
-        if (_helpN[t].length >= 3) break;
-        if (!_helpN[t].includes(n)) { _helpN[t].push(n); used.add(n.id); }
+      const picked = pickDiverse(by(t), 6);
+      // top up every tab to at least 3 with posts from creators not already in this tab
+      if (picked.length < 3) {
+        const have = new Set(picked.map(n => n.profile.id));
+        const extra = pickDiverse(all.filter(n => !picked.includes(n)), 3 - picked.length, { have });
+        picked.push(...extra);
       }
+      _helpN[t] = picked;
     });
     const active = document.querySelector('.helpful-tab.active');
     const m = active && /setHelpfulTab\('([^']+)'/.exec(active.getAttribute('onclick') || '');
@@ -283,11 +313,16 @@
     web: n => /web|extension/i.test(n.category),
   };
   let _spotAll = [];
+  const _spotPick = {};
+  function buildSpotlightPicks(all) {
+    const have = new Set();
+    ['mobile', 'macos', 'web'].forEach(t => { _spotPick[t] = pickDiverse(all.filter(COMMUNITY[t]), 1, { have }); });
+  }
   function renderSpotlight(tab) {
     const row = document.querySelector('.hmiss-row');
     if (!row) return;
     // Spotlight shows ONE card: the top-scoring post in the chosen category
-    const list = _spotAll.filter(COMMUNITY[tab] || COMMUNITY.all).slice(0, 1);
+    const list = (_spotPick[tab] || _spotAll.filter(COMMUNITY[tab] || COMMUNITY.all)).slice(0, 1);
     row.innerHTML = list.length
       ? list.map((n, i) => heroCard(n, 'hmiss-card', i)).join('')
       : '<div style="padding:24px 16px;color:#8492A6;font-family:Outfit,sans-serif;">No builds here yet.</div>';
@@ -354,12 +389,13 @@
       if (list.length < 3) list = all;
       trendingData[k] = list.slice(0, 10).map((n, i) => legacyObj(n, i + 1));
     });
+    const trend = pickDiverse(all, 10, { expw: 4 });
     const grid = document.querySelector('.trending-grid');
     if (grid) {
       const rc = ['#FF8140', '#EFB351', '#596378'];
-      grid.innerHTML = all.slice(0, 6).map((n, i) => listCard(n, i + 1, rc[i] || '#293142')).join('');
+      grid.innerHTML = trend.slice(0, 6).map((n, i) => listCard(n, i + 1, rc[i] || '#293142')).join('');
     }
-    window._trendList = all.slice(0, 10);
+    window._trendList = trend;
     renderTrendPage();
   }
 
@@ -442,7 +478,7 @@
     .hmiss-scroll .hmiss-card { width:100%; }
     .trend-rank { position:absolute; left:14px; top:12px; z-index:3; font:900 38px/1 'Outfit',sans-serif; transform:rotate(-8deg);
       -webkit-text-stroke:7px #fff; paint-order:stroke fill; text-shadow:0 2px 8px rgba(0,0,0,.18); pointer-events:none; }
-    .trend-note { margin:4px 16px 14px; padding:10px 12px; border-radius:12px; background:#F3F6FC; color:#6B7790; font:500 13px/1.4 'Outfit',sans-serif; display:flex; flex-direction:column; gap:6px; align-items:center; text-align:center; }
+    .trend-note { margin:4px 16px 14px; padding:10px 12px; border-radius:12px; background:#F3F6FC; color:#6B7790; font:500 13px/1.4 'Outfit',sans-serif; display:flex; flex-direction:row; gap:10px; align-items:center; text-align:left; }
     .trend-note b { color:#293142; font-weight:600; }
     .trend-note-ic { color:#3169ED; flex-shrink:0; }
     /* long names no longer spill out of list cards */
@@ -538,9 +574,11 @@
       const all = demote(ranked);
       all.forEach(registerDetail);
       _spotAll = all;
-      buildBotd(ranked);
+      RANK = new Map(all.map((n, i) => [n.id, i]));
+      buildBotd(all);
       buildHelpful(all);
       buildVibes(all);
+      buildSpotlightPicks(all);
       renderSpotlight('mobile');
       buildContributors(all);
       buildTrending(all);
