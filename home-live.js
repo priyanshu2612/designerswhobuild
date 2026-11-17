@@ -530,4 +530,28 @@
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run);
   else run();
+
+  // ── Mobile autoplay safety net ──
+  // Some phones (iOS Low Power Mode, Data Saver, strict autoplay) refuse silent autoplay until the
+  // user touches the page. Force muted, and retry on the first touch / tap, plus when metadata loads.
+  function _kickVideos() {
+    const vh = window.innerHeight || 800;
+    document.querySelectorAll('video.hmiss-video, video.post-video').forEach(v => {
+      if (!v.paused) return;
+      const card = v.closest('.botd-card');
+      if (card && !card.classList.contains('botd-hero')) return;
+      const r = v.getBoundingClientRect();
+      if (!r.width || r.bottom < vh * 0.1 || r.top > vh * 0.9) return;
+      const rx = r.left + r.width / 2;
+      if (rx < 0 || rx > window.innerWidth) return;
+      try { v.defaultMuted = true; v.muted = !document.body.classList.contains('sound-on'); v.setAttribute('playsinline', ''); v.setAttribute('webkit-playsinline', ''); } catch (e) {}
+      const p = v.play();
+      if (p && p.catch) p.catch(() => { try { v.muted = true; v.play().catch(() => {}); } catch (e) {} });
+    });
+  }
+  ['touchstart', 'touchend', 'pointerdown', 'click', 'keydown'].forEach(ev =>
+    document.addEventListener(ev, () => setTimeout(_kickVideos, 0), { passive: true }));
+  window.addEventListener('scroll', (() => { let t; return () => { clearTimeout(t); t = setTimeout(_kickVideos, 250); }; })(), { passive: true });
+  setTimeout(_kickVideos, 1200); setTimeout(_kickVideos, 3000);
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) _kickVideos(); });
 })();
