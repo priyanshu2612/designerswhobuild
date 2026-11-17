@@ -236,7 +236,7 @@
     if (!el) return;
     const list = _helpN[tab] || [];
     el.className = 'botd-scroll helpful-carousel';
-    el.style.cssText = 'padding:0;gap:1px;';
+    el.style.cssText = '';   // inherit .botd-scroll padding (10% inset) like Must checkout builds
     el.scrollLeft = 0;
     el.innerHTML = list.map((n, i) => heroCard(n, 'botd-card', i)).join('');
     el.querySelectorAll('video.hmiss-video').forEach(v => { try { hmissObserver.observe(v); } catch (e) {} });
