@@ -436,6 +436,7 @@
     margin-top: -78px;
     text-align: center;
     overflow: hidden;
+    border-radius: 0 0 28px 28px;
   }
   .header-card:has(.hero-ctasection.hidden) .hero-bg-img {
     margin-top: -66px;
@@ -3065,40 +3066,6 @@
           <button class="btn-primary" onclick="openAuthModal()">Join now</button>
           <button class="btn-outline-hero">Share a build</button>
         </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Category tabs -->
-  <div class="tabs-wrap">
-    <div class="tabs">
-      <div class="tab active">
-        <img src="data:image/png;base64,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" width="28" height="28" alt="All projects" data-inactive-src="https://ik.imagekit.io/424h6me27c/qsasd.png">
-        <span class="tab-label">All projects</span>
-      </div>
-      <div class="tab">
-        <img src="https://ik.imagekit.io/424h6me27c/mobile%20apps.png" width="28" height="28" alt="Mobile apps" data-active-src="https://ik.imagekit.io/424h6me27c/Frame%202147207698-1.png?updatedAt=1777626888226" data-inactive-src="https://ik.imagekit.io/424h6me27c/mobile%20apps.png">
-        <span class="tab-label">Mobile apps</span>
-      </div>
-      <div class="tab">
-        <img src="https://ik.imagekit.io/424h6me27c/macos.png" width="28" height="28" alt="macOS" data-active-src="https://ik.imagekit.io/424h6me27c/Frame%202147207698-2.png?updatedAt=1777626888222" data-inactive-src="https://ik.imagekit.io/424h6me27c/macos.png">
-        <span class="tab-label">macOS</span>
-      </div>
-      <div class="tab">
-        <img src="https://ik.imagekit.io/424h6me27c/interactive.png" width="28" height="28" alt="Interactive" data-active-src="https://ik.imagekit.io/424h6me27c/Frame%202147207698-3.png?updatedAt=1777626888262" data-inactive-src="https://ik.imagekit.io/424h6me27c/interactive.png">
-        <span class="tab-label">Interactive</span>
-      </div>
-      <div class="tab">
-        <img src="https://ik.imagekit.io/424h6me27c/games.png" width="28" height="28" alt="Games" data-active-src="https://ik.imagekit.io/424h6me27c/fluent_games-32-filled.png?updatedAt=1777626887809" data-inactive-src="https://ik.imagekit.io/424h6me27c/games.png">
-        <span class="tab-label">Games</span>
-      </div>
-      <div class="tab">
-        <img src="https://ik.imagekit.io/424h6me27c/short%20videos.png" width="28" height="28" alt="Short Videos" data-active-src="https://ik.imagekit.io/424h6me27c/fluent_movies-and-tv-16-filled.png?updatedAt=1777626887962" data-inactive-src="https://ik.imagekit.io/424h6me27c/short%20videos.png">
-        <span class="tab-label">Short Videos</span>
-      </div>
-      <div class="tab">
-        <img src="https://ik.imagekit.io/424h6me27c/websites.png" width="28" height="28" alt="Websites">
-        <span class="tab-label">Websites</span>
       </div>
     </div>
   </div>
@@ -6836,6 +6803,6 @@ Download now for free : pasteryapp.xyz</div>
     initAuth();
   });
 </script>
-<script src="home-live.js?v=8"></script>
+<script src="home-live.js?v=9"></script>
 </body>
 </html>
