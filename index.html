@@ -5299,7 +5299,7 @@ Download now for free : pasteryapp.xyz</div>
 
       const sticker = c.hasPosts ? `<div class="contrib-sticker">
         <img src="https://ik.imagekit.io/424h6me27c/Frame%202147207780.png" alt="">
-        <div class="sticker-count"><span class="sticker-num">${c.total}</span><span class="sticker-lbl">BUILDS</span></div>
+        <div class="sticker-count"><span class="sticker-num">${c.total}</span><span class="sticker-lbl">${Number(c.total) === 1 ? 'BUILD' : 'BUILDS'}</span></div>
       </div>` : '';
 
       const expHtml = c.exp
@@ -5687,7 +5687,7 @@ Download now for free : pasteryapp.xyz</div>
     const catCounts = {};
     posts.forEach(p => { if (p.category) catCounts[p.category] = (catCounts[p.category] || 0) + 1; });
     const buildStats = [];
-    if (total > 0) buildStats.push({ count: total, label: 'Total builds', icon: _tabIcon(iconAllProjects) });
+    if (total > 0) buildStats.push({ count: total, label: total === 1 ? 'Total build' : 'Total builds', icon: _tabIcon(iconAllProjects) });
     Object.entries(catCounts).forEach(([cat, cnt]) => {
       const idx = _catIconIdx[cat] ?? 1;
       const img = tabImgs[idx] ? (tabImgs[idx].dataset.activeSrc || tabImgs[idx].src) : '';
@@ -5793,7 +5793,7 @@ Download now for free : pasteryapp.xyz</div>
             ${heroAvatarHtml}
             ${total > 0 ? `<div class="contrib-sticker" style="right:-16px;top:-10px;">
               <img src="https://ik.imagekit.io/424h6me27c/Frame%202147207780.png" alt="" style="width:54px;height:54px;display:block;">
-              <div class="sticker-count"><span class="sticker-num">${total}</span><span class="sticker-lbl">BUILDS</span></div>
+              <div class="sticker-count"><span class="sticker-num">${total}</span><span class="sticker-lbl">${Number(total) === 1 ? 'BUILD' : 'BUILDS'}</span></div>
             </div>` : ''}
           </div>
           <div style="flex:1;min-width:0;padding-top:20px;">
@@ -6801,6 +6801,6 @@ Download now for free : pasteryapp.xyz</div>
     initAuth();
   });
 </script>
-<script src="home-live.js?v=11"></script>
+<script src="home-live.js?v=12"></script>
 </body>
 </html>

@@ -263,7 +263,7 @@
         img.src = n.image && !n.video && n.raw.media_layout !== 'video' ? n.image : (n.raw.thumbnail_url || iconFor(n));
       });
       const c = card.querySelector('.vibe-count');
-      if (c) c.textContent = set.length + ' builds';
+      if (c) c.textContent = set.length + (set.length === 1 ? ' build' : ' builds');
     });
   }
 
@@ -314,7 +314,7 @@
           <img class="contrib-avatar" src="${esc(pr.avatar_url || _AVATAR_FB)}" onerror="_onAvatarErr(this)" alt="">
           <div class="contrib-sticker">
             <img src="https://ik.imagekit.io/424h6me27c/Frame%202147207780.png" alt="">
-            <div class="sticker-count"><span class="sticker-num">${String(e.posts.length).padStart(2, '0')}</span><span class="sticker-lbl">BUILDS</span></div>
+            <div class="sticker-count"><span class="sticker-num">${String(e.posts.length).padStart(2, '0')}</span><span class="sticker-lbl">${e.posts.length === 1 ? 'BUILD' : 'BUILDS'}</span></div>
           </div>
         </div>
         <div class="contrib-name">${esc(pr.name)}</div>
