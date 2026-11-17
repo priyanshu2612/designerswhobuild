@@ -4567,6 +4567,22 @@ Download now for free : pasteryapp.xyz</div>
     });
   }, { threshold: 0.5 });
 
+  // ── Card thumbnails: the post's own media wins ──
+  //  image post → that image · video post → its first frame · no media → uploaded icon, else the per-type placeholder
+  function _postThumb(p) {
+    const base = 'width:64px;height:64px;border-radius:14px;object-fit:cover;display:block;';
+    const img = (p.media_urls || []).find(Boolean);
+    if (img) return `<img src="${img}" style="${base}background:#EEF2FF;" alt="" loading="lazy">`;
+    if (p.media_video_url) return `<video src="${p.media_video_url}#t=0.1" muted playsinline preload="metadata" disablepictureinpicture style="${base}background:#10192D;pointer-events:none;"></video>`;
+    if (p.thumbnail_url) return `<img src="${p.thumbnail_url}" style="${base}" alt="">`;
+    const cats = (Array.isArray(p.post_categories) ? p.post_categories : []).map(c => String(c).toLowerCase());
+    let c = String(p.category || '').toLowerCase();
+    if (cats.includes('game')) c = 'game';
+    else if (c.includes('windows')) c = 'macos';
+    else if (c.includes('figma') || c.includes('dashboard')) c = 'web';
+    return `<img src="${_categoryIcon(c)}" style="${base}border:1px solid #E0E5EF;" alt="">`;
+  }
+
   // Call once after any post cards are placed in the page (idempotent)
   function _hydratePosts(root) {
     (root || document).querySelectorAll('.post-card').forEach(card => {
@@ -4686,7 +4702,7 @@ Download now for free : pasteryapp.xyz</div>
       return `<div class="project-card" onclick="openPostDetail('${c.key}')" style="cursor:pointer;">
         <div class="card-top-row">
           <div class="card-thumb-wrap">
-            <img src="${c.img || _categoryIcon(c.meta)}" style="width:64px;height:64px;border-radius:14px;object-fit:cover;display:block;${!c.img?'border:1px solid #E0E5EF;':''}" alt="">
+            ${c.thumbHtml || `<img src="${c.img || _categoryIcon(c.meta)}" style="width:64px;height:64px;border-radius:14px;object-fit:cover;display:block;${!c.img?'border:1px solid #E0E5EF;':''}" alt="">`}
           </div>
           <div class="card-info">
             <div class="card-name-row">
@@ -5158,7 +5174,7 @@ Download now for free : pasteryapp.xyz</div>
         <div class="card-top-row">
           <div class="card-thumb-wrap">
             <span class="rank-badge" style="color:${c.rankColor}">#${c.rank}</span>
-            <img src="${c.img || _categoryIcon(c.meta)}" style="width:64px;height:64px;border-radius:14px;object-fit:cover;display:block;${!c.img?'border:1px solid #E0E5EF;':''}" alt="">
+            ${c.thumbHtml || `<img src="${c.img || _categoryIcon(c.meta)}" style="width:64px;height:64px;border-radius:14px;object-fit:cover;display:block;${!c.img?'border:1px solid #E0E5EF;':''}" alt="">`}
           </div>
           <div class="card-info">
             <div class="card-name-row"><span class="card-app-name">${c.name}</span>${badge}</div>
@@ -5253,7 +5269,7 @@ Download now for free : pasteryapp.xyz</div>
       return `<div class="project-card" onclick="openPostDetail('${c.key}')" style="cursor:pointer;">
         <div class="card-top-row">
           <div class="card-thumb-wrap">
-            <img src="${c.img || ''}" style="width:64px;height:64px;border-radius:14px;object-fit:cover;display:block;" alt="">
+            ${c.thumbHtml || `<img src="${c.img || ''}" style="width:64px;height:64px;border-radius:14px;object-fit:cover;display:block;" alt="">`}
           </div>
           <div class="card-info">
             <div class="card-name-row"><span class="card-app-name">${c.name}</span>${badge}</div>
@@ -5822,7 +5838,7 @@ Download now for free : pasteryapp.xyz</div>
           <div class="project-card" style="width:100%;box-sizing:border-box;margin-bottom:10px;">
             <div class="card-top-row">
               <div class="card-thumb-wrap">
-                <img src="${p.thumbnail_url || (p.media_urls && p.media_urls[0]) || _categoryIcon(p.category)}" style="width:64px;height:64px;border-radius:14px;object-fit:cover;display:block;" alt="">
+                ${_postThumb(p)}
               </div>
               <div class="card-info">
                 <div class="card-name-row"><span class="card-app-name">${p.app_name || p.title || ''}</span></div>
@@ -5842,7 +5858,7 @@ Download now for free : pasteryapp.xyz</div>
           <div class="project-card" style="width:100%;box-sizing:border-box;margin-bottom:10px;">
             <div class="card-top-row">
               <div class="card-thumb-wrap">
-                <img src="${p.thumbnail_url || (p.media_urls && p.media_urls[0]) || _categoryIcon(p.category)}" style="width:64px;height:64px;border-radius:14px;object-fit:cover;display:block;" alt="">
+                ${_postThumb(p)}
               </div>
               <div class="card-info">
                 <div class="card-name-row"><span class="card-app-name">${p.app_name || p.title || ''}</span></div>
@@ -6964,6 +6980,6 @@ Download now for free : pasteryapp.xyz</div>
     initAuth();
   });
 </script>
-<script src="home-live.js?v=19"></script>
+<script src="home-live.js?v=20"></script>
 </body>
 </html>

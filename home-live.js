@@ -115,7 +115,7 @@
       <div class="card-top-row">
         <div class="card-thumb-wrap">
           ${rank ? `<span class="rank-badge" style="color:${rankColor}">#${rank}</span>` : ''}
-          <img src="${esc(icon)}" style="width:64px;height:64px;border-radius:14px;object-fit:cover;display:block;${hasRealIcon(n) ? '' : 'border:1px solid #E0E5EF;'}" alt="">
+          ${_postThumb(n.raw)}
         </div>
         <div class="card-info">
           <div class="card-name-row"><span class="card-app-name">${esc(n.name)}</span>${badge}</div>
@@ -137,7 +137,7 @@
       key: n.id, rank, rankColor: rank === 1 ? '#FF8140' : rank === 2 ? '#EFB351' : rank === 3 ? '#596378' : '#293142',
       img: hasRealIcon(n) ? n.raw.thumbnail_url : iconFor(n),
       name: n.name, status: n.status, desc: n.tagline, meta: n.meta, hot: n.hot === 'New' ? '' : n.hot,
-      author: n.author, role: n.role, previewImg: n.image, liveUrl: n.raw.live_url || '#',
+      author: n.author, role: n.role, previewImg: n.image, liveUrl: n.raw.live_url || '#', thumbHtml: _postThumb(n.raw),
     };
   }
 
