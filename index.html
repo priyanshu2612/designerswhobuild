@@ -1719,6 +1719,9 @@
   .helpful-section { padding: 0; }
   .helpful-tab-row { display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none; padding: 0 10px 14px; margin-top: 0; }
   .helpful-tab-row::-webkit-scrollbar { display: none; }
+  /* centred in the viewport; auto margins (not justify-content) so it still scrolls from the left edge when it overflows */
+  .helpful-tab-row .helpful-tab:first-child { margin-left: auto; }
+  .helpful-tab-row .helpful-tab:last-child { margin-right: auto; }
   .helpful-tab {
     font-size: 14px; font-weight: 500; color: #596378;
     padding: 8px 14px; border-radius: 20px; cursor: pointer;
@@ -6835,6 +6838,6 @@ Download now for free : pasteryapp.xyz</div>
     initAuth();
   });
 </script>
-<script src="home-live.js?v=4"></script>
+<script src="home-live.js?v=5"></script>
 </body>
 </html>
