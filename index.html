@@ -275,8 +275,8 @@
     let media = '';
     if (p.media_layout === 'single' && mu[0]) {
       media = `<div class="post-media-single">
-        <img src="${mu[0]}" style="width:100%;height:100%;object-fit:cover;display:block;" alt="">
-        <div class="media-views"><svg width="13" height="13" viewBox="0 0 13 13" fill="none"><circle cx="6.5" cy="6.5" r="5.5" stroke="white" stroke-width="1.2"/><circle cx="6.5" cy="6.5" r="2.2" fill="white"/></svg> ${p.views_count||0} Views</div>
+        <img src="${mu[0]}" style="width:100%;height:auto;max-height:560px;object-fit:cover;display:block;" alt="">
+        <div class="media-views"><svg width="13" height="13" viewBox="0 0 13 13" fill="none"><circle cx="6.5" cy="6.5" r="5.5" stroke="white" stroke-width="1.2"/><circle cx="6.5" cy="6.5" r="2.2" fill="white"/></svg> <span class="views-pill-text">${_viewsLabel(p.views_count||0)}</span></div>
       </div>`;
     } else if (p.media_layout === '5grid' && mu.length >= 4) {
       media = `<div class="post-media-5grid">
@@ -291,9 +291,10 @@
       </div>`;
     } else if (p.media_layout === 'video' && p.media_video_url) {
       media = `<div class="post-media-video" style="background:#000;cursor:pointer;" onclick="togglePostVideo(this)">
-        <video class="post-video" src="${p.media_video_url}" loop muted playsinline style="width:100%;height:100%;object-fit:cover;display:block;position:absolute;inset:0;"></video>
+        <video class="post-video" src="${p.media_video_url}" loop muted playsinline preload="metadata" style="width:100%;height:100%;object-fit:cover;display:block;position:absolute;inset:0;"></video>
         <div class="video-play-btn post-play-overlay"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M6 3.5L18 11L6 18.5V3.5Z" fill="white"/></svg></div>
-        <div class="media-views"><svg width="13" height="13" viewBox="0 0 13 13" fill="none"><circle cx="6.5" cy="6.5" r="5.5" stroke="white" stroke-width="1.2"/><circle cx="6.5" cy="6.5" r="2.2" fill="white"/></svg> ${p.views_count||0} Views</div>
+        <button type="button" class="media-sound" onclick="toggleSound(event)" aria-label="Mute or unmute"><svg class="snd-off" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H2v6h4l5 4V5z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg><svg class="snd-on" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M19 5a10 10 0 0 1 0 14"/></svg></button>
+        <div class="media-views"><svg width="13" height="13" viewBox="0 0 13 13" fill="none"><circle cx="6.5" cy="6.5" r="5.5" stroke="white" stroke-width="1.2"/><circle cx="6.5" cy="6.5" r="2.2" fill="white"/></svg> <span class="views-pill-text">${_viewsLabel(p.views_count||0)}</span></div>
       </div>`;
     } else if (p.media_layout === 'carousel' && mu.length) {
       media = `<div class="post-media-carousel">
@@ -318,7 +319,8 @@
     const authorAvatar = pr.avatar_url
       ? `<img src="${pr.avatar_url}" onerror="_onAvatarErr(this)" style="width:100%;height:100%;object-fit:cover;display:block;border-radius:50%;" alt="">`
       : `<div style="width:100%;height:100%;border-radius:50%;background:#EEF2FF;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;color:#3169ED;font-family:'Outfit',sans-serif;">${(pr.name||'?')[0].toUpperCase()}</div>`;
-    return `<div class="post-card" data-post-id="${p.id}">
+    const hasCtas = !!(liveBtn || journeyBtn);
+    return `<div class="post-card${hasCtas ? '' : ' no-ctas'}" data-post-id="${p.id}" data-author-id="${pr.id||''}">
       <div class="post-header" style="cursor:pointer;" ${profileClick}>
         <div class="post-avatar" style="padding:0;background:none;width:44px;height:44px;border-radius:50%;overflow:hidden;flex-shrink:0;">
           ${authorAvatar}
@@ -342,8 +344,8 @@
         <div class="post-react-vdivider"></div>
         <div class="comment-reaction" onclick="openComments('${p.id}')"><div class="reaction-emoji-wrap" style="font-size:0"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M4 4h14a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H7l-4 3V5a1 1 0 0 1 1-1z" stroke="#293142" stroke-width="1.4" stroke-linejoin="round"/></svg>${ccBadge}</div><div class="reaction-label">Comment</div></div>
       </div>
-      <div style="height:1px;background:#F2F4F7;margin:8px 12px 12px;"></div>
-      <div class="post-ctas">${liveBtn}${journeyBtn}</div>
+      ${hasCtas ? `<div style="height:1px;background:#F2F4F7;margin:8px 12px 12px;"></div>
+      <div class="post-ctas">${liveBtn}${journeyBtn}</div>` : ''}
     </div>`;
   }
 </script>
@@ -1452,6 +1454,23 @@
     border-radius: 20px;
     backdrop-filter: blur(4px);
   }
+  /* media pills: sound (left) mirrors the views pill (right) */
+  .media-sound {
+    position: absolute; bottom: 10px; left: 12px; z-index: 3;
+    display: flex; align-items: center; justify-content: center;
+    width: 32px; height: 26px; padding: 0; border: none; cursor: pointer;
+    color: #fff; background: rgba(0,0,0,0.38); border-radius: 20px;
+    backdrop-filter: blur(4px); -webkit-tap-highlight-color: transparent;
+  }
+  .media-sound .snd-on { display: none; }
+  body.sound-on .media-sound .snd-on { display: block; }
+  body.sound-on .media-sound .snd-off { display: none; }
+  .media-views { z-index: 3; }
+  /* single images keep their own ratio */
+  .post-media-single { aspect-ratio: auto; }
+  .post-media-single img { height: auto; max-height: 560px; }
+  /* no CTA row → no thin divider; fat divider gets equal air above and below */
+  .post-card.no-ctas .post-reactions { padding-bottom: 16px; }
   .post-media-5grid { width: 100%; overflow: hidden; }
   .grid5-row { display: flex; gap: 2px; margin-bottom: 2px; }
   .grid5-row:last-child { margin-bottom: 0; }
@@ -2216,6 +2235,7 @@
   .pv-edit-btn { background:#F2F4F7; color:#454C5F; border:none; border-radius:20px; height:36px; padding:0 16px; font-family:'Outfit',sans-serif; font-size:14px; font-weight:600; cursor:pointer; }
   .pv-name { font-size:22px; font-weight:700; color:#10192D; letter-spacing:-0.3px; }
   .pv-role { font-size:15px; font-weight:500; color:#10192D; }
+  .pv-source { display:inline-flex; align-items:center; gap:4px; margin-top:6px; font-size:12.5px; font-weight:500; color:#A9B0BE; }
   .pv-exp  { font-size:13px; font-weight:400; color:#8492A6; }
   .pv-bio  { font-size:14px; color:#454C5F; line-height:1.6; margin:10px 16px 4px; }
   .pv-stats-card { display:flex; align-items:stretch; background:#fff; border:1px solid #EDEFF2; border-radius:14px; margin:14px 16px 0; overflow:hidden; }
@@ -2328,8 +2348,8 @@
   .tools-sheet-title { font-size: 17px; font-weight: 700; color: #10192D; font-family: 'Outfit',sans-serif; }
   .tools-sheet-list { display: flex; flex-direction: column; gap: 14px; }
   .tools-sheet-item { display: flex; align-items: center; gap: 12px; }
-  .tools-sheet-icon { width: 40px; height: 40px; border-radius: 10px; overflow: hidden; flex-shrink: 0; background: #F2F4F7; display: flex; align-items: center; justify-content: center; }
-  .tools-sheet-icon img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .tools-sheet-icon { width: 40px; height: 40px; border-radius: 0; overflow: hidden; flex-shrink: 0; background: transparent; display: flex; align-items: center; justify-content: center; }
+  .tools-sheet-icon img { width: 100%; height: 100%; object-fit: contain; display: block; }
   .tools-sheet-name { font-size: 15px; font-weight: 600; color: #10192D; font-family: 'Outfit',sans-serif; }
 
   /* ── Header profile button ────────────────────── */
@@ -4324,6 +4344,7 @@ Download now for free : pasteryapp.xyz</div>
     const desc = container.querySelector('.post-desc');
     const btn  = container.querySelector('.read-more-btn');
     if (!desc || !btn) return;
+    if (!desc.offsetParent) return;   // not visible yet → can't measure, keep the button
     // Hide button if text doesn't overflow the 2-line clamp
     if (desc.scrollHeight <= 42) btn.style.display = 'none';
   }
@@ -4454,7 +4475,10 @@ Download now for free : pasteryapp.xyz</div>
       const video = entry.target;
       const icon = video.closest('.post-media-video').querySelector('.post-play-overlay');
       if (entry.isIntersecting) {
-        video.play().then(() => { if (icon) icon.style.display = 'none'; }).catch(() => {});
+        video.muted = !_soundOn;
+        video.play().then(() => { if (icon) icon.style.display = 'none'; }).catch(() => {
+          if (!video.muted) { video.muted = true; _setSound(false, false); video.play().then(() => { if (icon) icon.style.display = 'none'; }).catch(() => {}); }
+        });
       } else {
         video.pause();
         if (icon) icon.style.display = 'flex';
@@ -4469,6 +4493,91 @@ Download now for free : pasteryapp.xyz</div>
   }
 
   document.querySelectorAll('.post-video').forEach(v => _observeVideo(v));
+
+  // ── Sound preference: muted by default, remembered across the whole site ──
+  let _soundOn = false;
+  try { _soundOn = localStorage.getItem('dwb_sound_on') === '1'; } catch (e) {}
+  document.body.classList.toggle('sound-on', _soundOn);
+  function _setSound(on, save) {
+    _soundOn = on;
+    document.body.classList.toggle('sound-on', on);
+    if (save) { try { localStorage.setItem('dwb_sound_on', on ? '1' : '0'); } catch (e) {} }
+  }
+  function toggleSound(ev) {
+    if (ev) { ev.stopPropagation(); ev.preventDefault(); }
+    _setSound(!_soundOn, true);
+    document.querySelectorAll('video.post-video').forEach(v => {
+      v.muted = !_soundOn;
+      if (_soundOn && !v.paused) {
+        // a tap is a user gesture, so this normally succeeds; if the browser still blocks it, fall back to muted
+        v.play().catch(() => { v.muted = true; _setSound(false, false); });
+      }
+    });
+  }
+
+  // ── Views: counted like Reels/Shorts — a real watch, once per person per day ──
+  //  video  → ≥3s of actual playback while ≥50% on screen (or 80% of a clip shorter than that)
+  //  image  → ≥2s on screen at ≥50% visibility
+  //  never counts the author's own views, and the same device only counts a post once per 24h
+  const _VIEW_KEY = 'dwb_views_v1';
+  function _viewsMap() { try { return JSON.parse(localStorage.getItem(_VIEW_KEY) || '{}'); } catch (e) { return {}; } }
+  function _viewedRecently(id) { const t = _viewsMap()[id]; return !!t && Date.now() - t < 864e5; }
+  function _rememberView(id) {
+    const m = _viewsMap(), now = Date.now();
+    Object.keys(m).forEach(k => { if (now - m[k] > 3 * 864e5) delete m[k]; });
+    m[id] = now;
+    try { localStorage.setItem(_VIEW_KEY, JSON.stringify(m)); } catch (e) {}
+  }
+  function _formatViews(n) {
+    n = Number(n) || 0;
+    if (n >= 1e6) return (n / 1e6).toFixed(n >= 1e7 ? 0 : 1).replace(/\.0$/, '') + 'M';
+    if (n >= 1e3) return (n / 1e3).toFixed(n >= 1e4 ? 0 : 1).replace(/\.0$/, '') + 'K';
+    return String(n);
+  }
+  function _viewsLabel(n) { return _formatViews(n) + (Number(n) === 1 ? ' View' : ' Views'); }
+  async function _countView(card) {
+    const id = card.dataset.postId;
+    if (!id || _viewedRecently(id)) return;
+    if (currentProfile && card.dataset.authorId && card.dataset.authorId === currentProfile.id) return;
+    _rememberView(id);
+    const { data, error } = await sb.rpc('increment_post_view', { p_post_id: id });
+    if (error || data == null) return;
+    document.querySelectorAll(`[data-post-id="${id}"] .views-pill-text`).forEach(el => { el.textContent = _viewsLabel(data); });
+  }
+  const _viewTimers = new WeakMap();
+  const _viewObserver = new IntersectionObserver(entries => {
+    entries.forEach(en => {
+      const media = en.target, card = media.closest('.post-card');
+      if (!card) return;
+      if (!en.isIntersecting) { clearInterval(_viewTimers.get(media)); _viewTimers.delete(media); return; }
+      if (_viewTimers.has(media) || _viewedRecently(card.dataset.postId)) return;
+      const video = media.querySelector('video');
+      let watched = 0;
+      const h = setInterval(() => {
+        if (video) {
+          if (!video.paused && !video.ended) watched += 0.5;
+          const need = Math.min(3, Math.max(1, (video.duration || 3) * 0.8));
+          if (watched >= need) { clearInterval(h); _viewTimers.delete(media); _countView(card); }
+        } else {
+          watched += 0.5;
+          if (watched >= 2) { clearInterval(h); _viewTimers.delete(media); _countView(card); }
+        }
+      }, 500);
+      _viewTimers.set(media, h);
+    });
+  }, { threshold: 0.5 });
+
+  // Call once after any post cards are placed in the page (idempotent)
+  function _hydratePosts(root) {
+    (root || document).querySelectorAll('.post-card').forEach(card => {
+      if (card.dataset.hydrated) return;
+      card.dataset.hydrated = '1';
+      card.querySelectorAll('.post-video').forEach(v => _observeVideo(v));
+      card.querySelectorAll('.post-desc-container').forEach(c => _initReadMore(c));
+      card.querySelectorAll('.post-media-video, .post-media-single, .post-media-carousel, .post-media-5grid').forEach(m => _viewObserver.observe(m));
+    });
+  }
+  document.addEventListener('DOMContentLoaded', () => _hydratePosts());
 
   function openNavMenu() {
     document.getElementById('navMenuOverlay').classList.add('open');
@@ -5604,12 +5713,22 @@ Download now for free : pasteryapp.xyz</div>
     'Android Studio': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/androidstudio/androidstudio-original.svg',
     'Tailwind CSS': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-plain.svg',
     'Supabase': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/supabase/supabase-original.svg',
+    'Three.js': 'assets/tools/threejs.svg',
+    'Unity': 'assets/tools/unity.svg',
+    'Blender': 'assets/tools/blender.svg',
+    'MediaPipe': 'assets/tools/mediapipe.svg',
+    'Chrome Extension APIs': 'assets/tools/chrome.svg',
+    'Electron': 'assets/tools/electron.svg',
+    'Tauri': 'assets/tools/tauri.svg',
   };
   const _AITOOL_ICONS = {
     'ChatGPT': 'https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg',
     'Gemini': 'https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg',
-    'Claude': 'https://ik.imagekit.io/424h6me27c/claude-icon.png',
-    'Claude Code': 'https://ik.imagekit.io/424h6me27c/claude-icon.png',
+    'Claude': 'assets/tools/claude.svg',
+    'Claude Code': 'assets/tools/claude.svg',
+    'Claude Design': 'assets/tools/claude.svg',
+    'Meshy AI': 'assets/tools/meshy.png',
+    'AI assistant': 'assets/tools/ai-assistant.svg',
     'Cursor': 'https://avatars.githubusercontent.com/u/124584537',
     'Figma AI': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/figma/figma-original.svg',
     'Midjourney': 'https://ik.imagekit.io/424h6me27c/midjourney.png',
@@ -5799,6 +5918,7 @@ Download now for free : pasteryapp.xyz</div>
           <div style="flex:1;min-width:0;padding-top:20px;">
             <div class="pv-hero-name">${profile.name || ''}</div>
             ${roleStr ? `<div class="pv-hero-role">${roleStr}</div>` : ''}
+            ${(profile.linkedin_url || posts.some(x => x.source === 'LinkedIn')) ? `<div class="pv-source"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9S14.5 18.4 12 21c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/></svg>Sourced from LinkedIn</div>` : ''}
             ${expStr  ? `<div class="pv-hero-exp">${expStr}</div>`  : ''}
           </div>
           ${actionBtns ? `<div style="display:flex;align-items:center;gap:4px;padding-top:20px;flex-shrink:0;">${actionBtns}</div>` : ''}
@@ -5823,6 +5943,7 @@ Download now for free : pasteryapp.xyz</div>
       <div class="pv-section-divider"></div>
       <div class="pv-posts-hd">Recent build posts</div>
       ${postCards}`;
+    _hydratePosts(container);
   }
 
   // ── Tools Sheet ──────────────────────────────────
@@ -5868,9 +5989,7 @@ Download now for free : pasteryapp.xyz</div>
     else {
       list.innerHTML = tools.map(t => `
         <div class="tools-sheet-item">
-          <div class="tools-sheet-icon">
-            ${t.icon_url ? `<img src="${t.icon_url}" alt="${t.name}" onerror="_onAvatarErr(this)">` : ''}
-          </div>
+          ${t.icon_url ? `<div class="tools-sheet-icon"><img src="${t.icon_url}" alt="${t.name}" onerror="this.parentNode.style.visibility='hidden'"></div>` : ''}
           <span class="tools-sheet-name">${t.name || ''}</span>
         </div>`).join('');
     }
@@ -5899,14 +6018,14 @@ Download now for free : pasteryapp.xyz</div>
     const roles = _postRolesCache[postId] || [];
     const sheet = document.getElementById('rolesSheet');
     const list = sheet.querySelector('.tools-sheet-list');
-    list.innerHTML = roles.map(r => `<div class="tools-sheet-item"><div class="tools-sheet-icon" style="font-size:20px;background:#EEF3FD;">🎭</div><span class="tools-sheet-name">${r}</span></div>`).join('') || '<div style="color:#8492A6;font-size:14px;padding:8px 0;">No roles listed.</div>';
+    list.innerHTML = roles.map(r => `<div class="tools-sheet-item"><span class="tools-sheet-name">${r}</span></div>`).join('') || '<div style="color:#8492A6;font-size:14px;padding:8px 0;">No roles listed.</div>';
     sheet.style.display = 'flex';
   }
   function openPostCategoriesSheet(postId) {
     const cats = _postCatsCache[postId] || [];
     const sheet = document.getElementById('categorySheet');
     const list = sheet.querySelector('.tools-sheet-list');
-    list.innerHTML = cats.map(c => `<div class="tools-sheet-item"><div class="tools-sheet-icon" style="font-size:20px;background:#EEF3FD;">🏷️</div><span class="tools-sheet-name">${c}</span></div>`).join('') || '<div style="color:#8492A6;font-size:14px;padding:8px 0;">No categories listed.</div>';
+    list.innerHTML = cats.map(c => `<div class="tools-sheet-item"><span class="tools-sheet-name">${c}</span></div>`).join('') || '<div style="color:#8492A6;font-size:14px;padding:8px 0;">No categories listed.</div>';
     sheet.style.display = 'flex';
   }
 
@@ -6301,6 +6420,13 @@ Download now for free : pasteryapp.xyz</div>
           <div class="pd-journey-label">The Journey</div>
           ${stepsHtml}
         </div>`;
+    }
+
+    // Database posts open as the same card as in the feed (author on top, media, reactions) with the journey below
+    if (data.raw) {
+      el.innerHTML = renderFullPostCard(data.raw) + journeyHtml;
+      _hydratePosts(el);
+      return;
     }
 
     // Make the pills below tappable: the sheets read from these per-post caches
@@ -6838,6 +6964,6 @@ Download now for free : pasteryapp.xyz</div>
     initAuth();
   });
 </script>
-<script src="home-live.js?v=15"></script>
+<script src="home-live.js?v=16"></script>
 </body>
 </html>

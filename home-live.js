@@ -154,7 +154,7 @@
     });
     const imgs = (p.media_urls || []).filter(Boolean);
     _postDetailData[n.id] = {
-      key: n.id, title: n.name, desc: p.description || n.title,
+      key: n.id, raw: p, title: n.name, desc: p.description || n.title,
       status: n.status, category: p.category || '',
       video: n.video, images: imgs, hasMedia: n.hasMedia,
       img: imgs[0] || p.thumbnail_url || iconFor(n),
@@ -346,7 +346,7 @@
     const sec = document.querySelector('.nebuild-section');
     if (!sec) return;
     const h = sec.querySelector('.h-black');
-    if (h) h.textContent = 'All posts from the community';
+    if (h) h.textContent = 'All builds from the community';
     const old = sec.querySelectorAll('.post-card');
     if (!old.length) return;
     const holder = document.createElement('div');
@@ -364,9 +364,8 @@
       const chunk = list.slice(shown, shown + STEP);
       const box = document.createElement('div');
       box.innerHTML = chunk.map(renderFullPostCard).join('');
-      box.querySelectorAll('.post-video').forEach(v => { try { _observeVideo(v); } catch (e) {} });
-      box.querySelectorAll('.post-desc-container').forEach(c => { try { _initReadMore(c); } catch (e) {} });
       holder.append(...box.childNodes);
+      _hydratePosts(holder);          // after insertion, so "read more" can measure the text
       shown += chunk.length;
       if (shown >= list.length) more.remove();
     }
@@ -424,6 +423,79 @@
     .project-card .badge-live, .project-card .badge-platform { flex-shrink:0; }
     .project-card .card-desc { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }`;
   document.head.appendChild(st);
+
+  // ── Desktop heads-up banner (this site is designed phone-first) ──
+  function desktopBanner() {
+    const isDesktop = window.matchMedia('(min-width: 820px)').matches && !window.matchMedia('(pointer: coarse)').matches;
+    let dismissed = false; try { dismissed = sessionStorage.getItem('dwb_desktop_banner') === '1'; } catch (e) {}
+    if (!isDesktop || dismissed) return;
+    const bar = document.createElement('div');
+    bar.id = 'desktopBanner';
+    bar.innerHTML = '<span>🚧 This website isn’t optimised for desktop yet — it’s still a work in progress. Please open it on your phone for the best experience.</span><button type="button" aria-label="Dismiss">✕</button>';
+    document.body.prepend(bar);
+    document.body.classList.add('has-desktop-banner');
+    bar.querySelector('button').addEventListener('click', () => {
+      bar.remove(); document.body.classList.remove('has-desktop-banner');
+      try { sessionStorage.setItem('dwb_desktop_banner', '1'); } catch (e) {}
+    });
+  }
+
+  // ── First-visit note: honest disclaimer about LinkedIn-sourced data ──
+  function firstVisitSheet() {
+    let seen = false; try { seen = localStorage.getItem('dwb_disclaimer_seen') === '1'; } catch (e) {}
+    if (seen) return;
+    const wrap = document.createElement('div');
+    wrap.id = 'disclaimerSheet';
+    wrap.innerHTML = `
+      <div class="dsc-backdrop"></div>
+      <div class="dsc-sheet" role="dialog" aria-modal="true" aria-labelledby="dscTitle">
+        <div class="dsc-grab"></div>
+        <h3 id="dscTitle">A quick, honest note before you scroll 👋</h3>
+        <ul>
+          <li>Most of what you see here — names, roles, posts, videos — has been <b>gathered from LinkedIn</b>, by hand.</li>
+          <li>I did my best to get everything right, but <b>a few mistakes may have slipped in</b>. They’re honest slips, never intentional — and I’m truly sorry if one of them is yours. 🙏</li>
+          <li>This is just a sincere attempt to bring all the wonderful things designers are building <b>onto one platform</b>.</li>
+          <li>Want something <b>removed</b>, or a detail <b>corrected</b>? Please tell me through <b>Menu (☰) → Share feedback</b>. I’ll fix it as quickly as I can.</li>
+        </ul>
+        <p>Thank you for being kind about it, and for building things worth celebrating. 💙</p>
+        <button type="button" class="dsc-btn">Got it, let’s explore</button>
+      </div>`;
+    document.body.appendChild(wrap);
+    requestAnimationFrame(() => requestAnimationFrame(() => wrap.classList.add('open')));
+    const close = () => {
+      wrap.classList.remove('open');
+      try { localStorage.setItem('dwb_disclaimer_seen', '1'); } catch (e) {}
+      setTimeout(() => wrap.remove(), 350);
+    };
+    wrap.querySelector('.dsc-btn').addEventListener('click', close);
+    wrap.querySelector('.dsc-backdrop').addEventListener('click', close);
+  }
+
+  const st2 = document.createElement('style');
+  st2.textContent = `
+    #desktopBanner { position:sticky; top:0; z-index:400; display:flex; align-items:center; justify-content:center; gap:12px;
+      padding:9px 16px; background:#FFF4D6; color:#6B4E00; font:500 13px/1.35 'Outfit',sans-serif; text-align:center; border-bottom:1px solid #F1DFA6; }
+    #desktopBanner button { flex-shrink:0; border:none; background:transparent; color:#6B4E00; font-size:14px; cursor:pointer; padding:2px 6px; }
+    body.has-desktop-banner .sticky-nav { top:40px; }
+    #disclaimerSheet { position:fixed; inset:0; z-index:1000; pointer-events:none; }
+    #disclaimerSheet.open { pointer-events:all; }
+    #disclaimerSheet .dsc-backdrop { position:absolute; inset:0; background:rgba(16,25,45,0.5); opacity:0; transition:opacity .3s; }
+    #disclaimerSheet.open .dsc-backdrop { opacity:1; }
+    #disclaimerSheet .dsc-sheet { position:absolute; left:50%; bottom:0; width:100%; max-width:560px; transform:translate(-50%,100%);
+      transition:transform .35s cubic-bezier(.22,1,.36,1); background:#fff; border-radius:24px 24px 0 0; padding:12px 22px 26px;
+      font-family:'Outfit',sans-serif; color:#10192D; max-height:88vh; overflow-y:auto; }
+    #disclaimerSheet.open .dsc-sheet { transform:translate(-50%,0); }
+    #disclaimerSheet .dsc-grab { width:40px; height:4px; border-radius:2px; background:#E0E5EF; margin:0 auto 16px; }
+    #disclaimerSheet h3 { font-size:20px; font-weight:800; line-height:1.25; margin-bottom:12px; }
+    #disclaimerSheet ul { list-style:none; display:flex; flex-direction:column; gap:10px; margin-bottom:14px; }
+    #disclaimerSheet li { position:relative; padding-left:20px; font-size:14.5px; line-height:1.5; color:#454C5F; }
+    #disclaimerSheet li::before { content:''; position:absolute; left:2px; top:8px; width:7px; height:7px; border-radius:50%; background:#3169ED; }
+    #disclaimerSheet li b { color:#10192D; font-weight:600; }
+    #disclaimerSheet p { font-size:14px; color:#596378; margin-bottom:18px; }
+    #disclaimerSheet .dsc-btn { width:100%; height:48px; border:none; border-radius:12px; background:#3169ED; color:#fff; font:600 16px 'Outfit',sans-serif; cursor:pointer; }`;
+  document.head.appendChild(st2);
+  desktopBanner();
+  setTimeout(firstVisitSheet, 900);
 
   // ───────────────────────── boot ─────────────────────────
   async function run() {
