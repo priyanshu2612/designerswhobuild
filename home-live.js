@@ -53,7 +53,7 @@
     n.score = n.rx * 3 + n.cm * 4 + (hasMedia ? 4 : 0) + (n.status === 'live' ? 2 : 0) +
       (p.live_url ? 1 : 0) + 10 * Math.exp(-age / 30);
     n.hot = (n.rx + n.cm) > 0 ? '+' + (n.rx + n.cm) : 'New';
-    n.meta = n.category + ' · ' + getTimeAgo(p.created_at);
+    n.meta = p.source ? n.category : n.category + ' · ' + getTimeAgo(p.created_at);   // LinkedIn-sourced posts carry no "x days ago"
     n.author = pr.name || 'Unknown';
     n.role = [pr.role, pr.company].filter(Boolean).join(' · ');
     n.avatar = pr.avatar_url || null;
@@ -450,14 +450,14 @@
       <div class="dsc-backdrop"></div>
       <div class="dsc-sheet" role="dialog" aria-modal="true" aria-labelledby="dscTitle">
         <div class="dsc-grab"></div>
-        <h3 id="dscTitle">A quick, honest note before you scroll 👋</h3>
+        <h3 id="dscTitle">A quick, honest note 👋</h3>
         <ul>
-          <li>Most of what you see here — names, roles, posts, videos — has been <b>gathered from LinkedIn</b>, by hand.</li>
-          <li>I did my best to get everything right, but <b>a few mistakes may have slipped in</b>. They’re honest slips, never intentional — and I’m truly sorry if one of them is yours. 🙏</li>
-          <li>This is just a sincere attempt to bring all the wonderful things designers are building <b>onto one platform</b>.</li>
-          <li>Want something <b>removed</b>, or a detail <b>corrected</b>? Please tell me through <b>Menu (☰) → Share feedback</b>. I’ll fix it as quickly as I can.</li>
+          <li>This is <b>mostly gathered from LinkedIn</b>, by hand.</li>
+          <li>A few <b>mistakes may have slipped in</b>. They’re honest ones, never intentional.</li>
+          <li>It’s a sincere attempt to bring everything designers build <b>onto one platform</b>.</li>
+          <li>Want something <b>removed or corrected</b>? Tell me via <b>Menu (☰) → Share feedback</b>.</li>
         </ul>
-        <p>Thank you for being kind about it, and for building things worth celebrating. 💙</p>
+        <p>Thank you for being kind. 💙</p>
         <button type="button" class="dsc-btn">Got it, let’s explore</button>
       </div>`;
     document.body.appendChild(wrap);

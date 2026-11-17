@@ -328,7 +328,7 @@
         <div class="post-meta">
           <div class="post-name">${pr.name||''}</div>
           <div class="post-role">${pr.role||''}${pr.company?' · '+pr.company:''}${pr.experience_years?' · '+pr.experience_years+'yr exp':''}</div>
-          <div class="post-subtext">${timeAgo}${p.source?' · <span class="post-source"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9S14.5 18.4 12 21c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/></svg>Sourced from '+p.source+'</span>':''}</div>
+          <div class="post-subtext">${p.source ? '<span class="post-source"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9S14.5 18.4 12 21c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/></svg>Sourced from '+p.source+'</span>' : timeAgo}</div>
         </div>
       </div>
       <div class="post-content">
@@ -688,7 +688,7 @@
   .trending-scroll::-webkit-scrollbar { display: none; }
   .trending-grid {
     display: grid;
-    grid-template-columns: repeat(3, 280px);
+    grid-auto-columns: 280px;            /* columns appear only as cards need them (no empty space on the right) */
     grid-template-rows: repeat(3, auto);
     grid-auto-flow: column;
     column-gap: 24px;
@@ -6964,6 +6964,6 @@ Download now for free : pasteryapp.xyz</div>
     initAuth();
   });
 </script>
-<script src="home-live.js?v=16"></script>
+<script src="home-live.js?v=17"></script>
 </body>
 </html>
