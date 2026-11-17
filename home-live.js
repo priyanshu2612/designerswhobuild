@@ -278,7 +278,8 @@
   function renderSpotlight(tab) {
     const row = document.querySelector('.hmiss-row');
     if (!row) return;
-    const list = _spotAll.filter(COMMUNITY[tab] || COMMUNITY.all);
+    // Spotlight shows ONE card: the top-scoring post in the chosen category
+    const list = _spotAll.filter(COMMUNITY[tab] || COMMUNITY.all).slice(0, 1);
     row.innerHTML = list.length
       ? list.map((n, i) => heroCard(n, 'hmiss-card', i)).join('')
       : '<div style="padding:24px 16px;color:#8492A6;font-family:Outfit,sans-serif;">No builds here yet.</div>';
@@ -334,7 +335,7 @@
     const grid = document.querySelector('.trending-grid');
     if (grid) {
       const rc = ['#FF8140', '#EFB351', '#596378'];
-      grid.innerHTML = all.slice(0, 8).map((n, i) => listCard(n, i + 1, rc[i] || '#293142')).join('');
+      grid.innerHTML = all.slice(0, 6).map((n, i) => listCard(n, i + 1, rc[i] || '#293142')).join('');
     }
     if (typeof renderTrendingCards === 'function' && document.getElementById('trendingCards')) {
       renderTrendingCards(typeof _currentTrendingTab !== 'undefined' ? _currentTrendingTab : '24h');
@@ -412,6 +413,10 @@
     .post-source svg { flex-shrink:0; position:relative; top:1px; }
     .card-time:has(.hot-count:empty) { display:none; }
     .helpful-carousel { margin-top:4px; }
+    /* Spotlight: centred chips + a single centred card */
+    .community-tab-row .community-tab:first-child { margin-left:auto; }
+    .community-tab-row .community-tab:last-child { margin-right:auto; }
+    .hmiss-scroll .hmiss-row { margin:0 auto; }
     /* long names no longer spill out of list cards */
     .project-card .card-info { min-width:0; flex:1; }
     .project-card .card-name-row { min-width:0; }
@@ -434,7 +439,7 @@
       buildBotd(all);
       buildHelpful(all);
       buildVibes(all);
-      renderSpotlight('all');
+      renderSpotlight('mobile');
       buildContributors(all);
       buildTrending(all);
       buildCommunityFeed(usable);
