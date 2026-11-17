@@ -411,7 +411,13 @@
     .post-source { color:#A9B0BE; display:inline-flex; align-items:center; gap:4px; font-size:13px; vertical-align:baseline; }
     .post-source svg { flex-shrink:0; position:relative; top:1px; }
     .card-time:has(.hot-count:empty) { display:none; }
-    .helpful-carousel { margin-top:4px; }`;
+    .helpful-carousel { margin-top:4px; }
+    /* long names no longer spill out of list cards */
+    .project-card .card-info { min-width:0; flex:1; }
+    .project-card .card-name-row { min-width:0; }
+    .project-card .card-app-name { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; min-width:0; }
+    .project-card .badge-live, .project-card .badge-platform { flex-shrink:0; }
+    .project-card .card-desc { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }`;
   document.head.appendChild(st);
 
   // ───────────────────────── boot ─────────────────────────
