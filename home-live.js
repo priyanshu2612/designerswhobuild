@@ -442,9 +442,9 @@
     .hmiss-scroll .hmiss-card { width:100%; }
     .trend-rank { position:absolute; left:14px; top:12px; z-index:3; font:900 38px/1 'Outfit',sans-serif; transform:rotate(-8deg);
       -webkit-text-stroke:7px #fff; paint-order:stroke fill; text-shadow:0 2px 8px rgba(0,0,0,.18); pointer-events:none; }
-    .trend-note { margin:4px 16px 14px; padding:10px 12px; border-radius:12px; background:#F3F6FC; color:#6B7790; font:500 13px/1.4 'Outfit',sans-serif; display:flex; gap:8px; align-items:flex-start; }
+    .trend-note { margin:4px 16px 14px; padding:10px 12px; border-radius:12px; background:#F3F6FC; color:#6B7790; font:500 13px/1.4 'Outfit',sans-serif; display:flex; flex-direction:column; gap:6px; align-items:center; text-align:center; }
     .trend-note b { color:#293142; font-weight:600; }
-    .trend-note-ic { color:#3169ED; flex-shrink:0; margin-top:1px; }
+    .trend-note-ic { color:#3169ED; flex-shrink:0; }
     /* long names no longer spill out of list cards */
     .project-card .card-info { min-width:0; flex:1; }
     .project-card .card-name-row { min-width:0; }
