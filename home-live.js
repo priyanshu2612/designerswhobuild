@@ -178,6 +178,13 @@
     return a;
   }
 
+  // Owner's rule: this author's posts always rank last, in every section
+  const LAST_AUTHOR = 'James Chughh';
+  const demote = (list, nameOf) => {
+    const f = nameOf || (n => n.author);
+    return [...list.filter(n => f(n) !== LAST_AUTHOR), ...list.filter(n => f(n) === LAST_AUTHOR)];
+  };
+
   // ───────────────────────── sections ─────────────────────────
   function buildBotd(all) {
     const el = document.querySelector('.botd-scroll');
@@ -188,8 +195,9 @@
       seen.add(n.profile.id); pick.push(n);
       if (pick.length === 6) break;
     }
-    // Ashley Green always goes last in the carousel (owner's request)
-    pick.sort((a, b) => (a.author === 'Ashley Green') - (b.author === 'Ashley Green'));
+    // Ashley Green second-last, James Chughh last (owner's requests)
+    const slot = n => n.author === LAST_AUTHOR ? 2 : n.author === 'Ashley Green' ? 1 : 0;
+    pick.sort((a, b) => slot(a) - slot(b));
     el.innerHTML = pick.map((n, i) => heroCard(n, 'botd-card', i)).join('');
     el.querySelectorAll('video.hmiss-video').forEach(v => { try { hmissObserver.observe(v); } catch (e) {} });
     if (typeof _updateBotdHero === 'function') _updateBotdHero();
@@ -251,7 +259,7 @@
     let weird = all.filter(n => n.tags.includes('fun') || n.postCats.includes('Game') ||
       /game|interactive|figma plugin/i.test(n.category) || /\p{Extended_Pictographic}/u.test(n.title));
     if (weird.length < 3) weird = weird.concat(all.filter(n => !weird.includes(n)).slice(-(3 - weird.length)));
-    const sets = { 'Freshly baked': fresh, 'Surprise me': surprise, 'Weird only': weird };
+    const sets = { 'Freshly baked': demote(fresh), 'Surprise me': demote(surprise), 'Weird only': demote(weird) };
     Object.keys(sets).forEach(k => { _vibeData[k] = sets[k].map((n, i) => legacyObj(n, i + 1)); });
     document.querySelectorAll('.vibe-card').forEach(card => {
       const label = (card.querySelector('.vibe-title') || {}).textContent;
@@ -300,7 +308,7 @@
       if (!g.has(k)) g.set(k, { profile: n.profile, posts: [], score: 0 });
       const e = g.get(k); e.posts.push(n); e.score += n.score;
     });
-    const ranked = [...g.values()].sort((a, b) => b.posts.length - a.posts.length || b.score - a.score).slice(0, 8);
+    const ranked = demote([...g.values()].sort((a, b) => b.posts.length - a.posts.length || b.score - a.score), e => e.profile.name).slice(0, 8);
     const bg = ['#F0E9E0', '#F5E7EE', '#E8EDF7', '#EBF0E8', '#E8F2ED', '#EFE8F5', '#F5EDE3', '#E8EBF5'];
     const rc = ['#FF8140', '#EFB351', '#596378'];
     row.innerHTML = ranked.map((e, i) => {
@@ -353,7 +361,7 @@
     holder.id = 'homeLiveFeed';
     old[0].parentNode.insertBefore(holder, old[0]);
     old.forEach(c => c.remove());
-    const list = [...posts].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+    const list = demote([...posts].sort((a, b) => new Date(b.created_at) - new Date(a.created_at)), p => (p.profiles && p.profiles.name) || '');
     const STEP = 5;
     let shown = 0;
     const more = document.createElement('div');
@@ -505,10 +513,11 @@
         .order('created_at', { ascending: false });
       if (error || !data || !data.length) return; // keep static fallback
       const usable = data.filter(p => String(p.title || '').trim().length >= 15 && p.profiles);
-      const all = usable.map(norm).sort((a, b) => b.score - a.score);
+      const ranked = usable.map(norm).sort((a, b) => b.score - a.score);
+      const all = demote(ranked);
       all.forEach(registerDetail);
       _spotAll = all;
-      buildBotd(all);
+      buildBotd(ranked);
       buildHelpful(all);
       buildVibes(all);
       renderSpotlight('mobile');
