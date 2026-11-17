@@ -5843,7 +5843,7 @@ Download now for free : pasteryapp.xyz</div>
               <div class="card-info">
                 <div class="card-name-row"><span class="card-app-name">${p.app_name || p.title || ''}</span></div>
                 <div class="card-desc" style="-webkit-line-clamp:3;display:-webkit-box;-webkit-box-orient:vertical;overflow:hidden;">${p.description || ''}</div>
-                <div class="card-meta-row"><span class="card-platform">${p.category || ''}${p.created_at ? ' · ' + getTimeAgo(p.created_at) : ''}</span></div>
+                <div class="card-meta-row"><span class="card-platform">${p.category || ''}${(p.created_at && !p.source) ? ' · ' + getTimeAgo(p.created_at) : ''}</span></div>
               </div>
             </div>
           </div>`).join('')}
@@ -5863,7 +5863,7 @@ Download now for free : pasteryapp.xyz</div>
               <div class="card-info">
                 <div class="card-name-row"><span class="card-app-name">${p.app_name || p.title || ''}</span></div>
                 <div class="card-desc" style="-webkit-line-clamp:3;display:-webkit-box;-webkit-box-orient:vertical;overflow:hidden;">${p.description || ''}</div>
-                <div class="card-meta-row"><span class="card-platform">${p.category || ''}${p.created_at ? ' · ' + getTimeAgo(p.created_at) : ''}</span></div>
+                <div class="card-meta-row"><span class="card-platform">${p.category || ''}${(p.created_at && !p.source) ? ' · ' + getTimeAgo(p.created_at) : ''}</span></div>
               </div>
             </div>
           </div>`).join('')}
@@ -6980,6 +6980,6 @@ Download now for free : pasteryapp.xyz</div>
     initAuth();
   });
 </script>
-<script src="home-live.js?v=20"></script>
+<script src="home-live.js?v=21"></script>
 </body>
 </html>
