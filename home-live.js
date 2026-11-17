@@ -333,6 +333,20 @@
     }).join('');
   }
 
+  // ── Trending page: one ranked list of video-first cards ──
+  function renderTrendPage() {
+    const el = document.getElementById('trendingCards');
+    if (!el) return;
+    const rc = ['#FF8140', '#EFB351', '#596378'];
+    const list = window._trendList || [];
+    el.innerHTML = list.map((n, i) => {
+      const card = heroCard(n, 'hmiss-card trend-card', i);
+      return card.replace('<div class="hmiss-overlay"', `<div class="trend-rank" style="color:${rc[i] || '#293142'}">#${i + 1}</div><div class="hmiss-overlay"`);
+    }).join('');
+    el.querySelectorAll('video.hmiss-video').forEach(v => { try { hmissObserver.observe(v); } catch (e) {} });
+  }
+  window.renderTrendingCards = renderTrendPage;
+
   function buildTrending(all) {
     const windows = { '24h': 1, 'week': 7, 'month': 30 };
     Object.entries(windows).forEach(([k, d]) => {
@@ -345,9 +359,8 @@
       const rc = ['#FF8140', '#EFB351', '#596378'];
       grid.innerHTML = all.slice(0, 6).map((n, i) => listCard(n, i + 1, rc[i] || '#293142')).join('');
     }
-    if (typeof renderTrendingCards === 'function' && document.getElementById('trendingCards')) {
-      renderTrendingCards(typeof _currentTrendingTab !== 'undefined' ? _currentTrendingTab : '24h');
-    }
+    window._trendList = all.slice(0, 10);
+    renderTrendPage();
   }
 
   function buildCommunityFeed(posts) {
@@ -423,7 +436,15 @@
     /* Spotlight: centred chips + a single centred card */
     .community-tab-row .community-tab:first-child { margin-left:auto; }
     .community-tab-row .community-tab:last-child { margin-right:auto; }
-    .hmiss-scroll .hmiss-row { margin:0 auto; }
+    /* Full-width video-first cards: Trending page + Spotlight */
+    .inner-page-cards .trend-card { width:100%; }
+    .hmiss-scroll .hmiss-row { width:100%; }
+    .hmiss-scroll .hmiss-card { width:100%; }
+    .trend-rank { position:absolute; left:14px; top:12px; z-index:3; font:900 38px/1 'Outfit',sans-serif; transform:rotate(-8deg);
+      -webkit-text-stroke:7px #fff; paint-order:stroke fill; text-shadow:0 2px 8px rgba(0,0,0,.18); pointer-events:none; }
+    .trend-note { margin:4px 16px 14px; padding:10px 12px; border-radius:12px; background:#F3F6FC; color:#6B7790; font:500 13px/1.4 'Outfit',sans-serif; display:flex; gap:8px; align-items:flex-start; }
+    .trend-note b { color:#293142; font-weight:600; }
+    .trend-note-ic { color:#3169ED; font-size:14px; line-height:1.3; }
     /* long names no longer spill out of list cards */
     .project-card .card-info { min-width:0; flex:1; }
     .project-card .card-name-row { min-width:0; }
