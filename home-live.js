@@ -84,7 +84,7 @@
   function heroCard(n, cls, i) {
     const style = n.hasMedia ? 'cursor:pointer;' : `background:${GRADS[i % GRADS.length]};cursor:pointer;`;
     const media = n.video
-      ? `<video class="hmiss-video" src="${esc(n.video)}" preload="metadata" loop muted playsinline></video>`
+      ? `<video class="hmiss-video" src="${esc(n.video)}" preload="${i < 2 ? 'auto' : 'metadata'}" loop muted playsinline></video>`
       : (n.image ? `<img class="hmiss-video" src="${esc(n.image)}" alt="" loading="lazy">` : '');
     const blurs = n.hasMedia
       ? '<div class="hmiss-blur-1"></div><div class="hmiss-blur-2"></div><div class="hmiss-blur-3"></div><div class="hmiss-blur-4"></div>' : '';
@@ -554,4 +554,20 @@
   window.addEventListener('scroll', (() => { let t; return () => { clearTimeout(t); t = setTimeout(_kickVideos, 250); }; })(), { passive: true });
   setTimeout(_kickVideos, 1200); setTimeout(_kickVideos, 3000);
   document.addEventListener('visibilitychange', () => { if (!document.hidden) _kickVideos(); });
+
+  // ── Preload the centred card's video and its neighbours so they start instantly ──
+  function _warmCarousel(sc) {
+    const cards = [...sc.querySelectorAll('.botd-card, .hmiss-card')];
+    if (!cards.length) return;
+    const cx = sc.scrollLeft + sc.clientWidth / 2;
+    let best = 0, bd = Infinity;
+    cards.forEach((c, k) => { const d = Math.abs(c.offsetLeft + c.offsetWidth / 2 - cx); if (d < bd) { bd = d; best = k; } });
+    [best - 1, best, best + 1, best + 2].forEach(k => {
+      const v = cards[k] && cards[k].querySelector('video');
+      if (v && v.preload !== 'auto') { v.preload = 'auto'; try { v.load(); } catch (e) {} }
+    });
+  }
+  function _warmAll() { document.querySelectorAll('.botd-scroll, .hmiss-scroll').forEach(_warmCarousel); }
+  document.addEventListener('scroll', e => { const t = e.target; if (t && t.classList && (t.classList.contains('botd-scroll') || t.classList.contains('hmiss-scroll'))) _warmCarousel(t); }, { passive: true, capture: true });
+  setTimeout(_warmAll, 800); setTimeout(_warmAll, 2500);
 })();
